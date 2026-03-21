@@ -181,33 +181,37 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildTuiProgressBar(String label, double percent, String trailing) {
-    const int bars = 15;
-    int filledBars = (percent * bars).round();
-    String barString = '[' + '#' * filledBars + '-' * (bars - filledBars) + ']';
+    const int totalBars = 20;
+    int filledBars = (percent * totalBars).round();
+    String barString = '[' + '#' * filledBars + '-' * (totalBars - filledBars) + ']';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              label,
-              style: GoogleFonts.jetBrainsMono(color: Colors.greenAccent.withValues(alpha: 0.7), fontSize: 10),
+              label.padRight(10),
+              style: GoogleFonts.jetBrainsMono(
+                color: Colors.greenAccent.withValues(alpha: 0.7),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const Spacer(),
             Text(
               trailing,
               style: GoogleFonts.jetBrainsMono(color: Colors.white70, fontSize: 10),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           barString,
           style: GoogleFonts.jetBrainsMono(
             color: Colors.greenAccent,
             fontSize: 14,
-            letterSpacing: 2,
+            height: 1.0,
           ),
         ),
       ],
