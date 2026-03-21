@@ -99,17 +99,26 @@ class _HomeViewState extends State<HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTuiHeader(),
-          const SizedBox(height: 24),
           Text(
-            '// SERVICE_LISTING',
+            '// HARDWARE_RESOURCES',
             style: GoogleFonts.jetBrainsMono(
               color: Colors.white24,
               fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          _buildTuiHeader(),
+          const SizedBox(height: 24),
+          Text(
+            '// SERVICE_STATUS_ALL',
+            style: GoogleFonts.jetBrainsMono(
+              color: Colors.white24,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
           _buildTuiServiceList(services),
           const SizedBox(height: 32),
           Text(
@@ -206,8 +215,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildTuiServiceList(List<dynamic> services) {
-    final monitorOnly = services.where((s) => !['Jellyseerr', 'Navidrome', 'qBittorrent'].contains(s.name)).toList();
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -218,7 +225,7 @@ class _HomeViewState extends State<HomeView> {
       child: Wrap(
         spacing: 12,
         runSpacing: 8,
-        children: monitorOnly.map((service) => _buildTuiServiceItem(service)).toList(),
+        children: services.map((service) => _buildTuiServiceItem(service)).toList(),
       ),
     );
   }
@@ -325,13 +332,27 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
               ),
-              if (!service.isOnline)
-                Text(
-                  'OFFLINE',
-                  style: GoogleFonts.jetBrainsMono(color: Colors.redAccent, fontSize: 10, fontWeight: FontWeight.bold),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-              const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward_ios, color: Colors.white10, size: 12),
+                child: Row(
+                  children: [
+                    Text(
+                      'READY',
+                      style: GoogleFonts.jetBrainsMono(
+                        color: color,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.chevron_right, color: color, size: 12),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
