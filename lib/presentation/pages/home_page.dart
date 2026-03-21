@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/di/injection_container.dart';
 import '../blocs/nas_status_bloc.dart';
+import '../widgets/active_services_list.dart';
+import '../widgets/error_state_widget.dart';
+import '../widgets/hardware_resources_card.dart';
+import '../widgets/service_status_list.dart';
 import 'settings_page.dart';
-import 'media_page.dart';
-import 'music_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -29,15 +32,25 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
-        title: const Text('NAS Home'),
+        title: Text(
+          'NAS_MONITOR_v1.0',
+          style: GoogleFonts.jetBrainsMono(
+            fontWeight: FontWeight.bold,
+            color: Colors.greenAccent,
+            fontSize: 18,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.greenAccent, size: 20),
             onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings, color: Colors.white30, size: 20),
             onPressed: () async {
               final bloc = context.read<NasStatusBloc>();
               await Navigator.push(
@@ -52,152 +65,52 @@ class _HomeViewState extends State<HomeView> {
       body: BlocBuilder<NasStatusBloc, NasStatusState>(
         builder: (context, state) {
           return state.when(
-            initial: () => const Center(child: Text('Bem-vindo!')),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (message) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(message),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final bloc = context.read<NasStatusBloc>();
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SettingsPage()),
-                      );
-                      bloc.add(const RefreshRequested());
-                    },
-                    child: const Text('Ir para Configurações'),
-                  ),
-                ],
+            initial: () => const Center(child: Text('Initializing system...')),
+            loading: () => const Center(
+              child: CircularProgressIndicator(
+                color: Colors.greenAccent,
+                strokeWidth: 2,
               ),
             ),
-            loaded: (services) => RefreshIndicator(
-              onRefresh: () async {
-                context.read<NasStatusBloc>().add(const RefreshRequested());
-              },
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                ),
-                itemCount: services.length,
-                itemBuilder: (context, index) {
-                  final service = services[index];
-                  return _buildServiceCard(context, service);
-                },
-              ),
+            error: (message) => ErrorStateWidget(
+              message: message,
+              onRetry: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
             ),
+            loaded: (services) => _buildDashboard(services),
           );
         },
       ),
     );
   }
 
-  Widget _buildServiceCard(BuildContext context, dynamic service) {
-    IconData icon;
-    Color color;
+  Widget _buildDashboard(List<dynamic> services) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader('// HARDWARE_RESOURCES'),
+          const HardwareResourcesCard(),
+          const SizedBox(height: 24),
+          _buildSectionHeader('// SERVICE_STATUS_ALL'),
+          ServiceStatusList(services: services),
+          const SizedBox(height: 32),
+          _buildSectionHeader('// QUICK_ACCESS_MODULES'),
+          ActiveServicesList(services: services),
+        ],
+      ),
+    );
+  }
 
-    switch (service.name) {
-      case 'Jellyfin':
-        icon = Icons.movie;
-        color = Colors.orange;
-        break;
-      case 'Jellyseerr':
-        icon = Icons.request_page;
-        color = Colors.purple;
-        break;
-      case 'Navidrome':
-        icon = Icons.music_note;
-        color = Colors.blue;
-        break;
-      case 'AdGuard Home':
-        icon = Icons.security;
-        color = Colors.green;
-        break;
-      case 'Nginx Proxy Manager':
-        icon = Icons.router;
-        color = Colors.teal;
-        break;
-      case 'Vaultwarden':
-        icon = Icons.lock;
-        color = Colors.red;
-        break;
-      case 'qBittorrent':
-        icon = Icons.download;
-        color = Colors.blueGrey;
-        break;
-      case 'Radarr':
-        icon = Icons.movie_filter;
-        color = Colors.yellow;
-        break;
-      case 'Sonarr':
-        icon = Icons.tv;
-        color = Colors.lightBlue;
-        break;
-      case 'Prowlarr':
-        icon = Icons.search_sharp;
-        color = Colors.redAccent;
-        break;
-      case 'Bazarr':
-        icon = Icons.subtitles;
-        color = Colors.amber;
-        break;
-      case 'Tdarr':
-        icon = Icons.video_settings;
-        color = Colors.deepOrange;
-        break;
-      default:
-        icon = Icons.miscellaneous_services;
-        color = Colors.grey;
-    }
-
-    return Card(
-      elevation: 4,
-      child: InkWell(
-        onTap: () {
-          if (service.name == 'Jellyseerr') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MediaPage()),
-            );
-          } else if (service.name == 'Navidrome') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MusicPage()),
-            );
-          }
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 48, color: color),
-            const SizedBox(height: 8),
-            Text(
-              service.name,
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: 4,
-                  backgroundColor: service.isOnline ? Colors.green : Colors.red,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  service.isOnline ? 'Online' : 'Offline',
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ],
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(
+        title,
+        style: GoogleFonts.jetBrainsMono(
+          color: Colors.white24,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

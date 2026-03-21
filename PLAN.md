@@ -77,7 +77,11 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 
 ## 🚀 Para onde vamos (Próximos Passos)
 
-### 1. Melhorias na Experiência de Música
+### 1. Integração de Fotos e Arquivos
+- [ ] **Módulo Photos (Immich)**: Integração para visualização da galeria e status de backup.
+- [ ] **Módulo Files (Nextcloud)**: Integração via WebDAV para gerenciamento de arquivos e backups.
+
+### 2. Melhorias na Experiência de Música
 - [ ] Implementar um **Audio Player** para ouvir as músicas diretamente pelo app.
 - [ ] Adicionar suporte a playlists e busca de músicas.
 - [ ] Melhorar o carregamento de capas de álbuns (cache e placeholders).
