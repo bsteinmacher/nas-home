@@ -11,7 +11,7 @@ class NasRepositoryImpl implements NasRepository {
   Future<List<NasService>> getServices() async {
     return [
       const NasService(name: 'Nginx Proxy Manager', port: '81', description: 'Proxy & SSL Manager'),
-      const NasService(name: 'AdGuard Home', port: '3000', description: 'DNS Sinkhole'),
+      const NasService(name: 'AdGuard Home', port: '8085', description: 'DNS Sinkhole'),
       const NasService(name: 'Vaultwarden', port: '80', description: 'Passwords'),
       const NasService(name: 'Jellyfin', port: '8096', description: 'Media Server'),
       const NasService(name: 'Jellyseerr', port: '5055', description: 'Media Requests'),
