@@ -13,52 +13,76 @@ Este plano descreve a criação de um aplicativo Android em Flutter para atuar c
 - **Local do Projeto:** `/home/didizera/dev/nas-home`
 - **Referência do NAS:** `/home/didizera/meu-nas` (Serviços Docker)
 
-## 🛠️ Ambiente de Desenvolvimento
-- **Flutter SDK:** `3.29.0` (Stable) em `/home/didizera/dev/flutter`
+## 🏗️ Arquitetura Implementada
+Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
+- **Data Layer:** Repositórios e Data Sources para APIs (Jellyseerr, Navidrome, Status Check).
+- **Domain Layer:** Entidades e Casos de Uso (ex: `RequestMediaUseCase`, `GetServicesStatusUseCase`).
+- **Presentation Layer:** Gerenciamento de estado com **BLoC** e Widgets Material 3.
+- **Injeção de Dependência:** Centralizada via **GetIt**.
+
+---
+
+## ✅ O que já foi feito (Concluído)
+
+### 1. Inicialização e Infraestrutura
+- [x] Criação do projeto Flutter (`nas_home`).
+- [x] Configuração de dependências (`dio`, `flutter_bloc`, `get_it`, `freezed`, `shared_preferences`, `crypto`).
+- [x] Configuração do Android Manifest (Permissões de rede).
+- [x] Definição da estrutura de pastas Clean Architecture.
+- [x] Implementação do container de Injeção de Dependência (`injection_container.dart`).
+
+### 2. Configurações e Persistência
+- [x] Tela de **Configurações** implementada.
+- [x] Persistência de dados (URL do NAS, API Keys de Jellyseerr, Credenciais Subsonic) usando `shared_preferences`.
+
+### 3. Dashboard de Status
+- [x] Mapeamento de 12 serviços baseados no `meu-nas/README.md`.
+- [x] Lógica de "HTTP Ping" para verificar disponibilidade dos serviços.
+- [x] Grid dinâmico na `HomePage` com indicadores visuais de Online/Offline e ícones personalizados.
+
+### 4. Integração Jellyseerr (Mídia)
+- [x] Mapeamento da API Jellyseerr (Search, Trending, Request).
+- [x] Tela de **Pedidos de Mídia** com busca e exibição de posters via TMDB.
+- [x] Fluxo de solicitação de filmes e séries implementado via `MediaBloc`.
+
+### 5. Integração Navidrome (Música)
+- [x] Mapeamento da API Subsonic (Compatível com Navidrome).
+- [x] Navegação por **Artistas** e **Álbuns** implementada.
+- [x] Lógica de autenticação Subsonic (Token/Salt MD5) funcionando.
+
+---
+
+## 📍 Onde estamos (Estado Atual)
+- O "esqueleto" funcional e a infraestrutura de dados do aplicativo estão prontos.
+- O app compila perfeitamente e passa em todas as análises estáticas (`flutter analyze`).
+- As três vertentes principais (Status, Mídia, Música) possuem BLoCs e UIs básicas funcionando.
+
+---
+
+## 🚀 Para onde vamos (Próximos Passos)
+
+### 1. Melhorias na Experiência de Música
+- [ ] Implementar um **Audio Player** para ouvir as músicas diretamente pelo app.
+- [ ] Adicionar suporte a playlists e busca de músicas.
+- [ ] Melhorar o carregamento de capas de álbuns (cache e placeholders).
+
+### 2. Navegação e Interação
+- [ ] Adicionar navegação via **BottomNavigationBar** para alternar entre Dashboard, Mídia e Música.
+- [ ] Implementar abertura dos serviços (ex: AdGuard Home, NPM) em uma **WebView interna** ou navegador externo.
+- [ ] Detalhes da mídia (sinopse, elenco, trailer) ao clicar em um poster no Jellyseerr.
+
+### 3. Refinamento Visual e UX
+- [ ] Implementar tratamento de erros mais amigável (ex: diálogos de erro, estados de vazio).
+- [ ] Refinar o tema Material 3 (cores dinâmicas baseadas no NAS).
+- [ ] Adicionar animações de transição entre telas.
+
+### 4. Testes e Estabilidade
+- [ ] Escrever testes unitários para os Repositórios e BLoCs.
+- [ ] Testar em dispositivos físicos para validar performance de rede.
+
+---
+
+## 🛠️ Ambiente de Referência
+- **Flutter SDK:** `3.29.0` (Stable)
 - **Dart SDK:** `3.7.0`
-- **Path:** Configurado no `~/.zshrc`
-- **Target:** Android (API Level a definir)
-
-## 🏗️ Arquitetura Proposta
-Utilizaremos **Clean Architecture** para garantir testabilidade e escalabilidade:
-- **Data Layer:** Repositórios e Data Sources para APIs (Jellyseerr, Navidrome).
-- **Domain Layer:** Entidades e Casos de Uso (ex: `RequestMediaUseCase`, `GetServiceStatusUseCase`).
-- **Presentation Layer:** BLoC para gerenciamento de estado e Widgets (Material 3).
-
-## 🚀 Passos de Implementação
-
-### 1. Inicialização do Projeto
-- [ ] Criar o projeto Flutter no diretório alvo.
-- [ ] Configurar dependências iniciais (`dio`, `flutter_bloc`, `get_it`, `freezed`, `json_serializable`).
-- [ ] Configurar o Android Manifest para permissões de rede.
-
-### 2. Infraestrutura e Configuração
-- [ ] Implementar armazenamento local (ex: `shared_preferences` ou `hive`) para salvar:
-    - IP/Domínio base do NAS.
-    - API Keys (Jellyseerr, Navidrome).
-- [ ] Criar serviço de verificação de status (ping HTTP) para os serviços Docker listados no `meu-nas/README.md`.
-
-### 3. Integração Jellyseerr (Mídia)
-- [ ] Mapear endpoints da Jellyseerr API (Busca, Trending, Solicitar).
-- [ ] Criar tela de "Pedidos de Mídia" com barra de busca e posters (grid).
-- [ ] Implementar fluxo de solicitação (Radarr/Sonarr via Jellyseerr).
-
-### 4. Integração Navidrome (Música)
-- [ ] Mapear API Subsonic (compatível com Navidrome).
-- [ ] Criar tela de navegação por Artistas/Álbuns.
-- [ ] Implementar funcionalidade de "pedir" (pode ser integração futura com Lidarr ou apenas navegação).
-
-### 5. Dashboard Principal
-- [ ] Grid dinâmico de cartões para cada serviço.
-- [ ] Indicador visual de status (On/Off).
-- [ ] Atalhos para abrir as Web UIs originais no navegador externo ou WebView interna.
-
-## 🧪 Verificação e Testes
-- [ ] Testes unitários para os mapeadores de API.
-- [ ] Testes de integração com os serviços rodando localmente (se possível).
-- [ ] Validação da interface em diferentes tamanhos de tela (Android).
-
-## 🛠️ Próximos Passos (Imediatos)
-1. Executar `flutter create nas_home` no diretório `/home/didizera/dev/nas-home`.
-2. Definir a estrutura de pastas inicial.
-3. Criar a tela de configurações para conectar ao NAS.
+- **Status da Análise:** `No issues found!`
