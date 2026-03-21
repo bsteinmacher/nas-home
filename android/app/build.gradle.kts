@@ -9,7 +9,7 @@ android {
     namespace = "com.example.nas_home"
     compileSdk = 36
     buildToolsVersion = "36.1.0"
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
