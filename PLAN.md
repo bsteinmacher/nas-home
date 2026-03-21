@@ -66,6 +66,12 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] **Fix:** Atualização do NDK para v27 conforme exigido por dependências.
 - [x] Build e deploy realizado com sucesso no dispositivo físico **SM A736B**.
 
+### 7. Refatoração e Modularização da UI
+- [x] Extração de widgets complexos da `HomePage` para componentes reutilizáveis.
+- [x] Criação dos módulos `HardwareResourcesCard`, `ServiceStatusList`, `ActiveServicesList` e `ErrorStateWidget`.
+- [x] Organização da ordem de exibição dos serviços (Immich em primeiro).
+- [x] Melhoria na legibilidade e manutenção do código da `HomePage`.
+
 ---
 
 ## 📍 Onde estamos (Estado Atual)
