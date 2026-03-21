@@ -256,7 +256,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildActiveServicesGrid(List<dynamic> services) {
-    final activeNames = ['Jellyseerr', 'Navidrome', 'qBittorrent'];
+    final activeNames = ['Jellyseerr', 'Navidrome', 'qBittorrent', 'Immich', 'Nextcloud'];
     final activeServices = services.where((s) => activeNames.contains(s.name)).toList();
 
     return Column(
@@ -284,6 +284,16 @@ class _HomeViewState extends State<HomeView> {
         icon = Icons.download_for_offline_outlined;
         color = Colors.orangeAccent;
         subLabel = 'DOWNLOAD_MANAGER';
+        break;
+      case 'Immich':
+        icon = Icons.photo_library_outlined;
+        color = Colors.pinkAccent;
+        subLabel = 'PHOTO_&_VIDEO_GALLERY';
+        break;
+      case 'Nextcloud':
+        icon = Icons.folder_shared_outlined;
+        color = Colors.lightBlueAccent;
+        subLabel = 'FILES_&_CLOUD_STORAGE';
         break;
       default:
         icon = Icons.bolt;

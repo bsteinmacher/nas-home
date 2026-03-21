@@ -22,6 +22,8 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'Prowlarr', port: '9696', description: 'Indexer Manager'),
       const NasService(name: 'Bazarr', port: '6767', description: 'Subtitles'),
       const NasService(name: 'Tdarr', port: '8265', description: 'Transcoding'),
+      const NasService(name: 'Immich', port: '2283', description: 'Photos & Videos'),
+      const NasService(name: 'Nextcloud', port: '8080', description: 'Files & Cloud'),
     ];
   }
 
