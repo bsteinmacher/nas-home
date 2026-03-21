@@ -162,7 +162,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               Text(
                 'TEMP: 42°C',
-                style: GoogleFonts.jetBrainsMono(color: Colors.orangeAccent.withOpacity(0.7), fontSize: 10),
+                style: GoogleFonts.jetBrainsMono(color: Colors.orangeAccent.withValues(alpha: 0.7), fontSize: 10),
               ),
             ],
           ),
@@ -184,7 +184,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Text(
               label,
-              style: GoogleFonts.jetBrainsMono(color: Colors.greenAccent.withOpacity(0.7), fontSize: 10),
+              style: GoogleFonts.jetBrainsMono(color: Colors.greenAccent.withValues(alpha: 0.7), fontSize: 10),
             ),
             Text(
               trailing,
@@ -212,7 +212,7 @@ class _HomeViewState extends State<HomeView> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A).withOpacity(0.5),
+        color: const Color(0xFF1A1A1A).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Wrap(
@@ -295,7 +295,7 @@ class _HomeViewState extends State<HomeView> {
           decoration: BoxDecoration(
             color: const Color(0xFF1E1E1E),
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: color.withOpacity(0.2)),
+            border: Border.all(color: color.withValues(alpha: 0.2)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
