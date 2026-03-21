@@ -10,8 +10,17 @@ class ActiveServicesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeNames = ['Jellyseerr', 'Navidrome', 'qBittorrent', 'Immich', 'Nextcloud'];
-    final activeServices = services.where((s) => activeNames.contains(s.name)).toList();
+    final activeNames = ['Immich', 'Jellyseerr', 'Navidrome', 'qBittorrent', 'Nextcloud'];
+    
+    // Primeiro filtra os serviços que estão na lista de ativos
+    final activeServices = services
+        .where((s) => activeNames.contains(s.name))
+        .toList();
+    
+    // Depois ordena com base na posição em activeNames
+    activeServices.sort((a, b) => 
+      activeNames.indexOf(a.name).compareTo(activeNames.indexOf(b.name))
+    );
 
     return Column(
       children: activeServices.map((service) => _buildActiveServiceCard(context, service)).toList(),
