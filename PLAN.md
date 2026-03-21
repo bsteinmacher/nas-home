@@ -62,6 +62,7 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] Instalação e configuração do **Java 17 (OpenJDK)** como padrão.
 - [x] Configuração de permissões USB via `android-udev`.
 - [x] Criação do `.vscode/launch.json` para execução via Cursor/VSCode.
+- [x] **Fix:** Atualização do NDK para v27 conforme exigido por dependências.
 - [x] Build e deploy realizado com sucesso no dispositivo físico **SM A736B**.
 
 ---
