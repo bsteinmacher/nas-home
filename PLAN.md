@@ -22,6 +22,12 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 
 ---
 
+## 🛠️ Workflow de Desenvolvimento (MANDATO)
+- **Git:** Realizar `git add`, `git commit` (com prefixos `feat:` ou `fix:`) e `git push` **obrigatoriamente** após a conclusão de cada parte/sub-tarefa.
+- **Branch:** Trabalho direto na `main`.
+
+---
+
 ## ✅ O que já foi feito (Concluído)
 
 ### 1. Inicialização e Infraestrutura
@@ -39,6 +45,7 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] Mapeamento de 12 serviços baseados no `meu-nas/README.md`.
 - [x] Lógica de "HTTP Ping" para verificar disponibilidade dos serviços.
 - [x] Grid dinâmico na `HomePage` com indicadores visuais de Online/Offline e ícones personalizados.
+- [x] **Fix:** Correção da porta do AdGuard Home para `8085`.
 
 ### 4. Integração Jellyseerr (Mídia)
 - [x] Mapeamento da API Jellyseerr (Search, Trending, Request).
@@ -50,12 +57,19 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] Navegação por **Artistas** e **Álbuns** implementada.
 - [x] Lógica de autenticação Subsonic (Token/Salt MD5) funcionando.
 
+### 6. Ambiente de Desenvolvimento (Arch Linux)
+- [x] Configuração do **Android SDK** (`/opt/android-sdk`) e `cmdline-tools`.
+- [x] Instalação e configuração do **Java 17 (OpenJDK)** como padrão.
+- [x] Configuração de permissões USB via `android-udev`.
+- [x] Criação do `.vscode/launch.json` para execução via Cursor/VSCode.
+- [x] Build e deploy realizado com sucesso no dispositivo físico **SM A736B**.
+
 ---
 
 ## 📍 Onde estamos (Estado Atual)
-- O "esqueleto" funcional e a infraestrutura de dados do aplicativo estão prontos.
-- O app compila perfeitamente e passa em todas as análises estáticas (`flutter analyze`).
-- As três vertentes principais (Status, Mídia, Música) possuem BLoCs e UIs básicas funcionando.
+- O aplicativo está rodando no dispositivo físico em modo Debug.
+- O ambiente de build (Arch Linux) está totalmente funcional com Java 17 e SDK 36.
+- O Dashboard, Mídia e Música estão integrados e funcionais em nível de dados.
 
 ---
 
@@ -84,5 +98,6 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 
 ## 🛠️ Ambiente de Referência
 - **Flutter SDK:** `3.29.0` (Stable)
-- **Dart SDK:** `3.7.0`
+- **Java:** `OpenJDK 17.0.18`
+- **Android SDK:** `36.1.0` (API 36)
 - **Status da Análise:** `No issues found!`
