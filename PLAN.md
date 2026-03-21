@@ -24,7 +24,8 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 
 ## 🛠️ Workflow de Desenvolvimento (MANDATO)
 - **Git:** Realizar `git add`, `git commit` (com prefixos `feat:` ou `fix:`) e `git push` **obrigatoriamente** após a conclusão de cada parte/sub-tarefa.
-- **Branch:** Trabalho direto na `main`.
+- **Branches:** Criar uma nova branch para cada nova funcionalidade ou correção significativa (ex: `feat/nome-da-feature` ou `fix/nome-do-bug`). Nunca trabalhar diretamente na `main` para grandes mudanças.
+- **Merge:** Realizar o merge para a `main` somente após a funcionalidade estar validada.
 
 ---
 
