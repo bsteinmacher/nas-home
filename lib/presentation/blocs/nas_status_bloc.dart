@@ -35,9 +35,6 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     Emitter<NasStatusState> emit,
   ) async {
     emit(const Loading());
-    
-    // Força um delay de 3 segundos para teste visual do spinner
-    await Future.delayed(const Duration(seconds: 3));
 
     final nasUrl = sharedPreferences.getString('nas_url');
     if (nasUrl == null || nasUrl.isEmpty) {
