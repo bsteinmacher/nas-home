@@ -10,7 +10,7 @@ class ActiveServicesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeNames = ['Immich', 'Jellyseerr', 'Navidrome', 'qBittorrent', 'Nextcloud'];
+    final activeNames = ['Immich', 'Jellyseerr', 'Navidrome', 'Nextcloud', 'qBittorrent'];
     
     // Primeiro filtra os serviços que estão na lista de ativos
     final activeServices = services
