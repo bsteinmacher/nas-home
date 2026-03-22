@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/di/injection_container.dart';
 import '../blocs/nas_status_bloc.dart';
 import '../widgets/active_services_list.dart';
+import '../widgets/braille_spinner.dart';
 import '../widgets/error_state_widget.dart';
 import '../widgets/hardware_resources_card.dart';
 import '../widgets/service_status_list.dart';
@@ -62,29 +63,55 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: BlocBuilder<NasStatusBloc, NasStatusState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const Center(child: Text('Initializing system...')),
-            loading: () => const Center(
-              child: CircularProgressIndicator(
-                color: Colors.greenAccent,
-                strokeWidth: 2,
-              ),
-            ),
-            error: (message) => ErrorStateWidget(
-              message: message,
-              onRetry: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
-            ),
-            loaded: (services) => _buildDashboard(services),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final bloc = context.read<NasStatusBloc>();
+          bloc.add(const RefreshRequested());
+          // Aguarda o próximo estado que não seja 'loading' para fechar o indicador
+          await bloc.stream.firstWhere((state) => state is! Loading);
         },
+        color: Colors.greenAccent,
+        backgroundColor: const Color(0xFF1F1F1F),
+        child: BlocBuilder<NasStatusBloc, NasStatusState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () => _buildScrollableContent(
+                const Center(child: Text('Initializing system...')),
+              ),
+              loading: () => _buildScrollableContent(
+                const Center(child: BrailleSpinner(fontSize: 24)),
+              ),
+              error: (message) => _buildScrollableContent(
+                ErrorStateWidget(
+                  message: message,
+                  onRetry: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
+                ),
+              ),
+              loaded: (services) => _buildDashboard(services),
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _buildScrollableContent(Widget child) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: child,
+          ),
+        );
+      },
     );
   }
 
   Widget _buildDashboard(List<dynamic> services) {
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

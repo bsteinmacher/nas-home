@@ -35,6 +35,10 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     Emitter<NasStatusState> emit,
   ) async {
     emit(const Loading());
+
+    // Delay de 1 segundo para permitir a visualização da animação do RefreshIndicator
+    await Future.delayed(const Duration(seconds: 1));
+
     final nasUrl = sharedPreferences.getString('nas_url');
     if (nasUrl == null || nasUrl.isEmpty) {
       emit(const Error('Configure a URL do NAS nas configurações.'));

@@ -59,36 +59,90 @@ class HardwareResourcesCard extends StatelessWidget {
   Widget _buildTuiProgressBar(String label, double percent, String trailing) {
     const int totalBars = 20;
     int filledBars = (percent * totalBars).round();
-    String barString = '[' + '#' * filledBars + '-' * (totalBars - filledBars) + ']';
+    String filledPart = '#' * filledBars;
+    String totalBarPlaceholder = '#' * totalBars;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          label,
+          style: GoogleFonts.jetBrainsMono(
+            color: Colors.white24,
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
         Row(
           children: [
             Text(
-              label.padRight(10),
+              '[',
               style: GoogleFonts.jetBrainsMono(
-                color: Colors.greenAccent.withValues(alpha: 0.7),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 14,
+                height: 1.0,
+              ),
+            ),
+            Stack(
+              children: [
+                // Fundo da barra (parte vazia)
+                Text(
+                  totalBarPlaceholder,
+                  style: GoogleFonts.jetBrainsMono(
+                    color: Colors.white10,
+                    fontSize: 14,
+                    height: 1.0,
+                  ),
+                ),
+                // Parte preenchida com o degradê estendido
+                if (filledBars > 0)
+                  ShaderMask(
+                    blendMode: BlendMode.srcIn,
+                    shaderCallback: (bounds) {
+                      // Calculamos a largura total teórica para o degradê
+                      // (largura de 1 char * total de bars)
+                      final charWidth = bounds.width / filledBars;
+                      final fullWidth = charWidth * totalBars;
+                      
+                      return const LinearGradient(
+                        colors: [
+                          Color(0xFF0082C9), // Nextcloud Blue
+                          Color(0xFF236997), // Navidrome Blue
+                          Color(0xFFF132D2), // Jellyseerr Pink
+                          Color(0xFFDA3731), // Immich Red
+                        ],
+                      ).createShader(Rect.fromLTWH(0, 0, fullWidth, bounds.height));
+                    },
+                    child: Text(
+                      filledPart,
+                      style: GoogleFonts.jetBrainsMono(
+                        color: Colors.white,
+                        fontSize: 14,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Text(
+              ']',
+              style: GoogleFonts.jetBrainsMono(
+                color: Colors.white,
+                fontSize: 14,
+                height: 1.0,
               ),
             ),
             const Spacer(),
             Text(
               trailing,
-              style: GoogleFonts.jetBrainsMono(color: Colors.white70, fontSize: 10),
+              style: GoogleFonts.jetBrainsMono(
+                color: Colors.white70,
+                fontSize: 12,
+                height: 1.0,
+              ),
             ),
           ],
-        ),
-        const SizedBox(height: 6),
-        Text(
-          barString,
-          style: GoogleFonts.jetBrainsMono(
-            color: Colors.greenAccent,
-            fontSize: 14,
-            height: 1.0,
-          ),
         ),
       ],
     );

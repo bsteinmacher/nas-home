@@ -47,6 +47,8 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] Lógica de "HTTP Ping" para verificar disponibilidade dos serviços.
 - [x] Grid dinâmico na `HomePage` com indicadores visuais de Online/Offline e ícones personalizados.
 - [x] **Fix:** Correção da porta do AdGuard Home para `8085`.
+- [x] **Feat:** Implementação de Pull-to-Refresh na HomePage.
+- [x] **Feat:** Remoção de delay fixo de 3s no carregamento.
 
 ### 4. Integração Jellyseerr (Mídia)
 - [x] Mapeamento da API Jellyseerr (Search, Trending, Request).
