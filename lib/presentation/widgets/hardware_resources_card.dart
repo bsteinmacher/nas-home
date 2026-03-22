@@ -33,7 +33,7 @@ class HardwareResourcesCard extends StatelessWidget {
           const SizedBox(height: 16),
           _buildTuiProgressBar('CPU_LOAD', 0.28, '28%'),
           const SizedBox(height: 12),
-          _buildTuiProgressBar('MEM_USAGE', 0.62, '4.9GB/8GB'),
+          _buildTuiProgressBar('RAM_USAGE', 0.62, '4.9GB/8GB'),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,7 +45,7 @@ class HardwareResourcesCard extends StatelessWidget {
               Text(
                 'TEMP: 42°C',
                 style: GoogleFonts.jetBrainsMono(
-                  color: Colors.orangeAccent.withValues(alpha: 0.7),
+                  color: Colors.orangeAccent.withValues(alpha: 0.6),
                   fontSize: 10,
                 ),
               ),
@@ -68,7 +68,7 @@ class HardwareResourcesCard extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.jetBrainsMono(
-            color: Colors.white24,
+            color: Colors.white30,
             fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
@@ -80,7 +80,7 @@ class HardwareResourcesCard extends StatelessWidget {
               '[',
               style: GoogleFonts.jetBrainsMono(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: 12,
                 height: 1.0,
               ),
             ),
@@ -129,7 +129,7 @@ class HardwareResourcesCard extends StatelessWidget {
               ']',
               style: GoogleFonts.jetBrainsMono(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: 12,
                 height: 1.0,
               ),
             ),
@@ -138,7 +138,7 @@ class HardwareResourcesCard extends StatelessWidget {
               trailing,
               style: GoogleFonts.jetBrainsMono(
                 color: Colors.white70,
-                fontSize: 12,
+                fontSize: 10,
                 height: 1.0,
               ),
             ),
