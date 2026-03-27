@@ -17,8 +17,8 @@ class BrailleSpinner extends StatefulWidget {
 }
 
 class _BrailleSpinnerState extends State<BrailleSpinner> {
-  // Sequência de 8 frames (Braille 8-dot)
-  // Simula uma rotação suave apagando um ponto por vez em um bloco de 4x2
+  // 8-frame sequence (Braille 8-dot)
+  // Simulates smooth rotation by clearing one dot at a time in a 4x2 block
   static const List<String> _frames = [
     '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣽', '⣾'
   ];
@@ -29,7 +29,7 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
   @override
   void initState() {
     super.initState();
-    // 100ms é a velocidade clássica para spinners de 8 frames
+    // 100ms is the standard speed for 8-frame spinners
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (mounted) {
         setState(() {
@@ -48,7 +48,7 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: widget.fontSize * 1.5, // Garante espaço para o caractere sem jitter
+      width: widget.fontSize * 1.5, // Ensures enough space to avoid jitter
       child: Center(
         child: Text(
           _frames[_currentFrame],

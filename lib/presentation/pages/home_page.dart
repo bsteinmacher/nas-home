@@ -68,7 +68,7 @@ class _HomeViewState extends State<HomeView> {
         onRefresh: () async {
           final bloc = context.read<NasStatusBloc>();
           bloc.add(const RefreshRequested());
-          // Aguarda o próximo estado que não seja 'loading' para fechar o indicador
+          // Wait for the next non-loading state to close the refresh indicator
           await bloc.stream.firstWhere((state) => state is! Loading);
         },
         color: Colors.greenAccent,

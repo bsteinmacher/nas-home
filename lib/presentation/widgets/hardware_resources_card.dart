@@ -68,7 +68,7 @@ class HardwareResourcesCard extends StatelessWidget {
 
   Widget _buildTuiProgressBar(String label, double percent, String trailing) {
     const int totalBars = 20;
-    // Garante que percent está entre 0.0 e 1.0
+    // Ensure percent is between 0.0 and 1.0
     double clampedPercent = percent.clamp(0.0, 1.0);
     int filledBars = (clampedPercent * totalBars).round();
     String filledPart = '#' * filledBars;
@@ -98,7 +98,7 @@ class HardwareResourcesCard extends StatelessWidget {
             ),
             Stack(
               children: [
-                // Fundo da barra (parte vazia)
+                // Bar background (empty part)
                 Text(
                   totalBarPlaceholder,
                   style: GoogleFonts.jetBrainsMono(
@@ -107,13 +107,13 @@ class HardwareResourcesCard extends StatelessWidget {
                     height: 1.0,
                   ),
                 ),
-                // Parte preenchida com o degradê estendido
+                // Filled part with extended gradient
                 if (filledBars > 0)
                   ShaderMask(
                     blendMode: BlendMode.srcIn,
                     shaderCallback: (bounds) {
-                      // Calculamos a largura total teórica para o degradê
-                      // (largura de 1 char * total de bars)
+                      // Calculate the theoretical total width for the gradient
+                      // (width of 1 char * total bars)
                       final charWidth = bounds.width / filledBars;
                       final fullWidth = charWidth * totalBars;
                       

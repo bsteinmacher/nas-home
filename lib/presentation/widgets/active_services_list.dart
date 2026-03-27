@@ -12,12 +12,12 @@ class ActiveServicesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final activeNames = ['Immich', 'Jellyseerr', 'Navidrome', 'Nextcloud', 'qBittorrent'];
     
-    // Primeiro filtra os serviços que estão na lista de ativos
+    // First, filter services that are in the active list
     final activeServices = services
         .where((s) => activeNames.contains(s.name))
         .toList();
     
-    // Depois ordena com base na posição em activeNames
+    // Then, sort based on the position in activeNames
     activeServices.sort((a, b) => 
       activeNames.indexOf(a.name).compareTo(activeNames.indexOf(b.name))
     );
