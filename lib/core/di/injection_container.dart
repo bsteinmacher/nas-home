@@ -10,6 +10,7 @@ import '../../domain/repositories/jellyseerr_repository.dart';
 import '../../domain/repositories/music_repository.dart';
 import '../../domain/repositories/nas_repository.dart';
 import '../../domain/usecases/get_services_status.dart';
+import '../../domain/usecases/get_hardware_info.dart';
 import '../../domain/usecases/jellyseerr_usecases.dart';
 import '../../domain/usecases/music_usecases.dart';
 import '../../presentation/blocs/media_bloc.dart';
@@ -48,6 +49,7 @@ Future<void> init() async {
 
   //! Domain
   sl.registerLazySingleton(() => GetServicesStatusUseCase(sl()));
+  sl.registerLazySingleton(() => GetHardwareInfoUseCase(sl()));
   sl.registerLazySingleton(() => SearchMediaUseCase(sl()));
   sl.registerLazySingleton(() => GetTrendingMediaUseCase(sl()));
   sl.registerLazySingleton(() => RequestMediaUseCase(sl()));
@@ -57,6 +59,7 @@ Future<void> init() async {
   //! Presentation
   sl.registerFactory(() => NasStatusBloc(
         getServicesStatus: sl(),
+        getHardwareInfo: sl(),
         sharedPreferences: sl(),
       ));
   sl.registerFactory(() => MediaBloc(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/di/injection_container.dart';
+import '../../domain/entities/nas_service.dart';
 import '../blocs/nas_status_bloc.dart';
 import '../widgets/active_services_list.dart';
 import '../widgets/braille_spinner.dart';
@@ -87,7 +88,7 @@ class _HomeViewState extends State<HomeView> {
                   onRetry: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
                 ),
               ),
-              loaded: (services) => _buildDashboard(services),
+              loaded: (services, hardwareInfo) => _buildDashboard(services, hardwareInfo),
             );
           },
         ),
@@ -109,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildDashboard(List<dynamic> services) {
+  Widget _buildDashboard(List<dynamic> services, dynamic hardwareInfo) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
@@ -117,10 +118,10 @@ class _HomeViewState extends State<HomeView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader('// HARDWARE_RESOURCES'),
-          const HardwareResourcesCard(),
+          HardwareResourcesCard(info: hardwareInfo),
           const SizedBox(height: 24),
           _buildSectionHeader('// SERVICE_STATUS_ALL'),
-          ServiceStatusList(services: services),
+          ServiceStatusList(services: services as List<NasService>),
           const SizedBox(height: 32),
           _buildSectionHeader('// QUICK_ACCESS_MODULES'),
           ActiveServicesList(services: services),

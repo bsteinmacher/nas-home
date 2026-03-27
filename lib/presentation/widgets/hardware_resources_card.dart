@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../domain/entities/hardware_info.dart';
 
 class HardwareResourcesCard extends StatelessWidget {
-  const HardwareResourcesCard({super.key});
+  final HardwareInfo info;
+
+  const HardwareResourcesCard({
+    super.key,
+    required this.info,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class HardwareResourcesCard extends StatelessWidget {
               const Icon(Icons.dns, color: Colors.greenAccent, size: 14),
               const SizedBox(width: 8),
               Text(
-                'HOST: LENOVO-E73',
+                'HOST: ${info.hostname}',
                 style: GoogleFonts.jetBrainsMono(
                   color: Colors.white,
                   fontSize: 12,
@@ -31,21 +37,25 @@ class HardwareResourcesCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _buildTuiProgressBar('CPU_LOAD', 0.28, '28%'),
+          _buildTuiProgressBar('CPU_LOAD', info.cpuUsage / 100, '${info.cpuUsage.toStringAsFixed(1)}%'),
           const SizedBox(height: 12),
-          _buildTuiProgressBar('RAM_USAGE', 0.62, '4.9GB/8GB'),
+          _buildTuiProgressBar(
+            'RAM_USAGE',
+            info.ramUsed / info.ramTotal,
+            '${info.ramUsed.toStringAsFixed(1)}GB/${info.ramTotal.toStringAsFixed(1)}GB',
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'UPTIME: 12d 04h 32m',
+                'UPTIME: ${info.uptime}',
                 style: GoogleFonts.jetBrainsMono(color: Colors.white38, fontSize: 10),
               ),
               Text(
-                'TEMP: 42°C',
+                'TEMP: ${info.temperature.toStringAsFixed(0)}°C',
                 style: GoogleFonts.jetBrainsMono(
-                  color: Colors.orangeAccent.withValues(alpha: 0.6),
+                  color: info.temperature > 60 ? Colors.redAccent : Colors.orangeAccent.withValues(alpha: 0.6),
                   fontSize: 10,
                 ),
               ),
@@ -58,7 +68,9 @@ class HardwareResourcesCard extends StatelessWidget {
 
   Widget _buildTuiProgressBar(String label, double percent, String trailing) {
     const int totalBars = 20;
-    int filledBars = (percent * totalBars).round();
+    // Garante que percent está entre 0.0 e 1.0
+    double clampedPercent = percent.clamp(0.0, 1.0);
+    int filledBars = (clampedPercent * totalBars).round();
     String filledPart = '#' * filledBars;
     String totalBarPlaceholder = '#' * totalBars;
 
