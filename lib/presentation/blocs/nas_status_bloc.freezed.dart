@@ -320,12 +320,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<NasService> services)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Loaded() when loaded != null:
-return loaded(_that.services);case Error() when error != null:
+return loaded(_that.services,_that.hardwareInfo);case Error() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -344,12 +344,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<NasService> services)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case Initial():
 return initial();case Loading():
 return loading();case Loaded():
-return loaded(_that.services);case Error():
+return loaded(_that.services,_that.hardwareInfo);case Error():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -367,12 +367,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<NasService> services)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Loaded() when loaded != null:
-return loaded(_that.services);case Error() when error != null:
+return loaded(_that.services,_that.hardwareInfo);case Error() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -449,7 +449,7 @@ String toString() {
 
 
 class Loaded implements NasStatusState {
-  const Loaded(final  List<NasService> services): _services = services;
+  const Loaded(final  List<NasService> services, this.hardwareInfo): _services = services;
   
 
  final  List<NasService> _services;
@@ -459,6 +459,7 @@ class Loaded implements NasStatusState {
   return EqualUnmodifiableListView(_services);
 }
 
+ final  HardwareInfo hardwareInfo;
 
 /// Create a copy of NasStatusState
 /// with the given fields replaced by the non-null parameter values.
@@ -470,16 +471,16 @@ $LoadedCopyWith<Loaded> get copyWith => _$LoadedCopyWithImpl<Loaded>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Loaded&&const DeepCollectionEquality().equals(other._services, _services));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Loaded&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.hardwareInfo, hardwareInfo) || other.hardwareInfo == hardwareInfo));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_services));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_services),hardwareInfo);
 
 @override
 String toString() {
-  return 'NasStatusState.loaded(services: $services)';
+  return 'NasStatusState.loaded(services: $services, hardwareInfo: $hardwareInfo)';
 }
 
 
@@ -490,11 +491,11 @@ abstract mixin class $LoadedCopyWith<$Res> implements $NasStatusStateCopyWith<$R
   factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) _then) = _$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<NasService> services
+ List<NasService> services, HardwareInfo hardwareInfo
 });
 
 
-
+$HardwareInfoCopyWith<$Res> get hardwareInfo;
 
 }
 /// @nodoc
@@ -507,14 +508,24 @@ class _$LoadedCopyWithImpl<$Res>
 
 /// Create a copy of NasStatusState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? services = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? services = null,Object? hardwareInfo = null,}) {
   return _then(Loaded(
 null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
-as List<NasService>,
+as List<NasService>,null == hardwareInfo ? _self.hardwareInfo : hardwareInfo // ignore: cast_nullable_to_non_nullable
+as HardwareInfo,
   ));
 }
 
-
+/// Create a copy of NasStatusState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HardwareInfoCopyWith<$Res> get hardwareInfo {
+  
+  return $HardwareInfoCopyWith<$Res>(_self.hardwareInfo, (value) {
+    return _then(_self.copyWith(hardwareInfo: value));
+  });
+}
 }
 
 /// @nodoc

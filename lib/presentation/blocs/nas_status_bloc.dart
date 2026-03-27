@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/nas_service.dart';
+import '../../domain/entities/hardware_info.dart';
 import '../../domain/usecases/get_services_status.dart';
+import '../../domain/usecases/get_hardware_info.dart';
 
 part 'nas_status_bloc.freezed.dart';
 
@@ -15,16 +17,18 @@ class NasStatusEvent with _$NasStatusEvent {
 class NasStatusState with _$NasStatusState {
   const factory NasStatusState.initial() = Initial;
   const factory NasStatusState.loading() = Loading;
-  const factory NasStatusState.loaded(List<NasService> services) = Loaded;
+  const factory NasStatusState.loaded(List<NasService> services, HardwareInfo hardwareInfo) = Loaded;
   const factory NasStatusState.error(String message) = Error;
 }
 
 class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
   final GetServicesStatusUseCase getServicesStatus;
+  final GetHardwareInfoUseCase getHardwareInfo;
   final SharedPreferences sharedPreferences;
 
   NasStatusBloc({
     required this.getServicesStatus,
+    required this.getHardwareInfo,
     required this.sharedPreferences,
   }) : super(const Initial()) {
     on<RefreshRequested>(_onRefreshRequested);
@@ -36,9 +40,6 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
   ) async {
     emit(const Loading());
 
-    // Delay de 1 segundo para permitir a visualização da animação do RefreshIndicator
-    await Future.delayed(const Duration(seconds: 1));
-
     final nasUrl = sharedPreferences.getString('nas_url');
     if (nasUrl == null || nasUrl.isEmpty) {
       emit(const Error('Configure a URL do NAS nas configurações.'));
@@ -46,8 +47,15 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     }
 
     try {
-      final services = await getServicesStatus.execute(nasUrl);
-      emit(Loaded(services));
+      final results = await Future.wait([
+        getServicesStatus.execute(nasUrl),
+        getHardwareInfo.execute(nasUrl),
+      ]);
+
+      final services = results[0] as List<NasService>;
+      final hardwareInfo = results[1] as HardwareInfo;
+
+      emit(Loaded(services, hardwareInfo));
     } catch (e) {
       emit(Error(e.toString()));
     }
