@@ -3,6 +3,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../domain/entities/hardware_info.dart';
+import 'tui_progress_bar.dart';
 
 class HardwareResourcesCard extends StatelessWidget {
   final HardwareInfo info;
@@ -35,12 +36,16 @@ class HardwareResourcesCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          _buildTuiProgressBar('CPU_LOAD', info.cpuUsage / 100, '${info.cpuUsage.toStringAsFixed(1)}%'),
+          TuiProgressBar(
+            label: 'CPU_LOAD',
+            percent: info.cpuUsage / 100,
+            trailing: '${info.cpuUsage.toStringAsFixed(1)}%',
+          ),
           const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
-          _buildTuiProgressBar(
-            'RAM_USAGE',
-            info.ramUsed / info.ramTotal,
-            '${info.ramUsed.toStringAsFixed(1)}GB/${info.ramTotal.toStringAsFixed(1)}GB',
+          TuiProgressBar(
+            label: 'RAM_USAGE',
+            percent: info.ramUsed / info.ramTotal,
+            trailing: '${info.ramUsed.toStringAsFixed(1)}GB/${info.ramTotal.toStringAsFixed(1)}GB',
           ),
           const SizedBox(height: AppSpacing.md),
           Row(
@@ -60,87 +65,6 @@ class HardwareResourcesCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTuiProgressBar(String label, double percent, String trailing) {
-    const int totalBars = 20;
-    double clampedPercent = percent.clamp(0.0, 1.0);
-    int filledBars = (clampedPercent * totalBars).round();
-    String filledPart = '#' * filledBars;
-    String totalBarPlaceholder = '#' * totalBars;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTypography.sectionHeader,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Row(
-          children: [
-            Text(
-              '[',
-              style: AppTypography.baseStyle.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 12,
-                height: 1.0,
-              ),
-            ),
-            Stack(
-              children: [
-                Text(
-                  totalBarPlaceholder,
-                  style: AppTypography.baseStyle.copyWith(
-                    color: AppColors.textMuted.withValues(alpha: 0.1),
-                    fontSize: 14,
-                    height: 1.0,
-                  ),
-                ),
-                if (filledBars > 0)
-                  ShaderMask(
-                    blendMode: BlendMode.srcIn,
-                    shaderCallback: (bounds) {
-                      final charWidth = bounds.width / filledBars;
-                      final fullWidth = charWidth * totalBars;
-                      
-                      return const LinearGradient(
-                        colors: [
-                          AppColors.files,
-                          AppColors.music,
-                          AppColors.media,
-                          AppColors.photos,
-                        ],
-                      ).createShader(Rect.fromLTWH(0, 0, fullWidth, bounds.height));
-                    },
-                    child: Text(
-                      filledPart,
-                      style: AppTypography.baseStyle.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: 14,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            Text(
-              ']',
-              style: AppTypography.baseStyle.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 12,
-                height: 1.0,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              trailing,
-              style: AppTypography.moduleSublabel.copyWith(color: AppColors.textSecondary),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

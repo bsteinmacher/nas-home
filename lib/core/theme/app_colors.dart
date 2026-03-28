@@ -22,4 +22,14 @@ abstract class AppColors {
   static const download = Colors.orangeAccent;
   static const photos = Colors.pinkAccent;
   static const files = Colors.lightBlueAccent;
+
+  // Terminal Gradients
+  static const terminalGradient = LinearGradient(
+    colors: [
+      files,
+      music,
+      media,
+      photos,
+    ],
+  );
 }
