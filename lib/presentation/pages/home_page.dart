@@ -37,9 +37,26 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'NAS_MONITOR_v1.0',
-          style: AppTypography.terminalTitle,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.terminalGreen,
+              size: 28,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => AppColors.terminalGradient.createShader(
+                Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+              ),
+              child: Text(
+                'NAS_MONITOR_v1.0',
+                style: AppTypography.terminalTitle.copyWith(color: Colors.white),
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -47,7 +64,7 @@ class _HomeViewState extends State<HomeView> {
             onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
           ),
           IconButton(
-            icon: const Icon(Icons.settings, color: AppColors.textMuted, size: 20),
+            icon: const Icon(Icons.settings, color: AppColors.terminalGreen, size: 20),
             onPressed: () async {
               final bloc = context.read<NasStatusBloc>();
               await Navigator.push(
