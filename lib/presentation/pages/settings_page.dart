@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/di/injection_container.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
+import '../widgets/tui_input_field.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -32,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await _prefs.setString('navidrome_pass', _navidromePassController.text);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Configurações salvas!')),
+        const SnackBar(content: Text('Settings saved successfully!')),
       );
       Navigator.pop(context);
     }
@@ -41,47 +45,62 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Configurações')),
+      appBar: AppBar(
+        title: Text(
+          'SETTINGS_CONFIG',
+          style: AppTypography.terminalTitle.copyWith(fontSize: 14),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left, size: 28),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           children: [
-            TextField(
+            TuiInputField(
               controller: _nasUrlController,
-              decoration: const InputDecoration(
-                labelText: 'URL do NAS (ex: http://192.168.1.10)',
-                border: OutlineInputBorder(),
-              ),
+              label: 'NAS URL (ex: http://192.168.1.10)',
+              hintText: 'http://...',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            TuiInputField(
               controller: _jellyseerrKeyController,
-              decoration: const InputDecoration(
-                labelText: 'Jellyseerr API Key',
-                border: OutlineInputBorder(),
-              ),
+              label: 'Jellyseerr API Key',
+              hintText: 'xxxxxxxx...',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            TuiInputField(
               controller: _navidromeUserController,
-              decoration: const InputDecoration(
-                labelText: 'Navidrome Usuário',
-                border: OutlineInputBorder(),
-              ),
+              label: 'Navidrome Username',
+              hintText: 'admin...',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            TuiInputField(
               controller: _navidromePassController,
+              label: 'Navidrome Password',
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Navidrome Senha',
-                border: OutlineInputBorder(),
-              ),
+              hintText: '********',
             ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _saveSettings,
-              child: const Text('Salvar'),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _saveSettings,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.terminalGreen,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+                  ),
+                ),
+                child: Text(
+                  'SAVE_CONFIGURATION',
+                  style: AppTypography.statusBadge,
+                ),
+              ),
             ),
           ],
         ),

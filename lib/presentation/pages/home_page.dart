@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/di/injection_container.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 import '../../domain/entities/nas_service.dart';
 import '../blocs/nas_status_bloc.dart';
 import '../widgets/active_services_list.dart';
@@ -34,25 +36,35 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
-        title: Text(
-          'NAS_MONITOR_v1.0',
-          style: GoogleFonts.jetBrainsMono(
-            fontWeight: FontWeight.bold,
-            color: Colors.greenAccent,
-            fontSize: 18,
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.terminalGreen,
+              size: 28,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => AppColors.terminalGradient.createShader(
+                Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+              ),
+              child: Text(
+                'NAS_MONITOR_v1.0',
+                style: AppTypography.terminalTitle.copyWith(color: Colors.white),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.greenAccent, size: 20),
+            icon: const Icon(Icons.refresh, size: 20),
             onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
           ),
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white30, size: 20),
+            icon: const Icon(Icons.settings, color: AppColors.terminalGreen, size: 20),
             onPressed: () async {
               final bloc = context.read<NasStatusBloc>();
               await Navigator.push(
@@ -68,11 +80,9 @@ class _HomeViewState extends State<HomeView> {
         onRefresh: () async {
           final bloc = context.read<NasStatusBloc>();
           bloc.add(const RefreshRequested());
-          // Wait for the next non-loading state to close the refresh indicator
           await bloc.stream.firstWhere((state) => state is! Loading);
         },
-        color: Colors.greenAccent,
-        backgroundColor: const Color(0xFF1F1F1F),
+        backgroundColor: AppColors.surface,
         child: BlocBuilder<NasStatusBloc, NasStatusState>(
           builder: (context, state) {
             return state.when(
@@ -113,16 +123,16 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildDashboard(List<dynamic> services, dynamic hardwareInfo) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader('// HARDWARE_RESOURCES'),
           HardwareResourcesCard(info: hardwareInfo),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
           _buildSectionHeader('// SERVICE_STATUS_ALL'),
           ServiceStatusList(services: services as List<NasService>),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSpacing.xl),
           _buildSectionHeader('// QUICK_ACCESS_MODULES'),
           ActiveServicesList(services: services),
         ],
@@ -132,14 +142,10 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xs),
       child: Text(
         title,
-        style: GoogleFonts.jetBrainsMono(
-          color: Colors.white24,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
+        style: AppTypography.sectionHeader,
       ),
     );
   }

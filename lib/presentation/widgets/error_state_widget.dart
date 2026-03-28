@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 
 class ErrorStateWidget extends StatelessWidget {
   final String message;
@@ -19,15 +21,15 @@ class ErrorStateWidget extends StatelessWidget {
         children: [
           Text(
             '[!] CRITICAL_ERROR: $message',
-            style: GoogleFonts.jetBrainsMono(color: Colors.redAccent, fontSize: 12),
+            style: AppTypography.moduleLabel.copyWith(color: Colors.redAccent, fontSize: 12),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           TextButton(
             onPressed: onRetry,
             child: Text(
               '> REBOOT_SYSTEM',
-              style: GoogleFonts.jetBrainsMono(color: Colors.greenAccent),
+              style: AppTypography.moduleLabel.copyWith(color: AppColors.terminalGreen),
             ),
           ),
         ],
