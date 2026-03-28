@@ -15,7 +15,14 @@ class AppTheme {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
-        iconTheme: IconThemeData(color: AppColors.terminalGreen),
+        iconTheme: IconThemeData(
+          color: AppColors.terminalGreen,
+          size: 26,
+        ),
+        actionsIconTheme: IconThemeData(
+          color: AppColors.terminalGreen,
+          size: 24,
+        ),
       ),
 
       // Map Typography to Flutter TextTheme

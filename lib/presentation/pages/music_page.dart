@@ -36,6 +36,10 @@ class _MusicViewState extends State<MusicView> {
           'MUSIC_REQUEST',
           style: AppTypography.terminalTitle.copyWith(color: AppColors.music),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Column(
         children: [
@@ -192,6 +196,10 @@ class _AlbumsViewState extends State<AlbumsView> {
         title: Text(
           'ALBUMS: ${widget.artistName.toUpperCase()}',
           style: AppTypography.terminalTitle.copyWith(fontSize: 14),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: BlocBuilder<MusicBloc, MusicState>(

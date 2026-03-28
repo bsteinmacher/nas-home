@@ -36,6 +36,10 @@ class _MediaViewState extends State<MediaView> {
           'MEDIA_REQUEST',
           style: AppTypography.terminalTitle.copyWith(color: AppColors.media),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Column(
         children: [

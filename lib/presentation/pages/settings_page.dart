@@ -47,7 +47,11 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(
           'SETTINGS_CONFIG',
-          style: AppTypography.terminalTitle.copyWith(fontSize: 14, color: AppColors.textPrimary),
+          style: AppTypography.terminalTitle.copyWith(fontSize: 14),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left, size: 28),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
