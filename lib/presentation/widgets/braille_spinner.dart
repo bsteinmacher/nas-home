@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class BrailleSpinner extends StatefulWidget {
   final double fontSize;
@@ -9,7 +10,7 @@ class BrailleSpinner extends StatefulWidget {
   const BrailleSpinner({
     super.key,
     this.fontSize = 20,
-    this.color = Colors.greenAccent,
+    this.color = AppColors.terminalGreen,
   });
 
   @override
@@ -17,8 +18,6 @@ class BrailleSpinner extends StatefulWidget {
 }
 
 class _BrailleSpinnerState extends State<BrailleSpinner> {
-  // 8-frame sequence (Braille 8-dot)
-  // Simulates smooth rotation by clearing one dot at a time in a 4x2 block
   static const List<String> _frames = [
     '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣽', '⣾'
   ];
@@ -29,7 +28,6 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
   @override
   void initState() {
     super.initState();
-    // 100ms is the standard speed for 8-frame spinners
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (mounted) {
         setState(() {
@@ -48,12 +46,12 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: widget.fontSize * 1.5, // Ensures enough space to avoid jitter
+      width: widget.fontSize * 1.5,
       child: Center(
         child: Text(
           _frames[_currentFrame],
           textAlign: TextAlign.center,
-          style: GoogleFonts.jetBrainsMono(
+          style: AppTypography.baseStyle.copyWith(
             color: widget.color,
             fontSize: widget.fontSize,
             fontWeight: FontWeight.bold,

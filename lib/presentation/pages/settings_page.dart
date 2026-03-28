@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/di/injection_container.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -41,49 +44,79 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Configurações')),
+      appBar: AppBar(
+        title: Text(
+          'SETTINGS_CONFIG',
+          style: AppTypography.terminalTitle.copyWith(fontSize: 14, color: AppColors.textPrimary),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           children: [
-            TextField(
+            _buildTextField(
               controller: _nasUrlController,
-              decoration: const InputDecoration(
-                labelText: 'URL do NAS (ex: http://192.168.1.10)',
-                border: OutlineInputBorder(),
-              ),
+              label: 'URL do NAS (ex: http://192.168.1.10)',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            _buildTextField(
               controller: _jellyseerrKeyController,
-              decoration: const InputDecoration(
-                labelText: 'Jellyseerr API Key',
-                border: OutlineInputBorder(),
-              ),
+              label: 'Jellyseerr API Key',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            _buildTextField(
               controller: _navidromeUserController,
-              decoration: const InputDecoration(
-                labelText: 'Navidrome Usuário',
-                border: OutlineInputBorder(),
-              ),
+              label: 'Navidrome Usuário',
             ),
-            const SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: AppSpacing.md),
+            _buildTextField(
               controller: _navidromePassController,
+              label: 'Navidrome Senha',
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Navidrome Senha',
-                border: OutlineInputBorder(),
-              ),
             ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _saveSettings,
-              child: const Text('Salvar'),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _saveSettings,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.terminalGreen,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+                  ),
+                ),
+                child: Text(
+                  'SAVE_CONFIGURATION',
+                  style: AppTypography.statusBadge,
+                ),
+              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    bool obscureText = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: AppTypography.baseStyle.copyWith(fontSize: 14),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: AppTypography.moduleSublabel.copyWith(fontSize: 12),
+        border: const OutlineInputBorder(),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.terminalGreen),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.surfaceLighter),
         ),
       ),
     );

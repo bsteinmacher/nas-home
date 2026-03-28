@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 
 class ServiceStatusList extends StatelessWidget {
   final List<dynamic> services;
@@ -10,14 +12,14 @@ class ServiceStatusList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A).withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(4),
+        color: AppColors.surface.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
       ),
       child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
+        spacing: AppSpacing.sm + AppSpacing.xs,
+        runSpacing: AppSpacing.sm,
         children: services.map((service) => _buildTuiServiceItem(service)).toList(),
       ),
     );
@@ -30,13 +32,13 @@ class ServiceStatusList extends StatelessWidget {
         Icon(
           Icons.circle,
           size: 8,
-          color: service.isOnline ? Colors.greenAccent : Colors.redAccent,
+          color: service.isOnline ? AppColors.terminalGreen : Colors.redAccent,
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSpacing.sm),
         Text(
           service.name.replaceAll(' ', '_').toUpperCase(),
-          style: GoogleFonts.jetBrainsMono(
-            color: service.isOnline ? Colors.white70 : Colors.white24,
+          style: AppTypography.moduleSublabel.copyWith(
+            color: service.isOnline ? AppColors.textSecondary : AppColors.textMuted,
             fontSize: 10,
           ),
         ),
