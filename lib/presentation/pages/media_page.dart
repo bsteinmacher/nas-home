@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../blocs/media_bloc.dart';
+import '../widgets/tui_input_field.dart';
 
 class MediaPage extends StatelessWidget {
   const MediaPage({super.key});
@@ -45,24 +46,16 @@ class _MediaViewState extends State<MediaView> {
         children: [
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
-            child: TextField(
+            child: TuiInputField(
               controller: _searchController,
-              style: AppTypography.baseStyle,
-              decoration: InputDecoration(
-                hintText: 'Buscar filmes ou séries...',
-                hintStyle: AppTypography.moduleSublabel.copyWith(fontSize: 14),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search, color: AppColors.terminalGreen),
-                  onPressed: () {
-                    if (_searchController.text.isNotEmpty) {
-                      context.read<MediaBloc>().add(SearchRequested(_searchController.text));
-                    }
-                  },
-                ),
-                border: const OutlineInputBorder(),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.terminalGreen),
-                ),
+              hintText: 'Search movies or shows',
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search, color: AppColors.terminalGreen, size: 20),
+                onPressed: () {
+                  if (_searchController.text.isNotEmpty) {
+                    context.read<MediaBloc>().add(SearchRequested(_searchController.text));
+                  }
+                },
               ),
               onSubmitted: (value) {
                 if (value.isNotEmpty) {
@@ -77,13 +70,13 @@ class _MediaViewState extends State<MediaView> {
                 state.whenOrNull(
                   requestSuccess: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Solicitação enviada com sucesso!')),
+                      const SnackBar(content: Text('Request sent successfully!')),
                     );
                   },
                   error: (message) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Erro: $message'),
+                        content: Text('Error: $message'),
                         backgroundColor: Colors.redAccent,
                       ),
                     );
@@ -112,7 +105,7 @@ class _MediaViewState extends State<MediaView> {
                   ),
                   orElse: () => Center(
                     child: Text(
-                      'Busque por algo ou veja o trending',
+                      'Search for titles or check trending',
                       style: AppTypography.moduleSublabel.copyWith(fontSize: 14),
                     ),
                   ),

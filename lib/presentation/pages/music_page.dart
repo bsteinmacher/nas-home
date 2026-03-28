@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../blocs/music_bloc.dart';
+import '../widgets/tui_input_field.dart';
 
 class MusicPage extends StatelessWidget {
   const MusicPage({super.key});
@@ -45,23 +46,14 @@ class _MusicViewState extends State<MusicView> {
         children: [
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
-            child: TextField(
+            child: TuiInputField(
               controller: _searchController,
-              style: AppTypography.baseStyle,
-              decoration: InputDecoration(
-                hintText: 'Search artist...',
-                hintStyle: AppTypography.moduleSublabel.copyWith(fontSize: 14),
-                prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.send, color: AppColors.terminalGreen),
-                  onPressed: () {
-                    context.read<MusicBloc>().add(SearchRequested(_searchController.text));
-                  },
-                ),
-                border: const OutlineInputBorder(),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.terminalGreen),
-                ),
+              hintText: 'Search artist',
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search, color: AppColors.terminalGreen, size: 20),
+                onPressed: () {
+                  context.read<MusicBloc>().add(SearchRequested(_searchController.text));
+                },
               ),
               onSubmitted: (value) {
                 context.read<MusicBloc>().add(SearchRequested(value));

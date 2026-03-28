@@ -4,6 +4,7 @@ import '../../core/di/injection_container.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
+import '../widgets/tui_input_field.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -35,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await _prefs.setString('navidrome_pass', _navidromePassController.text);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Configurações salvas!')),
+        const SnackBar(content: Text('Settings saved successfully!')),
       );
       Navigator.pop(context);
     }
@@ -58,25 +59,29 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           children: [
-            _buildTextField(
+            TuiInputField(
               controller: _nasUrlController,
-              label: 'URL do NAS (ex: http://192.168.1.10)',
+              label: 'NAS URL (ex: http://192.168.1.10)',
+              hintText: 'http://...',
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildTextField(
+            TuiInputField(
               controller: _jellyseerrKeyController,
               label: 'Jellyseerr API Key',
+              hintText: 'xxxxxxxx...',
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildTextField(
+            TuiInputField(
               controller: _navidromeUserController,
-              label: 'Navidrome Usuário',
+              label: 'Navidrome Username',
+              hintText: 'admin...',
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildTextField(
+            TuiInputField(
               controller: _navidromePassController,
-              label: 'Navidrome Senha',
+              label: 'Navidrome Password',
               obscureText: true,
+              hintText: '********',
             ),
             const SizedBox(height: AppSpacing.xl),
             SizedBox(
@@ -98,29 +103,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    bool obscureText = false,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      style: AppTypography.baseStyle.copyWith(fontSize: 14),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: AppTypography.moduleSublabel.copyWith(fontSize: 12),
-        border: const OutlineInputBorder(),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.terminalGreen),
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.surfaceLighter),
         ),
       ),
     );
