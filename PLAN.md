@@ -17,13 +17,13 @@ Este plano descreve a criação de um aplicativo Android em Flutter para atuar c
 Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - **Data Layer:** Repositórios e Data Sources para APIs (Jellyseerr, Navidrome, Status Check).
 - **Domain Layer:** Entidades e Casos de Uso (ex: `RequestMediaUseCase`, `GetServicesStatusUseCase`).
-- **Presentation Layer:** Gerenciamento de estado com **BLoC** e Widgets Material 3.
+- **Presentation Layer:** Gerenciamento de estado com **BLoC** e Design System centralizado.
 - **Injeção de Dependência:** Centralizada via **GetIt**.
 
 ---
 
 ## 🛠️ Workflow de Desenvolvimento (MANDATO)
-- **Git:** Realizar `git add`, `git commit` (com prefixos `feat:` ou `fix:`) e `git push` **obrigatoriamente** após a conclusão de cada parte/sub-tarefa.
+- **Git:** Realizar `git add`, `git commit` (com prefixos `feat:`, `fix:` ou `style:`) e `git push` **obrigatoriamente** após a conclusão de cada parte/sub-tarefa.
 - **Branches:** Criar uma nova branch para cada nova funcionalidade ou correção significativa (ex: `feat/nome-da-feature` ou `fix/nome-do-bug`). Nunca trabalhar diretamente na `main` para grandes mudanças.
 - **Merge:** Realizar o merge para a `main` somente após a funcionalidade estar validada.
 
@@ -74,12 +74,21 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [x] Organização da ordem de exibição dos serviços (Immich em primeiro).
 - [x] Melhoria na legibilidade e manutenção do código da `HomePage`.
 
+### 8. Design System e Identidade Visual (TUI)
+- [x] Centralização de **Design Tokens** (AppColors, AppTypography, AppSpacing) em `lib/core/theme/`.
+- [x] Implementação de **Terminal Gradients** reutilizáveis para barras de progresso e títulos.
+- [x] Criação do componente `TuiInputField` (Input estilo terminal com prompt `>`).
+- [x] Criação do componente `TuiProgressBar` (Barras ASCII `#` com gradiente).
+- [x] Padronização de navegação com ícones robustos (`Icons.chevron_left/right`).
+- [x] **Internacionalização:** Padronização de toda a interface e mensagens para **Inglês**.
+- [x] Refinamento do tema global Material 3 com foco em estética Terminal/Cyberpunk.
+
 ---
 
 ## 📍 Onde estamos (Estado Atual)
 - O aplicativo está rodando no dispositivo físico em modo Debug.
-- O ambiente de build (Arch Linux) está totalmente funcional com Java 17 e SDK 36.
-- O Dashboard, Mídia e Música estão integrados e funcionais em nível de dados.
+- O ambiente de build (Arch Linux) está totalmente funcional.
+- **UI/UX:** O app possui uma identidade visual TUI sólida e consistente em todas as telas.
 
 ---
 
@@ -89,24 +98,13 @@ Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
 - [ ] **Módulo Photos (Immich)**: Integração para visualização da galeria e status de backup.
 - [ ] **Módulo Files (Nextcloud)**: Integração via WebDAV para gerenciamento de arquivos e backups.
 
-### 2. Melhorias na Experiência de Música
-- [ ] Implementar um **Audio Player** para ouvir as músicas diretamente pelo app.
-- [ ] Adicionar suporte a playlists e busca de músicas.
-- [ ] Melhorar o carregamento de capas de álbuns (cache e placeholders).
-
 ### 2. Navegação e Interação
-- [ ] Adicionar navegação via **BottomNavigationBar** para alternar entre Dashboard, Mídia e Música.
 - [ ] Implementar abertura dos serviços (ex: AdGuard Home, NPM) em uma **WebView interna** ou navegador externo.
 - [ ] Detalhes da mídia (sinopse, elenco, trailer) ao clicar em um poster no Jellyseerr.
 
-### 3. Refinamento Visual e UX
-- [ ] Implementar tratamento de erros mais amigável (ex: diálogos de erro, estados de vazio).
-- [ ] Refinar o tema Material 3 (cores dinâmicas baseadas no NAS).
-- [ ] Adicionar animações de transição entre telas.
-
-### 4. Testes e Estabilidade
+### 3. Testes e Estabilidade
 - [ ] Escrever testes unitários para os Repositórios e BLoCs.
-- [ ] Testar em dispositivos físicos para validar performance de rede.
+- [x] Testar em dispositivos físicos para validar performance de rede.
 
 ---
 
