@@ -1,4 +1,4 @@
-# 🏠 Meu-NAS App
+# 🏠 NAS_MONITOR_v1.0
 
 Interface de gerenciamento e dashboard centralizado para o projeto [meu-nas](https://github.com/didizera/meu-nas).
 
