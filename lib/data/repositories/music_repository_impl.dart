@@ -8,7 +8,10 @@ class MusicRepositoryImpl implements MusicRepository {
   MusicRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<Artist>> getArtists() => dataSource.getArtists();
+  Future<List<Artist>> searchArtists(String query) => dataSource.searchArtists(query);
+
+  @override
+  Future<void> requestArtist(Artist artist) => dataSource.requestArtist(artist);
 
   @override
   Future<List<Album>> getAlbums(String artistId) => dataSource.getAlbums(artistId);

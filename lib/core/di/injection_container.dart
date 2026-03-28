@@ -26,7 +26,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Dio());
 
   //! Core
-  // TODO: Implement NetworkInfo
 
   //! Data
   sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl()));
@@ -39,11 +38,11 @@ Future<void> init() async {
   sl.registerLazySingleton<JellyseerrRepository>(
       () => JellyseerrRepositoryImpl(sl()));
 
-  sl.registerLazySingleton<MusicDataSource>(() => SubsonicDataSourceImpl(
+  // Lidarr (Music Request Service)
+  sl.registerLazySingleton<MusicDataSource>(() => LidarrDataSourceImpl(
         dio: sl(),
         baseUrl: sl<SharedPreferences>().getString('nas_url') ?? '',
-        user: sl<SharedPreferences>().getString('navidrome_user') ?? '',
-        password: sl<SharedPreferences>().getString('navidrome_pass') ?? '',
+        apiKey: '4540e053d6c1496ba99a0ecd32a6f455', // Lidarr API Key from GEMINI.md
       ));
   sl.registerLazySingleton<MusicRepository>(() => MusicRepositoryImpl(sl()));
 
@@ -53,7 +52,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchMediaUseCase(sl()));
   sl.registerLazySingleton(() => GetTrendingMediaUseCase(sl()));
   sl.registerLazySingleton(() => RequestMediaUseCase(sl()));
-  sl.registerLazySingleton(() => GetArtistsUseCase(sl()));
+  
+  // Music (Lidarr)
+  sl.registerLazySingleton(() => SearchArtistsUseCase(sl()));
+  sl.registerLazySingleton(() => RequestArtistUseCase(sl()));
   sl.registerLazySingleton(() => GetAlbumsUseCase(sl()));
 
   //! Presentation
@@ -68,7 +70,8 @@ Future<void> init() async {
         requestMedia: sl(),
       ));
   sl.registerFactory(() => MusicBloc(
-        getArtists: sl(),
+        searchArtists: sl(),
+        requestArtist: sl(),
         getAlbums: sl(),
       ));
 }

@@ -10,17 +10,19 @@ class ActiveServicesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeNames = ['Immich', 'Jellyseerr', 'Navidrome', 'Nextcloud', 'qBittorrent'];
+    final activeNames = ['Immich', 'Jellyseerr', 'Lidarr', 'Nextcloud', 'qBittorrent'];
     
     // First, filter services that are in the active list
     final activeServices = services
-        .where((s) => activeNames.contains(s.name))
+        .where((s) => activeNames.contains(s.name) || (s.name == 'Navidrome' && activeNames.contains('Lidarr')))
         .toList();
     
     // Then, sort based on the position in activeNames
-    activeServices.sort((a, b) => 
-      activeNames.indexOf(a.name).compareTo(activeNames.indexOf(b.name))
-    );
+    activeServices.sort((a, b) {
+      final nameA = a.name == 'Navidrome' ? 'Lidarr' : a.name;
+      final nameB = b.name == 'Navidrome' ? 'Lidarr' : b.name;
+      return activeNames.indexOf(nameA).compareTo(activeNames.indexOf(nameB));
+    });
 
     return Column(
       children: activeServices.map((service) => _buildActiveServiceCard(context, service)).toList(),
@@ -32,6 +34,8 @@ class ActiveServicesList extends StatelessWidget {
     Color color;
     String subLabel;
 
+    final displayLabel = service.name == 'Navidrome' ? 'Lidarr' : service.name;
+
     switch (service.name) {
       case 'Jellyseerr':
         icon = Icons.movie_outlined;
@@ -41,7 +45,7 @@ class ActiveServicesList extends StatelessWidget {
       case 'Navidrome':
         icon = Icons.music_note_outlined;
         color = Colors.blueAccent;
-        subLabel = 'MUSIC_LIBRARY_BROWSER';
+        subLabel = 'SEARCH_&_REQUEST_MUSIC';
         break;
       case 'qBittorrent':
         icon = Icons.download_for_offline_outlined;
@@ -92,7 +96,7 @@ class ActiveServicesList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service.name.toUpperCase(),
+                      displayLabel.toUpperCase(),
                       style: GoogleFonts.jetBrainsMono(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,

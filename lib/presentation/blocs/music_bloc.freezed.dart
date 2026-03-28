@@ -55,11 +55,12 @@ extension MusicEventPatterns on MusicEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ArtistsRequested value)?  artistsRequested,TResult Function( AlbumsRequested value)?  albumsRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( ArtistRequested value)?  artistRequested,TResult Function( AlbumsRequested value)?  albumsRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case ArtistsRequested() when artistsRequested != null:
-return artistsRequested(_that);case AlbumsRequested() when albumsRequested != null:
+case SearchRequested() when searchRequested != null:
+return searchRequested(_that);case ArtistRequested() when artistRequested != null:
+return artistRequested(_that);case AlbumsRequested() when albumsRequested != null:
 return albumsRequested(_that);case _:
   return orElse();
 
@@ -78,11 +79,12 @@ return albumsRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ArtistsRequested value)  artistsRequested,required TResult Function( AlbumsRequested value)  albumsRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( ArtistRequested value)  artistRequested,required TResult Function( AlbumsRequested value)  albumsRequested,}){
 final _that = this;
 switch (_that) {
-case ArtistsRequested():
-return artistsRequested(_that);case AlbumsRequested():
+case SearchRequested():
+return searchRequested(_that);case ArtistRequested():
+return artistRequested(_that);case AlbumsRequested():
 return albumsRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -100,11 +102,12 @@ return albumsRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ArtistsRequested value)?  artistsRequested,TResult? Function( AlbumsRequested value)?  albumsRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( ArtistRequested value)?  artistRequested,TResult? Function( AlbumsRequested value)?  albumsRequested,}){
 final _that = this;
 switch (_that) {
-case ArtistsRequested() when artistsRequested != null:
-return artistsRequested(_that);case AlbumsRequested() when albumsRequested != null:
+case SearchRequested() when searchRequested != null:
+return searchRequested(_that);case ArtistRequested() when artistRequested != null:
+return artistRequested(_that);case AlbumsRequested() when albumsRequested != null:
 return albumsRequested(_that);case _:
   return null;
 
@@ -122,10 +125,11 @@ return albumsRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  artistsRequested,TResult Function( String artistId)?  albumsRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function( Artist artist)?  artistRequested,TResult Function( String artistId)?  albumsRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case ArtistsRequested() when artistsRequested != null:
-return artistsRequested();case AlbumsRequested() when albumsRequested != null:
+case SearchRequested() when searchRequested != null:
+return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
+return artistRequested(_that.artist);case AlbumsRequested() when albumsRequested != null:
 return albumsRequested(_that.artistId);case _:
   return orElse();
 
@@ -144,10 +148,11 @@ return albumsRequested(_that.artistId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  artistsRequested,required TResult Function( String artistId)  albumsRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function( Artist artist)  artistRequested,required TResult Function( String artistId)  albumsRequested,}) {final _that = this;
 switch (_that) {
-case ArtistsRequested():
-return artistsRequested();case AlbumsRequested():
+case SearchRequested():
+return searchRequested(_that.query);case ArtistRequested():
+return artistRequested(_that.artist);case AlbumsRequested():
 return albumsRequested(_that.artistId);case _:
   throw StateError('Unexpected subclass');
 
@@ -165,10 +170,11 @@ return albumsRequested(_that.artistId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  artistsRequested,TResult? Function( String artistId)?  albumsRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function( Artist artist)?  artistRequested,TResult? Function( String artistId)?  albumsRequested,}) {final _that = this;
 switch (_that) {
-case ArtistsRequested() when artistsRequested != null:
-return artistsRequested();case AlbumsRequested() when albumsRequested != null:
+case SearchRequested() when searchRequested != null:
+return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
+return artistRequested(_that.artist);case AlbumsRequested() when albumsRequested != null:
 return albumsRequested(_that.artistId);case _:
   return null;
 
@@ -180,34 +186,143 @@ return albumsRequested(_that.artistId);case _:
 /// @nodoc
 
 
-class ArtistsRequested implements MusicEvent {
-  const ArtistsRequested();
+class SearchRequested implements MusicEvent {
+  const SearchRequested(this.query);
   
 
+ final  String query;
 
-
+/// Create a copy of MusicEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SearchRequestedCopyWith<SearchRequested> get copyWith => _$SearchRequestedCopyWithImpl<SearchRequested>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ArtistsRequested);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchRequested&&(identical(other.query, query) || other.query == query));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,query);
 
 @override
 String toString() {
-  return 'MusicEvent.artistsRequested()';
+  return 'MusicEvent.searchRequested(query: $query)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class $SearchRequestedCopyWith<$Res> implements $MusicEventCopyWith<$Res> {
+  factory $SearchRequestedCopyWith(SearchRequested value, $Res Function(SearchRequested) _then) = _$SearchRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String query
+});
 
 
+
+
+}
+/// @nodoc
+class _$SearchRequestedCopyWithImpl<$Res>
+    implements $SearchRequestedCopyWith<$Res> {
+  _$SearchRequestedCopyWithImpl(this._self, this._then);
+
+  final SearchRequested _self;
+  final $Res Function(SearchRequested) _then;
+
+/// Create a copy of MusicEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? query = null,}) {
+  return _then(SearchRequested(
+null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ArtistRequested implements MusicEvent {
+  const ArtistRequested(this.artist);
+  
+
+ final  Artist artist;
+
+/// Create a copy of MusicEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ArtistRequestedCopyWith<ArtistRequested> get copyWith => _$ArtistRequestedCopyWithImpl<ArtistRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ArtistRequested&&(identical(other.artist, artist) || other.artist == artist));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,artist);
+
+@override
+String toString() {
+  return 'MusicEvent.artistRequested(artist: $artist)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ArtistRequestedCopyWith<$Res> implements $MusicEventCopyWith<$Res> {
+  factory $ArtistRequestedCopyWith(ArtistRequested value, $Res Function(ArtistRequested) _then) = _$ArtistRequestedCopyWithImpl;
+@useResult
+$Res call({
+ Artist artist
+});
+
+
+$ArtistCopyWith<$Res> get artist;
+
+}
+/// @nodoc
+class _$ArtistRequestedCopyWithImpl<$Res>
+    implements $ArtistRequestedCopyWith<$Res> {
+  _$ArtistRequestedCopyWithImpl(this._self, this._then);
+
+  final ArtistRequested _self;
+  final $Res Function(ArtistRequested) _then;
+
+/// Create a copy of MusicEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? artist = null,}) {
+  return _then(ArtistRequested(
+null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
+as Artist,
+  ));
+}
+
+/// Create a copy of MusicEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ArtistCopyWith<$Res> get artist {
+  
+  return $ArtistCopyWith<$Res>(_self.artist, (value) {
+    return _then(_self.copyWith(artist: value));
+  });
+}
+}
 
 /// @nodoc
 
@@ -319,14 +434,15 @@ extension MusicStatePatterns on MusicState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MusicInitial value)?  initial,TResult Function( MusicLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( AlbumsLoaded value)?  albumsLoaded,TResult Function( MusicError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MusicInitial value)?  initial,TResult Function( MusicLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( AlbumsLoaded value)?  albumsLoaded,TResult Function( MusicSuccess value)?  success,TResult Function( MusicError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MusicInitial() when initial != null:
 return initial(_that);case MusicLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that);case MusicError() when error != null:
+return albumsLoaded(_that);case MusicSuccess() when success != null:
+return success(_that);case MusicError() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -345,14 +461,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MusicInitial value)  initial,required TResult Function( MusicLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( AlbumsLoaded value)  albumsLoaded,required TResult Function( MusicError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MusicInitial value)  initial,required TResult Function( MusicLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( AlbumsLoaded value)  albumsLoaded,required TResult Function( MusicSuccess value)  success,required TResult Function( MusicError value)  error,}){
 final _that = this;
 switch (_that) {
 case MusicInitial():
 return initial(_that);case MusicLoading():
 return loading(_that);case ArtistsLoaded():
 return artistsLoaded(_that);case AlbumsLoaded():
-return albumsLoaded(_that);case MusicError():
+return albumsLoaded(_that);case MusicSuccess():
+return success(_that);case MusicError():
 return error(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -370,14 +487,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MusicInitial value)?  initial,TResult? Function( MusicLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( AlbumsLoaded value)?  albumsLoaded,TResult? Function( MusicError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MusicInitial value)?  initial,TResult? Function( MusicLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( AlbumsLoaded value)?  albumsLoaded,TResult? Function( MusicSuccess value)?  success,TResult? Function( MusicError value)?  error,}){
 final _that = this;
 switch (_that) {
 case MusicInitial() when initial != null:
 return initial(_that);case MusicLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that);case MusicError() when error != null:
+return albumsLoaded(_that);case MusicSuccess() when success != null:
+return success(_that);case MusicError() when error != null:
 return error(_that);case _:
   return null;
 
@@ -395,13 +513,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Artist> artists)?  artistsLoaded,TResult Function( List<Album> albums)?  albumsLoaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Artist> artists)?  artistsLoaded,TResult Function( List<Album> albums)?  albumsLoaded,TResult Function( String message)?  success,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MusicInitial() when initial != null:
 return initial();case MusicLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that.albums);case MusicError() when error != null:
+return albumsLoaded(_that.albums);case MusicSuccess() when success != null:
+return success(_that.message);case MusicError() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -420,13 +539,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Artist> artists)  artistsLoaded,required TResult Function( List<Album> albums)  albumsLoaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Artist> artists)  artistsLoaded,required TResult Function( List<Album> albums)  albumsLoaded,required TResult Function( String message)  success,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case MusicInitial():
 return initial();case MusicLoading():
 return loading();case ArtistsLoaded():
 return artistsLoaded(_that.artists);case AlbumsLoaded():
-return albumsLoaded(_that.albums);case MusicError():
+return albumsLoaded(_that.albums);case MusicSuccess():
+return success(_that.message);case MusicError():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -444,13 +564,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Artist> artists)?  artistsLoaded,TResult? Function( List<Album> albums)?  albumsLoaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Artist> artists)?  artistsLoaded,TResult? Function( List<Album> albums)?  albumsLoaded,TResult? Function( String message)?  success,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case MusicInitial() when initial != null:
 return initial();case MusicLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that.albums);case MusicError() when error != null:
+return albumsLoaded(_that.albums);case MusicSuccess() when success != null:
+return success(_that.message);case MusicError() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -661,6 +782,72 @@ class _$AlbumsLoadedCopyWithImpl<$Res>
   return _then(AlbumsLoaded(
 null == albums ? _self._albums : albums // ignore: cast_nullable_to_non_nullable
 as List<Album>,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class MusicSuccess implements MusicState {
+  const MusicSuccess(this.message);
+  
+
+ final  String message;
+
+/// Create a copy of MusicState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MusicSuccessCopyWith<MusicSuccess> get copyWith => _$MusicSuccessCopyWithImpl<MusicSuccess>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicSuccess&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message);
+
+@override
+String toString() {
+  return 'MusicState.success(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MusicSuccessCopyWith<$Res> implements $MusicStateCopyWith<$Res> {
+  factory $MusicSuccessCopyWith(MusicSuccess value, $Res Function(MusicSuccess) _then) = _$MusicSuccessCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$MusicSuccessCopyWithImpl<$Res>
+    implements $MusicSuccessCopyWith<$Res> {
+  _$MusicSuccessCopyWithImpl(this._self, this._then);
+
+  final MusicSuccess _self;
+  final $Res Function(MusicSuccess) _then;
+
+/// Create a copy of MusicState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(MusicSuccess(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
