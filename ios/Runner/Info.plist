@@ -14,8 +14,10 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>nas_home</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<key>CFBundleName</key>
+	<string>NAS_MONITOR_v1.0</string>
+
+>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

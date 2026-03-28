@@ -1,6 +1,6 @@
 {
-    "name": "nas_home",
-    "short_name": "nas_home",
+    "name": "NAS_MONITOR_v1.0",
+    "short_name": "NAS_MONITOR_v1.0",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -15,7 +15,7 @@ class NasHomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Nas Home',
+      title: 'NAS_MONITOR_v1.0',
       theme: AppTheme.darkTheme,
       home: const HomePage(),
     );
