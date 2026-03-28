@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/di/injection_container.dart';
 import '../blocs/media_bloc.dart';
 
@@ -28,8 +29,18 @@ class _MediaViewState extends State<MediaView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
-        title: const Text('Pedidos de Mídia'),
+        title: Text(
+          'MEDIA_REQUEST',
+          style: GoogleFonts.jetBrainsMono(
+            fontWeight: FontWeight.bold,
+            color: Colors.purpleAccent,
+            fontSize: 18,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Column(
         children: [
