@@ -6,7 +6,7 @@ Interface de gerenciamento e dashboard centralizado para o projeto [meu-nas](htt
 
 - **Monitoramento de Hardware:** Visualização em tempo real de CPU, RAM (Uso/Total), Uptime e Temperatura do processador via integração com a **Glances API (v4)**.
 - **Status de Serviços:** Check de disponibilidade (online/offline) em tempo real de todos os serviços Docker rodando no NAS (Jellyfin, Navidrome, Immich, etc).
-- **Integração Jellyseerr:** Pesquisa e solicitação de filmes e séries diretamente do app.
+- **Integração Seerr:** Pesquisa e solicitação de filmes e séries diretamente do app.
 - **Integração Lidarr:** Pesquisa e solicitação de Artistas e Albúms diretamente do app..
 - **Módulos de Acesso Rápido:** Atalhos dinâmicos para Immich, Jellyfin, Navidrome, qBittorrent e Nextcloud.
 

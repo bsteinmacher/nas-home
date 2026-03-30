@@ -20,7 +20,7 @@
 
 ## Services (Docker Stack: media)
 - Music: Lidarr (Port 8686), Navidrome (Port 4533)
-- Video: Jellyfin (Port 8096), Jellyseerr (Port 5055)
+- Video: Jellyfin (Port 8096), Seerr (Port 5055)
 - Management: Radarr (7878), Sonarr (8989), Bazarr (6767), Prowlarr (9696), Recyclarr
 - Downloads/Automation: qBittorrent (8080), autobrr (7474), FlareSolverr (8191)
 - Optimization: Tdarr (8265/8266)
@@ -30,12 +30,12 @@
 ## Critical API Keys / Secrets
 - Lidarr: `4540e053d6c1496ba99a0ecd32a6f455`
 - Prowlarr: `0aea3885b6314515b3479588e3401db6`
-- Jellyseerr: `MTc3MzE2MTE0MTU0N2I3NmI3YTc0LThiYmEtNGZiOC1iYjk3LWEyYzEzM2VlMDNiYg==`
+- Seerr: `MTc3MzE2MTE0MTU0N2I3NmI3YTc0LThiYmEtNGZiOC1iYjk3LWEyYzEzM2VlMDNiYg==`
 
 ## Networking
 - Docker Network: `proxynet` (external)
 - Internal DNS: Services use container names (e.g., `http://lidarr:8686`)
-- **CRITICAL RULE:** For internal service-to-service communication (e.g., Jellyseerr -> Sonarr), ALWAYS use the container name (e.g., `sonarr`) instead of the `.home` domain.
+- **CRITICAL RULE:** For internal service-to-service communication (e.g., Seerr -> Sonarr), ALWAYS use the container name (e.g., `sonarr`) instead of the `.home` domain.
 
 ## Local Domain Mapping (NPM)
 | Local Domain | Internal Service | Port |
@@ -44,11 +44,11 @@
 | `bazarr.home` | `bazarr` | 6767 |
 | `immich.home` | `immich` | 2283 |
 | `jellyfin.home` | `jellyfin` | 8096 |
-| `jellyseerr.home` | `jellyseerr` | 5055 |
 | `lidarr.home` | `lidarr` | 8686 |
 | `navidrome.home` | `navidrome` | 4533 |
 | `prowlarr.home` | `prowlarr` | 9696 |
 | `radarr.home` | `radarr` | 7878 |
+| `seerr.home` | `seerr` | 5055 |
 | `sonarr.home` | `sonarr` | 8989 |
 | `tdarr.home` | `tdarr` | 8265 |
 | `torrent.home` | `qbittorrent` | 8080 |
