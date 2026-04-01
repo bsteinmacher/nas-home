@@ -16,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final _nasUrlController = TextEditingController();
   final _jellyseerrKeyController = TextEditingController();
+  final _lidarrKeyController = TextEditingController();
   final _navidromeUserController = TextEditingController();
   final _navidromePassController = TextEditingController();
   final _prefs = sl<SharedPreferences>();
@@ -25,6 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _nasUrlController.text = _prefs.getString('nas_url') ?? '';
     _jellyseerrKeyController.text = _prefs.getString('jellyseerr_api_key') ?? '';
+    _lidarrKeyController.text = _prefs.getString('lidarr_api_key') ?? '';
     _navidromeUserController.text = _prefs.getString('navidrome_user') ?? '';
     _navidromePassController.text = _prefs.getString('navidrome_pass') ?? '';
   }
@@ -32,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void _saveSettings() async {
     await _prefs.setString('nas_url', _nasUrlController.text);
     await _prefs.setString('jellyseerr_api_key', _jellyseerrKeyController.text);
+    await _prefs.setString('lidarr_api_key', _lidarrKeyController.text);
     await _prefs.setString('navidrome_user', _navidromeUserController.text);
     await _prefs.setString('navidrome_pass', _navidromePassController.text);
     if (mounted) {

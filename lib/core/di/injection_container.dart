@@ -42,7 +42,7 @@ Future<void> init() async {
   sl.registerLazySingleton<MusicDataSource>(() => LidarrDataSourceImpl(
         dio: sl(),
         baseUrl: sl<SharedPreferences>().getString('nas_url') ?? '',
-        apiKey: '4540e053d6c1496ba99a0ecd32a6f455', // Lidarr API Key from GEMINI.md
+        apiKey: sl<SharedPreferences>().getString('lidarr_api_key') ?? '',
       ));
   sl.registerLazySingleton<MusicRepository>(() => MusicRepositoryImpl(sl()));
 
