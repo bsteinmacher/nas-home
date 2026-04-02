@@ -10,6 +10,14 @@ class ServiceStatusList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Sort services: online first, then alphabetical
+    final sortedServices = List<dynamic>.from(services)
+      ..sort((a, b) {
+        if (a.isOnline && !b.isOnline) return -1;
+        if (!a.isOnline && b.isOnline) return 1;
+        return a.name.compareTo(b.name);
+      });
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
@@ -18,9 +26,9 @@ class ServiceStatusList extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
       ),
       child: Wrap(
-        spacing: AppSpacing.sm + AppSpacing.xs,
+        spacing: AppSpacing.md, // Aumentei o espaçamento entre itens para compensar a falta de espaço interna
         runSpacing: AppSpacing.sm,
-        children: services.map((service) => _buildTuiServiceItem(service)).toList(),
+        children: sortedServices.map((service) => _buildTuiServiceItem(service)).toList(),
       ),
     );
   }
@@ -31,15 +39,15 @@ class ServiceStatusList extends StatelessWidget {
       children: [
         Icon(
           Icons.circle,
-          size: 8,
+          size: 6, // Reduzi um pouco para ficar mais elegante sem o espaço
           color: service.isOnline ? AppColors.terminalGreen : Colors.redAccent,
         ),
-        const SizedBox(width: AppSpacing.sm),
+        // Removido SizedBox entre a bolinha e o texto
         Text(
-          service.name.replaceAll(' ', '_').toUpperCase(),
+          ' ${service.name.replaceAll(' ', '_').toUpperCase()}', // Adicionei apenas um espaço de texto para não ficar grudado no pixel
           style: AppTypography.moduleSublabel.copyWith(
             color: service.isOnline ? AppColors.textSecondary : AppColors.textMuted,
-            fontSize: 10,
+            fontSize: 9,
           ),
         ),
       ],

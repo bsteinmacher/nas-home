@@ -12,7 +12,7 @@ class ActiveServicesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeNames = ['Immich', 'Jellyseerr', 'Lidarr', 'Nextcloud', 'qBittorrent'];
+    final activeNames = ['Immich', 'Seerr', 'Lidarr', 'Nextcloud', 'qBittorrent'];
     
     final activeServices = services
         .where((s) => activeNames.contains(s.name) || (s.name == 'Navidrome' && activeNames.contains('Lidarr')))
@@ -37,7 +37,7 @@ class ActiveServicesList extends StatelessWidget {
     final displayLabel = service.name == 'Navidrome' ? 'Lidarr' : service.name;
 
     switch (service.name) {
-      case 'Jellyseerr':
+      case 'Seerr':
         icon = Icons.movie_outlined;
         color = AppColors.media;
         subLabel = 'SEARCH_&_REQUEST_MEDIA';
@@ -72,7 +72,7 @@ class ActiveServicesList extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xs),
       child: InkWell(
         onTap: () {
-          if (service.name == 'Jellyseerr') {
+          if (service.name == 'Seerr') {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const MediaPage()));
           } else if (service.name == 'Navidrome') {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const MusicPage()));

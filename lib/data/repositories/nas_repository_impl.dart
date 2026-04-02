@@ -15,7 +15,7 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'AdGuard Home', port: '8085', description: 'DNS Sinkhole'),
       const NasService(name: 'Vaultwarden', port: '80', description: 'Passwords'),
       const NasService(name: 'Jellyfin', port: '8096', description: 'Media Server'),
-      const NasService(name: 'Jellyseerr', port: '5055', description: 'Media Requests'),
+      const NasService(name: 'Seerr', port: '5055', description: 'Media Requests'),
       const NasService(name: 'Navidrome', port: '4533', description: 'Music Server'),
       const NasService(name: 'qBittorrent', port: '8080', description: 'Torrent Client'),
       const NasService(name: 'Radarr', port: '7878', description: 'Movies Automation'),
@@ -25,6 +25,7 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'Tdarr', port: '8265', description: 'Transcoding'),
       const NasService(name: 'Immich', port: '2283', description: 'Photos & Videos'),
       const NasService(name: 'Nextcloud', port: '8080', description: 'Files & Cloud'),
+      const NasService(name: 'Nas Registry', port: '8000', description: 'API Discovery Service'),
     ];
   }
 

@@ -1,29 +1,43 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/media.dart';
 
-abstract class JellyseerrDataSource {
+abstract class SeerrDataSource {
   Future<List<Media>> search(String query);
   Future<List<Media>> getTrending();
   Future<void> requestMedia(int mediaId, String mediaType);
 }
 
-class JellyseerrDataSourceImpl implements JellyseerrDataSource {
+class SeerrDataSourceImpl implements SeerrDataSource {
   final Dio dio;
-  final String baseUrl;
-  final String apiKey;
+  final SharedPreferences sharedPreferences;
 
-  JellyseerrDataSourceImpl({
+  SeerrDataSourceImpl({
     required this.dio,
-    required this.baseUrl,
-    required this.apiKey,
+    required this.sharedPreferences,
   });
+
+  String get _baseUrl {
+    String url = sharedPreferences.getString('nas_url') ?? '';
+    if (!url.startsWith('http')) {
+      url = 'http://$url';
+    }
+    if (url.endsWith('/')) {
+      url = url.substring(0, url.length - 1);
+    }
+    // Extract only the base part without the port if it has one
+    final uri = Uri.parse(url);
+    return '${uri.scheme}://${uri.host}';
+  }
+
+  String get _apiKey => sharedPreferences.getString('seerr_api_key') ?? '';
 
   @override
   Future<List<Media>> search(String query) async {
     final response = await dio.get(
-      '$baseUrl:5055/api/v1/search',
+      '$_baseUrl:5055/api/v1/search',
       queryParameters: {'query': query},
-      options: Options(headers: {'X-Api-Key': apiKey}),
+      options: Options(headers: {'X-Api-Key': _apiKey}),
     );
 
     final results = response.data['results'] as List;
@@ -33,8 +47,8 @@ class JellyseerrDataSourceImpl implements JellyseerrDataSource {
   @override
   Future<List<Media>> getTrending() async {
     final response = await dio.get(
-      '$baseUrl:5055/api/v1/discover/trending',
-      options: Options(headers: {'X-Api-Key': apiKey}),
+      '$_baseUrl:5055/api/v1/discover/trending',
+      options: Options(headers: {'X-Api-Key': _apiKey}),
     );
 
     final results = response.data['results'] as List;
@@ -44,12 +58,12 @@ class JellyseerrDataSourceImpl implements JellyseerrDataSource {
   @override
   Future<void> requestMedia(int mediaId, String mediaType) async {
     await dio.post(
-      '$baseUrl:5055/api/v1/request',
+      '$_baseUrl:5055/api/v1/request',
       data: {
         'mediaId': mediaId,
         'mediaType': mediaType,
       },
-      options: Options(headers: {'X-Api-Key': apiKey}),
+      options: Options(headers: {'X-Api-Key': _apiKey}),
     );
   }
 
