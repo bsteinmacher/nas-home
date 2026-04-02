@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/media.dart';
-import '../../domain/usecases/jellyseerr_usecases.dart';
+import '../../domain/usecases/seerr_usecases.dart';
 
 part 'media_bloc.freezed.dart';
 

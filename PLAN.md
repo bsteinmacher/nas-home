@@ -1,115 +1,36 @@
-# 🏠 Plano de Implementação: Nas-Home App (Flutter)
+# PLAN: Magia Automática (NAS Registry)
 
-Este plano descreve a criação de um aplicativo Android em Flutter para atuar como a homepage e interface de gerenciamento do projeto `meu-nas`.
+O objetivo é criar um microserviço no NAS que automatiza a configuração do app, eliminando a necessidade de copiar e colar chaves de API manualmente.
 
-## 🎯 Objetivos
-- Centralizar o acesso aos serviços do NAS (AdGuard, NPM, Jellyfin, etc.).
-- Interface customizada para pedidos de Filmes/Séries (via Jellyseerr API).
-- Interface customizada para navegação/pedidos de Música (via Navidrome/Subsonic API).
-- Dashboard de status dos serviços.
-- Arquitetura escalável para novos serviços.
+## 1. Back-end: NAS Registry (Docker)
+Criaremos um container leve (Python + FastAPI) que roda no NAS.
 
-## 📂 Contexto do Projeto
-- **Local do Projeto:** `/home/didizera/dev/nas-home`
-- **Referência do NAS:** `/home/didizera/meu-nas` (Serviços Docker)
+### Funcionalidades:
+- **Auto-Discovery:** O container terá acesso (read-only) aos volumes de configuração do Lidarr, Radarr, Sonarr, Seerr e Prowlarr.
+- **API Endpoint:** Um endpoint `GET /config` que retorna um JSON com todas as chaves extraídas em tempo real.
+- **Segurança:** Implementação de um `X-Registry-Token` para que apenas o seu app possa ler as chaves.
 
-## 🏗️ Arquitetura Implementada
-Utilizamos **Clean Architecture** para garantir testabilidade e escalabilidade:
-- **Data Layer:** Repositórios e Data Sources para APIs (Jellyseerr, Navidrome, Status Check).
-- **Domain Layer:** Entidades e Casos de Uso (ex: `RequestMediaUseCase`, `GetServicesStatusUseCase`).
-- **Presentation Layer:** Gerenciamento de estado com **BLoC** e Design System centralizado.
-- **Injeção de Dependência:** Centralizada via **GetIt**.
+### Estrutura do Docker:
+- **Imagem:** `python:3.11-slim`
+- **Volumes:**
+  - `/home/didizera/meu-nas/media/lidarr/config.xml:/app/configs/lidarr/config.xml:ro`
+  - `/home/didizera/meu-nas/media/seerr/settings.json:/app/configs/seerr/settings.json:ro`
+  - (e outros conforme necessário)
 
----
+## 2. Rede e Exposição (Nginx Proxy Manager)
+- Criar host `registry.meunas.home` apontando para o container na porta 8000.
+- Adicionar cabeçalho de segurança ou Basic Auth se preferir.
 
-## 🛠️ Workflow de Desenvolvimento (MANDATO)
-- **Git:** Realizar `git add`, `git commit` (com prefixos `feat:`, `fix:` ou `style:`) e `git push` **obrigatoriamente** após a conclusão de cada parte/sub-tarefa.
-- **Branches:** Criar uma nova branch para cada nova funcionalidade ou correção significativa (ex: `feat/nome-da-feature` ou `fix/nome-do-bug`). Nunca trabalhar diretamente na `main` para grandes mudanças.
-- **Merge:** Realizar o merge para a `main` somente após a funcionalidade estar validada.
+## 3. Front-end: Flutter App
+- **Settings Page:** Adicionar botão "Sincronizar com NAS".
+- **Fluxo:**
+  1. O usuário digita o "Registry Token" (uma vez).
+  2. O app chama `http://registry.meunas.home/config`.
+  3. O app popula `SharedPreferences` com as chaves recebidas.
 
----
-
-## ✅ O que já foi feito (Concluído)
-
-### 1. Inicialização e Infraestrutura
-- [x] Criação do projeto Flutter (`nas_home`).
-- [x] Configuração de dependências (`dio`, `flutter_bloc`, `get_it`, `freezed`, `shared_preferences`, `crypto`).
-- [x] Configuração do Android Manifest (Permissões de rede).
-- [x] Definição da estrutura de pastas Clean Architecture.
-- [x] Implementação do container de Injeção de Dependência (`injection_container.dart`).
-
-### 2. Configurações e Persistência
-- [x] Tela de **Configurações** implementada.
-- [x] Persistência de dados (URL do NAS, API Keys de Jellyseerr, Credenciais Subsonic) usando `shared_preferences`.
-
-### 3. Dashboard de Status
-- [x] Mapeamento de 12 serviços baseados no `meu-nas/README.md`.
-- [x] Lógica de "HTTP Ping" para verificar disponibilidade dos serviços.
-- [x] Grid dinâmico na `HomePage` com indicadores visuais de Online/Offline e ícones personalizados.
-- [x] **Fix:** Correção da porta do AdGuard Home para `8085`.
-- [x] **Feat:** Implementação de Pull-to-Refresh na HomePage.
-- [x] **Feat:** Remoção de delay fixo de 3s no carregamento.
-
-### 4. Integração Jellyseerr (Mídia)
-- [x] Mapeamento da API Jellyseerr (Search, Trending, Request).
-- [x] Tela de **Pedidos de Mídia** com busca e exibição de posters via TMDB.
-- [x] Fluxo de solicitação de filmes e séries implementado via `MediaBloc`.
-
-### 5. Integração Navidrome (Música)
-- [x] Mapeamento da API Subsonic (Compatível com Navidrome).
-- [x] Navegação por **Artistas** e **Álbuns** implementada.
-- [x] Lógica de autenticação Subsonic (Token/Salt MD5) funcionando.
-
-### 6. Ambiente de Desenvolvimento (Arch Linux)
-- [x] Configuração do **Android SDK** (`/opt/android-sdk`) e `cmdline-tools`.
-- [x] Instalação e configuração do **Java 17 (OpenJDK)** como padrão.
-- [x] Configuração de permissões USB via `android-udev`.
-- [x] Criação do `.vscode/launch.json` para execução via Cursor/VSCode.
-- [x] **Fix:** Atualização do NDK para v27 conforme exigido por dependências.
-- [x] Build e deploy realizado com sucesso no dispositivo físico **SM A736B**.
-
-### 7. Refatoração e Modularização da UI
-- [x] Extração de widgets complexos da `HomePage` para componentes reutilizáveis.
-- [x] Criação dos módulos `HardwareResourcesCard`, `ServiceStatusList`, `ActiveServicesList` e `ErrorStateWidget`.
-- [x] Organização da ordem de exibição dos serviços (Immich em primeiro).
-- [x] Melhoria na legibilidade e manutenção do código da `HomePage`.
-
-### 8. Design System e Identidade Visual (TUI)
-- [x] Centralização de **Design Tokens** (AppColors, AppTypography, AppSpacing) em `lib/core/theme/`.
-- [x] Implementação de **Terminal Gradients** reutilizáveis para barras de progresso e títulos.
-- [x] Criação do componente `TuiInputField` (Input estilo terminal com prompt `>`).
-- [x] Criação do componente `TuiProgressBar` (Barras ASCII `#` com gradiente).
-- [x] Padronização de navegação com ícones robustos (`Icons.chevron_left/right`).
-- [x] **Internacionalização:** Padronização de toda a interface e mensagens para **Inglês**.
-- [x] Refinamento do tema global Material 3 com foco em estética Terminal/Cyberpunk.
-
----
-
-## 📍 Onde estamos (Estado Atual)
-- O aplicativo está rodando no dispositivo físico em modo Debug.
-- O ambiente de build (Arch Linux) está totalmente funcional.
-- **UI/UX:** O app possui uma identidade visual TUI sólida e consistente em todas as telas.
-
----
-
-## 🚀 Para onde vamos (Próximos Passos)
-
-### 1. Integração de Fotos e Arquivos
-- [ ] **Módulo Photos (Immich)**: Integração para visualização da galeria e status de backup.
-- [ ] **Módulo Files (Nextcloud)**: Integração via WebDAV para gerenciamento de arquivos e backups.
-
-### 2. Navegação e Interação
-- [ ] Implementar abertura dos serviços (ex: AdGuard Home, NPM) em uma **WebView interna** ou navegador externo.
-- [ ] Detalhes da mídia (sinopse, elenco, trailer) ao clicar em um poster no Jellyseerr.
-
-### 3. Testes e Estabilidade
-- [ ] Escrever testes unitários para os Repositórios e BLoCs.
-- [x] Testar em dispositivos físicos para validar performance de rede.
-
----
-
-## 🛠️ Ambiente de Referência
-- **Flutter SDK:** `3.29.0` (Stable)
-- **Java:** `OpenJDK 17.0.18`
-- **Android SDK:** `36.1.0` (API 36)
-- **Status da Análise:** `No issues found!`
+## 4. Cronograma de Execução:
+1. **[ ]** Criar código do microserviço `nas-registry` (Python).
+2. **[ ]** Criar `Dockerfile` e `docker-compose.yaml` (ou adicionar ao existente).
+3. **[ ]** Deploy no NAS via SSH.
+4. **[ ]** Configurar Nginx Proxy Manager.
+5. **[ ]** Implementar lógica de sincronização no app Flutter.

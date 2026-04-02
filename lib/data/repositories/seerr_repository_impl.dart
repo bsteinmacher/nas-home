@@ -1,11 +1,11 @@
 import '../../domain/entities/media.dart';
-import '../../domain/repositories/jellyseerr_repository.dart';
-import '../datasources/jellyseerr_datasource.dart';
+import '../../domain/repositories/seerr_repository.dart';
+import '../datasources/seerr_datasource.dart';
 
-class JellyseerrRepositoryImpl implements JellyseerrRepository {
-  final JellyseerrDataSource dataSource;
+class SeerrRepositoryImpl implements SeerrRepository {
+  final SeerrDataSource dataSource;
 
-  JellyseerrRepositoryImpl(this.dataSource);
+  SeerrRepositoryImpl(this.dataSource);
 
   @override
   Future<List<Media>> search(String query) => dataSource.search(query);

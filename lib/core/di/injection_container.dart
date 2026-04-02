@@ -1,18 +1,22 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-import '../../data/datasources/jellyseerr_datasource.dart';
+import '../../data/datasources/seerr_datasource.dart';
 import '../../data/datasources/music_datasource.dart';
-import '../../data/repositories/jellyseerr_repository_impl.dart';
+import '../../data/datasources/registry_datasource.dart';
+import '../../data/repositories/seerr_repository_impl.dart';
 import '../../data/repositories/music_repository_impl.dart';
 import '../../data/repositories/nas_repository_impl.dart';
-import '../../domain/repositories/jellyseerr_repository.dart';
+import '../../data/repositories/registry_repository_impl.dart';
+import '../../domain/repositories/seerr_repository.dart';
 import '../../domain/repositories/music_repository.dart';
 import '../../domain/repositories/nas_repository.dart';
+import '../../domain/repositories/registry_repository.dart';
 import '../../domain/usecases/get_services_status.dart';
 import '../../domain/usecases/get_hardware_info.dart';
-import '../../domain/usecases/jellyseerr_usecases.dart';
+import '../../domain/usecases/seerr_usecases.dart';
 import '../../domain/usecases/music_usecases.dart';
+import '../../domain/usecases/sync_registry_config.dart';
 import '../../presentation/blocs/media_bloc.dart';
 import '../../presentation/blocs/music_bloc.dart';
 import '../../presentation/blocs/nas_status_bloc.dart';
@@ -30,19 +34,21 @@ Future<void> init() async {
   //! Data
   sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl()));
   
-  sl.registerLazySingleton<JellyseerrDataSource>(() => JellyseerrDataSourceImpl(
+  sl.registerLazySingleton<RegistryDataSource>(() => RegistryDataSourceImpl(dio: sl()));
+  sl.registerLazySingleton<RegistryRepository>(
+      () => RegistryRepositoryImpl(dataSource: sl(), sharedPreferences: sl()));
+
+  sl.registerLazySingleton<SeerrDataSource>(() => SeerrDataSourceImpl(
         dio: sl(),
-        baseUrl: sl<SharedPreferences>().getString('nas_url') ?? '',
-        apiKey: sl<SharedPreferences>().getString('jellyseerr_api_key') ?? '',
+        sharedPreferences: sl(),
       ));
-  sl.registerLazySingleton<JellyseerrRepository>(
-      () => JellyseerrRepositoryImpl(sl()));
+  sl.registerLazySingleton<SeerrRepository>(
+      () => SeerrRepositoryImpl(sl()));
 
   // Lidarr (Music Request Service)
   sl.registerLazySingleton<MusicDataSource>(() => LidarrDataSourceImpl(
         dio: sl(),
-        baseUrl: sl<SharedPreferences>().getString('nas_url') ?? '',
-        apiKey: '4540e053d6c1496ba99a0ecd32a6f455', // Lidarr API Key from GEMINI.md
+        sharedPreferences: sl(),
       ));
   sl.registerLazySingleton<MusicRepository>(() => MusicRepositoryImpl(sl()));
 
@@ -52,6 +58,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchMediaUseCase(sl()));
   sl.registerLazySingleton(() => GetTrendingMediaUseCase(sl()));
   sl.registerLazySingleton(() => RequestMediaUseCase(sl()));
+  sl.registerLazySingleton(() => SyncRegistryConfigUseCase(sl()));
   
   // Music (Lidarr)
   sl.registerLazySingleton(() => SearchArtistsUseCase(sl()));

@@ -27,11 +27,6 @@
 - Photos: Immich (2283)
 - Database: Postgres (Immich), Redis (Immich)
 
-## Critical API Keys / Secrets
-- Lidarr: `4540e053d6c1496ba99a0ecd32a6f455`
-- Prowlarr: `0aea3885b6314515b3479588e3401db6`
-- Seerr: `MTc3MzE2MTE0MTU0N2I3NmI3YTc0LThiYmEtNGZiOC1iYjk3LWEyYzEzM2VlMDNiYg==`
-
 ## Networking
 - Docker Network: `proxynet` (external)
 - Internal DNS: Services use container names (e.g., `http://lidarr:8686`)
@@ -53,6 +48,12 @@
 | `tdarr.home` | `tdarr` | 8265 |
 | `torrent.home` | `qbittorrent` | 8080 |
 | `vaultwarden.home` | `vaultwarden` | 80 |
+
+## Registry & Discovery
+- **NAS Registry (Source of Truth):** FastAPI service at `http://localhost:8000/config` (`nas-registry` container).
+- **Authentication:** Requires `X-Registry-Token` header (found in `~/nas-registry/.env`).
+- **Function:** Automatically extracts API keys from Lidarr, Prowlarr, Radarr, Sonarr, and Jellyseerr/Seerr.
+- **Workflow:** Always consult this service when configuring API integrations or if keys change.
 
 ## Specific Configurations
 - FlareSolverr: Configured globally in Prowlarr. Each indexer (Lidarr/Radarr/Sonarr) must select 'FlareSolverr' in the Proxy field. No specific tags required.
