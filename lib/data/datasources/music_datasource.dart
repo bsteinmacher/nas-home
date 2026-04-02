@@ -95,7 +95,7 @@ class LidarrDataSourceImpl implements MusicDataSource {
     final cover = images?.firstWhere(
       (img) => img['coverType'] == 'cover',
       orElse: () => images.isNotEmpty ? images.first : null,
-    );
+  );
 
     return Album(
       id: json['id']?.toString(),
