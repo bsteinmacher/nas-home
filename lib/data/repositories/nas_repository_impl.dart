@@ -94,6 +94,47 @@ class NasRepositoryImpl implements NasRepository {
         } catch (_) {}
       }
 
+      // Parsing Network
+      double downloadSpeed = 0;
+      double uploadSpeed = 0;
+      final network = data['network'] as List?;
+      if (network != null) {
+        final mainInterface = network.firstWhere(
+          (n) => n['interface_name'] == 'enp2s0',
+          orElse: () => network.first,
+        );
+        downloadSpeed = ((mainInterface['bytes_recv_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
+        uploadSpeed = ((mainInterface['bytes_sent_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
+      }
+
+      // Parsing Disks
+      double ssdUsed = 0;
+      double ssdTotal = 0;
+      double hddUsed = 0;
+      double hddTotal = 0;
+      final fs = data['fs'] as List?;
+      if (fs != null) {
+        // SSD (/)
+        final ssdFs = fs.firstWhere(
+          (f) => f['mnt_point'] == '/',
+          orElse: () => null,
+        );
+        if (ssdFs != null) {
+          ssdUsed = ((ssdFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
+          ssdTotal = ((ssdFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
+        }
+
+        // HDD (/home/didizera/meu-nas/data)
+        final hddFs = fs.firstWhere(
+          (f) => f['mnt_point'] == '/home/didizera/meu-nas/data',
+          orElse: () => null,
+        );
+        if (hddFs != null) {
+          hddUsed = ((hddFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
+          hddTotal = ((hddFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
+        }
+      }
+
       // Hostname
       String hostname = 'UNKNOWN';
       if (data['system'] != null) {
@@ -107,6 +148,12 @@ class NasRepositoryImpl implements NasRepository {
         ramTotal: ramTotal,
         uptime: uptimeStr,
         temperature: temp,
+        downloadSpeed: downloadSpeed,
+        uploadSpeed: uploadSpeed,
+        ssdUsed: ssdUsed,
+        ssdTotal: ssdTotal,
+        hddUsed: hddUsed,
+        hddTotal: hddTotal,
       );
     } catch (e) {
       print('Error fetching hardware info from $apiUrl: $e');
@@ -117,6 +164,12 @@ class NasRepositoryImpl implements NasRepository {
         ramTotal: 0,
         uptime: 'N/A',
         temperature: 0,
+        downloadSpeed: 0,
+        uploadSpeed: 0,
+        ssdUsed: 0,
+        ssdTotal: 0,
+        hddUsed: 0,
+        hddTotal: 0,
       );
     }
   }

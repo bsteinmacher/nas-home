@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HardwareInfo {
 
- String get hostname; double get cpuUsage; double get ramUsed; double get ramTotal; String get uptime; double get temperature;
+ String get hostname; double get cpuUsage; double get ramUsed; double get ramTotal; String get uptime; double get temperature; double get downloadSpeed; double get uploadSpeed; double get ssdUsed; double get ssdTotal; double get hddUsed; double get hddTotal;
 /// Create a copy of HardwareInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $HardwareInfoCopyWith<HardwareInfo> get copyWith => _$HardwareInfoCopyWithImpl<H
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HardwareInfo&&(identical(other.hostname, hostname) || other.hostname == hostname)&&(identical(other.cpuUsage, cpuUsage) || other.cpuUsage == cpuUsage)&&(identical(other.ramUsed, ramUsed) || other.ramUsed == ramUsed)&&(identical(other.ramTotal, ramTotal) || other.ramTotal == ramTotal)&&(identical(other.uptime, uptime) || other.uptime == uptime)&&(identical(other.temperature, temperature) || other.temperature == temperature));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HardwareInfo&&(identical(other.hostname, hostname) || other.hostname == hostname)&&(identical(other.cpuUsage, cpuUsage) || other.cpuUsage == cpuUsage)&&(identical(other.ramUsed, ramUsed) || other.ramUsed == ramUsed)&&(identical(other.ramTotal, ramTotal) || other.ramTotal == ramTotal)&&(identical(other.uptime, uptime) || other.uptime == uptime)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.downloadSpeed, downloadSpeed) || other.downloadSpeed == downloadSpeed)&&(identical(other.uploadSpeed, uploadSpeed) || other.uploadSpeed == uploadSpeed)&&(identical(other.ssdUsed, ssdUsed) || other.ssdUsed == ssdUsed)&&(identical(other.ssdTotal, ssdTotal) || other.ssdTotal == ssdTotal)&&(identical(other.hddUsed, hddUsed) || other.hddUsed == hddUsed)&&(identical(other.hddTotal, hddTotal) || other.hddTotal == hddTotal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,hostname,cpuUsage,ramUsed,ramTotal,uptime,temperature);
+int get hashCode => Object.hash(runtimeType,hostname,cpuUsage,ramUsed,ramTotal,uptime,temperature,downloadSpeed,uploadSpeed,ssdUsed,ssdTotal,hddUsed,hddTotal);
 
 @override
 String toString() {
-  return 'HardwareInfo(hostname: $hostname, cpuUsage: $cpuUsage, ramUsed: $ramUsed, ramTotal: $ramTotal, uptime: $uptime, temperature: $temperature)';
+  return 'HardwareInfo(hostname: $hostname, cpuUsage: $cpuUsage, ramUsed: $ramUsed, ramTotal: $ramTotal, uptime: $uptime, temperature: $temperature, downloadSpeed: $downloadSpeed, uploadSpeed: $uploadSpeed, ssdUsed: $ssdUsed, ssdTotal: $ssdTotal, hddUsed: $hddUsed, hddTotal: $hddTotal)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $HardwareInfoCopyWith<$Res>  {
   factory $HardwareInfoCopyWith(HardwareInfo value, $Res Function(HardwareInfo) _then) = _$HardwareInfoCopyWithImpl;
 @useResult
 $Res call({
- String hostname, double cpuUsage, double ramUsed, double ramTotal, String uptime, double temperature
+ String hostname, double cpuUsage, double ramUsed, double ramTotal, String uptime, double temperature, double downloadSpeed, double uploadSpeed, double ssdUsed, double ssdTotal, double hddUsed, double hddTotal
 });
 
 
@@ -65,7 +65,7 @@ class _$HardwareInfoCopyWithImpl<$Res>
 
 /// Create a copy of HardwareInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? hostname = null,Object? cpuUsage = null,Object? ramUsed = null,Object? ramTotal = null,Object? uptime = null,Object? temperature = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? hostname = null,Object? cpuUsage = null,Object? ramUsed = null,Object? ramTotal = null,Object? uptime = null,Object? temperature = null,Object? downloadSpeed = null,Object? uploadSpeed = null,Object? ssdUsed = null,Object? ssdTotal = null,Object? hddUsed = null,Object? hddTotal = null,}) {
   return _then(_self.copyWith(
 hostname: null == hostname ? _self.hostname : hostname // ignore: cast_nullable_to_non_nullable
 as String,cpuUsage: null == cpuUsage ? _self.cpuUsage : cpuUsage // ignore: cast_nullable_to_non_nullable
@@ -73,6 +73,12 @@ as double,ramUsed: null == ramUsed ? _self.ramUsed : ramUsed // ignore: cast_nul
 as double,ramTotal: null == ramTotal ? _self.ramTotal : ramTotal // ignore: cast_nullable_to_non_nullable
 as double,uptime: null == uptime ? _self.uptime : uptime // ignore: cast_nullable_to_non_nullable
 as String,temperature: null == temperature ? _self.temperature : temperature // ignore: cast_nullable_to_non_nullable
+as double,downloadSpeed: null == downloadSpeed ? _self.downloadSpeed : downloadSpeed // ignore: cast_nullable_to_non_nullable
+as double,uploadSpeed: null == uploadSpeed ? _self.uploadSpeed : uploadSpeed // ignore: cast_nullable_to_non_nullable
+as double,ssdUsed: null == ssdUsed ? _self.ssdUsed : ssdUsed // ignore: cast_nullable_to_non_nullable
+as double,ssdTotal: null == ssdTotal ? _self.ssdTotal : ssdTotal // ignore: cast_nullable_to_non_nullable
+as double,hddUsed: null == hddUsed ? _self.hddUsed : hddUsed // ignore: cast_nullable_to_non_nullable
+as double,hddTotal: null == hddTotal ? _self.hddTotal : hddTotal // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -158,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature,  double downloadSpeed,  double uploadSpeed,  double ssdUsed,  double ssdTotal,  double hddUsed,  double hddTotal)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HardwareInfo() when $default != null:
-return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature);case _:
+return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature,_that.downloadSpeed,_that.uploadSpeed,_that.ssdUsed,_that.ssdTotal,_that.hddUsed,_that.hddTotal);case _:
   return orElse();
 
 }
@@ -179,10 +185,10 @@ return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature,  double downloadSpeed,  double uploadSpeed,  double ssdUsed,  double ssdTotal,  double hddUsed,  double hddTotal)  $default,) {final _that = this;
 switch (_that) {
 case _HardwareInfo():
-return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature);case _:
+return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature,_that.downloadSpeed,_that.uploadSpeed,_that.ssdUsed,_that.ssdTotal,_that.hddUsed,_that.hddTotal);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +205,10 @@ return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String hostname,  double cpuUsage,  double ramUsed,  double ramTotal,  String uptime,  double temperature,  double downloadSpeed,  double uploadSpeed,  double ssdUsed,  double ssdTotal,  double hddUsed,  double hddTotal)?  $default,) {final _that = this;
 switch (_that) {
 case _HardwareInfo() when $default != null:
-return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature);case _:
+return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that.uptime,_that.temperature,_that.downloadSpeed,_that.uploadSpeed,_that.ssdUsed,_that.ssdTotal,_that.hddUsed,_that.hddTotal);case _:
   return null;
 
 }
@@ -214,7 +220,7 @@ return $default(_that.hostname,_that.cpuUsage,_that.ramUsed,_that.ramTotal,_that
 @JsonSerializable()
 
 class _HardwareInfo implements HardwareInfo {
-  const _HardwareInfo({required this.hostname, required this.cpuUsage, required this.ramUsed, required this.ramTotal, required this.uptime, required this.temperature});
+  const _HardwareInfo({required this.hostname, required this.cpuUsage, required this.ramUsed, required this.ramTotal, required this.uptime, required this.temperature, required this.downloadSpeed, required this.uploadSpeed, required this.ssdUsed, required this.ssdTotal, required this.hddUsed, required this.hddTotal});
   factory _HardwareInfo.fromJson(Map<String, dynamic> json) => _$HardwareInfoFromJson(json);
 
 @override final  String hostname;
@@ -223,6 +229,12 @@ class _HardwareInfo implements HardwareInfo {
 @override final  double ramTotal;
 @override final  String uptime;
 @override final  double temperature;
+@override final  double downloadSpeed;
+@override final  double uploadSpeed;
+@override final  double ssdUsed;
+@override final  double ssdTotal;
+@override final  double hddUsed;
+@override final  double hddTotal;
 
 /// Create a copy of HardwareInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HardwareInfo&&(identical(other.hostname, hostname) || other.hostname == hostname)&&(identical(other.cpuUsage, cpuUsage) || other.cpuUsage == cpuUsage)&&(identical(other.ramUsed, ramUsed) || other.ramUsed == ramUsed)&&(identical(other.ramTotal, ramTotal) || other.ramTotal == ramTotal)&&(identical(other.uptime, uptime) || other.uptime == uptime)&&(identical(other.temperature, temperature) || other.temperature == temperature));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HardwareInfo&&(identical(other.hostname, hostname) || other.hostname == hostname)&&(identical(other.cpuUsage, cpuUsage) || other.cpuUsage == cpuUsage)&&(identical(other.ramUsed, ramUsed) || other.ramUsed == ramUsed)&&(identical(other.ramTotal, ramTotal) || other.ramTotal == ramTotal)&&(identical(other.uptime, uptime) || other.uptime == uptime)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.downloadSpeed, downloadSpeed) || other.downloadSpeed == downloadSpeed)&&(identical(other.uploadSpeed, uploadSpeed) || other.uploadSpeed == uploadSpeed)&&(identical(other.ssdUsed, ssdUsed) || other.ssdUsed == ssdUsed)&&(identical(other.ssdTotal, ssdTotal) || other.ssdTotal == ssdTotal)&&(identical(other.hddUsed, hddUsed) || other.hddUsed == hddUsed)&&(identical(other.hddTotal, hddTotal) || other.hddTotal == hddTotal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,hostname,cpuUsage,ramUsed,ramTotal,uptime,temperature);
+int get hashCode => Object.hash(runtimeType,hostname,cpuUsage,ramUsed,ramTotal,uptime,temperature,downloadSpeed,uploadSpeed,ssdUsed,ssdTotal,hddUsed,hddTotal);
 
 @override
 String toString() {
-  return 'HardwareInfo(hostname: $hostname, cpuUsage: $cpuUsage, ramUsed: $ramUsed, ramTotal: $ramTotal, uptime: $uptime, temperature: $temperature)';
+  return 'HardwareInfo(hostname: $hostname, cpuUsage: $cpuUsage, ramUsed: $ramUsed, ramTotal: $ramTotal, uptime: $uptime, temperature: $temperature, downloadSpeed: $downloadSpeed, uploadSpeed: $uploadSpeed, ssdUsed: $ssdUsed, ssdTotal: $ssdTotal, hddUsed: $hddUsed, hddTotal: $hddTotal)';
 }
 
 
@@ -257,7 +269,7 @@ abstract mixin class _$HardwareInfoCopyWith<$Res> implements $HardwareInfoCopyWi
   factory _$HardwareInfoCopyWith(_HardwareInfo value, $Res Function(_HardwareInfo) _then) = __$HardwareInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String hostname, double cpuUsage, double ramUsed, double ramTotal, String uptime, double temperature
+ String hostname, double cpuUsage, double ramUsed, double ramTotal, String uptime, double temperature, double downloadSpeed, double uploadSpeed, double ssdUsed, double ssdTotal, double hddUsed, double hddTotal
 });
 
 
@@ -274,7 +286,7 @@ class __$HardwareInfoCopyWithImpl<$Res>
 
 /// Create a copy of HardwareInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? hostname = null,Object? cpuUsage = null,Object? ramUsed = null,Object? ramTotal = null,Object? uptime = null,Object? temperature = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? hostname = null,Object? cpuUsage = null,Object? ramUsed = null,Object? ramTotal = null,Object? uptime = null,Object? temperature = null,Object? downloadSpeed = null,Object? uploadSpeed = null,Object? ssdUsed = null,Object? ssdTotal = null,Object? hddUsed = null,Object? hddTotal = null,}) {
   return _then(_HardwareInfo(
 hostname: null == hostname ? _self.hostname : hostname // ignore: cast_nullable_to_non_nullable
 as String,cpuUsage: null == cpuUsage ? _self.cpuUsage : cpuUsage // ignore: cast_nullable_to_non_nullable
@@ -282,6 +294,12 @@ as double,ramUsed: null == ramUsed ? _self.ramUsed : ramUsed // ignore: cast_nul
 as double,ramTotal: null == ramTotal ? _self.ramTotal : ramTotal // ignore: cast_nullable_to_non_nullable
 as double,uptime: null == uptime ? _self.uptime : uptime // ignore: cast_nullable_to_non_nullable
 as String,temperature: null == temperature ? _self.temperature : temperature // ignore: cast_nullable_to_non_nullable
+as double,downloadSpeed: null == downloadSpeed ? _self.downloadSpeed : downloadSpeed // ignore: cast_nullable_to_non_nullable
+as double,uploadSpeed: null == uploadSpeed ? _self.uploadSpeed : uploadSpeed // ignore: cast_nullable_to_non_nullable
+as double,ssdUsed: null == ssdUsed ? _self.ssdUsed : ssdUsed // ignore: cast_nullable_to_non_nullable
+as double,ssdTotal: null == ssdTotal ? _self.ssdTotal : ssdTotal // ignore: cast_nullable_to_non_nullable
+as double,hddUsed: null == hddUsed ? _self.hddUsed : hddUsed // ignore: cast_nullable_to_non_nullable
+as double,hddTotal: null == hddTotal ? _self.hddTotal : hddTotal // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

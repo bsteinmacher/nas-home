@@ -20,6 +20,7 @@ abstract class AppColors {
   static const media = Colors.purpleAccent;
   static const music = Colors.blueAccent;
   static const download = Colors.orangeAccent;
+  static const upload = Colors.tealAccent;
   static const photos = Colors.pinkAccent;
   static const files = Colors.lightBlueAccent;
 

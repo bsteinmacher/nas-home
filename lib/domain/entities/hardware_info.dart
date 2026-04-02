@@ -12,6 +12,12 @@ abstract class HardwareInfo with _$HardwareInfo {
     required double ramTotal,
     required String uptime,
     required double temperature,
+    required double downloadSpeed,
+    required double uploadSpeed,
+    required double ssdUsed,
+    required double ssdTotal,
+    required double hddUsed,
+    required double hddTotal,
   }) = _HardwareInfo;
 
   factory HardwareInfo.fromJson(Map<String, dynamic> json) => _$HardwareInfoFromJson(json);
