@@ -4,29 +4,29 @@ import '../../core/di/injection_container.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../blocs/music_bloc.dart';
+import '../blocs/lidarr_bloc.dart';
 import '../widgets/tui_input_field.dart';
 
-class MusicPage extends StatelessWidget {
-  const MusicPage({super.key});
+class LidarrPage extends StatelessWidget {
+  const LidarrPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<MusicBloc>(),
-      child: const MusicView(),
+      create: (_) => sl<LidarrBloc>(),
+      child: const LidarrView(),
     );
   }
 }
 
-class MusicView extends StatefulWidget {
-  const MusicView({super.key});
+class LidarrView extends StatefulWidget {
+  const LidarrView({super.key});
 
   @override
-  State<MusicView> createState() => _MusicViewState();
+  State<LidarrView> createState() => _LidarrViewState();
 }
 
-class _MusicViewState extends State<MusicView> {
+class _LidarrViewState extends State<LidarrView> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -34,8 +34,8 @@ class _MusicViewState extends State<MusicView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'MUSIC_REQUEST',
-          style: AppTypography.terminalTitle.copyWith(color: AppColors.music),
+          'LIDARR_REQUEST',
+          style: AppTypography.terminalTitle.copyWith(color: AppColors.lidarr),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
@@ -52,16 +52,16 @@ class _MusicViewState extends State<MusicView> {
               suffixIcon: IconButton(
                 icon: const Icon(Icons.search, color: AppColors.terminalGreen, size: 20),
                 onPressed: () {
-                  context.read<MusicBloc>().add(SearchRequested(_searchController.text));
+                  context.read<LidarrBloc>().add(SearchRequested(_searchController.text));
                 },
               ),
               onSubmitted: (value) {
-                context.read<MusicBloc>().add(SearchRequested(value));
+                context.read<LidarrBloc>().add(SearchRequested(value));
               },
             ),
           ),
           Expanded(
-            child: BlocConsumer<MusicBloc, MusicState>(
+            child: BlocConsumer<LidarrBloc, LidarrState>(
               listener: (context, state) {
                 state.maybeWhen(
                   success: (message) => ScaffoldMessenger.of(context).showSnackBar(
@@ -113,10 +113,10 @@ class _MusicViewState extends State<MusicView> {
                             ? const Icon(Icons.check_circle, color: AppColors.terminalGreen)
                             : ElevatedButton(
                                 onPressed: () {
-                                  context.read<MusicBloc>().add(ArtistRequested(artist));
+                                  context.read<LidarrBloc>().add(ArtistRequested(artist));
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.music,
+                                  backgroundColor: AppColors.lidarr,
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
@@ -130,7 +130,7 @@ class _MusicViewState extends State<MusicView> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (ctx) => BlocProvider.value(
-                                      value: context.read<MusicBloc>(),
+                                      value: context.read<LidarrBloc>(),
                                       child: AlbumsView(artistId: artist.id!, artistName: artist.artistName),
                                     ),
                                   ),
@@ -178,7 +178,7 @@ class _AlbumsViewState extends State<AlbumsView> {
   @override
   void initState() {
     super.initState();
-    context.read<MusicBloc>().add(AlbumsRequested(widget.artistId));
+    context.read<LidarrBloc>().add(AlbumsRequested(widget.artistId));
   }
 
   @override
@@ -194,7 +194,7 @@ class _AlbumsViewState extends State<AlbumsView> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: BlocBuilder<MusicBloc, MusicState>(
+      body: BlocBuilder<LidarrBloc, LidarrState>(
         builder: (context, state) {
           return state.maybeWhen(
             loading: () => const Center(child: CircularProgressIndicator()),

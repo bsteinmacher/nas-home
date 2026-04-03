@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'media_bloc.dart';
+part of 'seerr_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,7 +12,7 @@ part of 'media_bloc.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$MediaEvent {
+mixin _$SeerrEvent {
 
 
 
@@ -20,7 +20,7 @@ mixin _$MediaEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaEvent);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrEvent);
 }
 
 
@@ -29,20 +29,20 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaEvent()';
+  return 'SeerrEvent()';
 }
 
 
 }
 
 /// @nodoc
-class $MediaEventCopyWith<$Res>  {
-$MediaEventCopyWith(MediaEvent _, $Res Function(MediaEvent) __);
+class $SeerrEventCopyWith<$Res>  {
+$SeerrEventCopyWith(SeerrEvent _, $Res Function(SeerrEvent) __);
 }
 
 
-/// Adds pattern-matching-related methods to [MediaEvent].
-extension MediaEventPatterns on MediaEvent {
+/// Adds pattern-matching-related methods to [SeerrEvent].
+extension SeerrEventPatterns on SeerrEvent {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -55,12 +55,12 @@ extension MediaEventPatterns on MediaEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( TrendingRequested value)?  trendingRequested,TResult Function( RequestMedia value)?  mediaRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( TrendingRequested value)?  trendingRequested,TResult Function( RequestSeerr value)?  mediaRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case TrendingRequested() when trendingRequested != null:
-return trendingRequested(_that);case RequestMedia() when mediaRequested != null:
+return trendingRequested(_that);case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that);case _:
   return orElse();
 
@@ -79,12 +79,12 @@ return mediaRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( TrendingRequested value)  trendingRequested,required TResult Function( RequestMedia value)  mediaRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( TrendingRequested value)  trendingRequested,required TResult Function( RequestSeerr value)  mediaRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that);case TrendingRequested():
-return trendingRequested(_that);case RequestMedia():
+return trendingRequested(_that);case RequestSeerr():
 return mediaRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -102,12 +102,12 @@ return mediaRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( TrendingRequested value)?  trendingRequested,TResult? Function( RequestMedia value)?  mediaRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( TrendingRequested value)?  trendingRequested,TResult? Function( RequestSeerr value)?  mediaRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case TrendingRequested() when trendingRequested != null:
-return trendingRequested(_that);case RequestMedia() when mediaRequested != null:
+return trendingRequested(_that);case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that);case _:
   return null;
 
@@ -129,7 +129,7 @@ return mediaRequested(_that);case _:
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case TrendingRequested() when trendingRequested != null:
-return trendingRequested();case RequestMedia() when mediaRequested != null:
+return trendingRequested();case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that.mediaId,_that.mediaType);case _:
   return orElse();
 
@@ -152,7 +152,7 @@ return mediaRequested(_that.mediaId,_that.mediaType);case _:
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that.query);case TrendingRequested():
-return trendingRequested();case RequestMedia():
+return trendingRequested();case RequestSeerr():
 return mediaRequested(_that.mediaId,_that.mediaType);case _:
   throw StateError('Unexpected subclass');
 
@@ -174,7 +174,7 @@ return mediaRequested(_that.mediaId,_that.mediaType);case _:
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case TrendingRequested() when trendingRequested != null:
-return trendingRequested();case RequestMedia() when mediaRequested != null:
+return trendingRequested();case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that.mediaId,_that.mediaType);case _:
   return null;
 
@@ -186,13 +186,13 @@ return mediaRequested(_that.mediaId,_that.mediaType);case _:
 /// @nodoc
 
 
-class SearchRequested implements MediaEvent {
+class SearchRequested implements SeerrEvent {
   const SearchRequested(this.query);
   
 
  final  String query;
 
-/// Create a copy of MediaEvent
+/// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -211,14 +211,14 @@ int get hashCode => Object.hash(runtimeType,query);
 
 @override
 String toString() {
-  return 'MediaEvent.searchRequested(query: $query)';
+  return 'SeerrEvent.searchRequested(query: $query)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SearchRequestedCopyWith<$Res> implements $MediaEventCopyWith<$Res> {
+abstract mixin class $SearchRequestedCopyWith<$Res> implements $SeerrEventCopyWith<$Res> {
   factory $SearchRequestedCopyWith(SearchRequested value, $Res Function(SearchRequested) _then) = _$SearchRequestedCopyWithImpl;
 @useResult
 $Res call({
@@ -237,7 +237,7 @@ class _$SearchRequestedCopyWithImpl<$Res>
   final SearchRequested _self;
   final $Res Function(SearchRequested) _then;
 
-/// Create a copy of MediaEvent
+/// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? query = null,}) {
   return _then(SearchRequested(
@@ -252,7 +252,7 @@ as String,
 /// @nodoc
 
 
-class TrendingRequested implements MediaEvent {
+class TrendingRequested implements SeerrEvent {
   const TrendingRequested();
   
 
@@ -272,7 +272,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaEvent.trendingRequested()';
+  return 'SeerrEvent.trendingRequested()';
 }
 
 
@@ -284,24 +284,24 @@ String toString() {
 /// @nodoc
 
 
-class RequestMedia implements MediaEvent {
-  const RequestMedia(this.mediaId, this.mediaType);
+class RequestSeerr implements SeerrEvent {
+  const RequestSeerr(this.mediaId, this.mediaType);
   
 
  final  int mediaId;
  final  String mediaType;
 
-/// Create a copy of MediaEvent
+/// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$RequestMediaCopyWith<RequestMedia> get copyWith => _$RequestMediaCopyWithImpl<RequestMedia>(this, _$identity);
+$RequestSeerrCopyWith<RequestSeerr> get copyWith => _$RequestSeerrCopyWithImpl<RequestSeerr>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestMedia&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSeerr&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType));
 }
 
 
@@ -310,15 +310,15 @@ int get hashCode => Object.hash(runtimeType,mediaId,mediaType);
 
 @override
 String toString() {
-  return 'MediaEvent.mediaRequested(mediaId: $mediaId, mediaType: $mediaType)';
+  return 'SeerrEvent.mediaRequested(mediaId: $mediaId, mediaType: $mediaType)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $RequestMediaCopyWith<$Res> implements $MediaEventCopyWith<$Res> {
-  factory $RequestMediaCopyWith(RequestMedia value, $Res Function(RequestMedia) _then) = _$RequestMediaCopyWithImpl;
+abstract mixin class $RequestSeerrCopyWith<$Res> implements $SeerrEventCopyWith<$Res> {
+  factory $RequestSeerrCopyWith(RequestSeerr value, $Res Function(RequestSeerr) _then) = _$RequestSeerrCopyWithImpl;
 @useResult
 $Res call({
  int mediaId, String mediaType
@@ -329,17 +329,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$RequestMediaCopyWithImpl<$Res>
-    implements $RequestMediaCopyWith<$Res> {
-  _$RequestMediaCopyWithImpl(this._self, this._then);
+class _$RequestSeerrCopyWithImpl<$Res>
+    implements $RequestSeerrCopyWith<$Res> {
+  _$RequestSeerrCopyWithImpl(this._self, this._then);
 
-  final RequestMedia _self;
-  final $Res Function(RequestMedia) _then;
+  final RequestSeerr _self;
+  final $Res Function(RequestSeerr) _then;
 
-/// Create a copy of MediaEvent
+/// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? mediaId = null,Object? mediaType = null,}) {
-  return _then(RequestMedia(
+  return _then(RequestSeerr(
 null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
 as String,
@@ -350,7 +350,7 @@ as String,
 }
 
 /// @nodoc
-mixin _$MediaState {
+mixin _$SeerrState {
 
 
 
@@ -358,7 +358,7 @@ mixin _$MediaState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaState);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrState);
 }
 
 
@@ -367,20 +367,20 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaState()';
+  return 'SeerrState()';
 }
 
 
 }
 
 /// @nodoc
-class $MediaStateCopyWith<$Res>  {
-$MediaStateCopyWith(MediaState _, $Res Function(MediaState) __);
+class $SeerrStateCopyWith<$Res>  {
+$SeerrStateCopyWith(SeerrState _, $Res Function(SeerrState) __);
 }
 
 
-/// Adds pattern-matching-related methods to [MediaState].
-extension MediaStatePatterns on MediaState {
+/// Adds pattern-matching-related methods to [SeerrState].
+extension SeerrStatePatterns on SeerrState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -393,13 +393,13 @@ extension MediaStatePatterns on MediaState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MediaInitial value)?  initial,TResult Function( MediaLoading value)?  loading,TResult Function( MediaLoaded value)?  loaded,TResult Function( MediaError value)?  error,TResult Function( RequestSuccess value)?  requestSuccess,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeerrInitial value)?  initial,TResult Function( SeerrLoading value)?  loading,TResult Function( SeerrLoaded value)?  loaded,TResult Function( SeerrError value)?  error,TResult Function( RequestSuccess value)?  requestSuccess,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case MediaInitial() when initial != null:
-return initial(_that);case MediaLoading() when loading != null:
-return loading(_that);case MediaLoaded() when loaded != null:
-return loaded(_that);case MediaError() when error != null:
+case SeerrInitial() when initial != null:
+return initial(_that);case SeerrLoading() when loading != null:
+return loading(_that);case SeerrLoaded() when loaded != null:
+return loaded(_that);case SeerrError() when error != null:
 return error(_that);case RequestSuccess() when requestSuccess != null:
 return requestSuccess(_that);case _:
   return orElse();
@@ -419,13 +419,13 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MediaInitial value)  initial,required TResult Function( MediaLoading value)  loading,required TResult Function( MediaLoaded value)  loaded,required TResult Function( MediaError value)  error,required TResult Function( RequestSuccess value)  requestSuccess,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeerrInitial value)  initial,required TResult Function( SeerrLoading value)  loading,required TResult Function( SeerrLoaded value)  loaded,required TResult Function( SeerrError value)  error,required TResult Function( RequestSuccess value)  requestSuccess,}){
 final _that = this;
 switch (_that) {
-case MediaInitial():
-return initial(_that);case MediaLoading():
-return loading(_that);case MediaLoaded():
-return loaded(_that);case MediaError():
+case SeerrInitial():
+return initial(_that);case SeerrLoading():
+return loading(_that);case SeerrLoaded():
+return loaded(_that);case SeerrError():
 return error(_that);case RequestSuccess():
 return requestSuccess(_that);case _:
   throw StateError('Unexpected subclass');
@@ -444,13 +444,13 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MediaInitial value)?  initial,TResult? Function( MediaLoading value)?  loading,TResult? Function( MediaLoaded value)?  loaded,TResult? Function( MediaError value)?  error,TResult? Function( RequestSuccess value)?  requestSuccess,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeerrInitial value)?  initial,TResult? Function( SeerrLoading value)?  loading,TResult? Function( SeerrLoaded value)?  loaded,TResult? Function( SeerrError value)?  error,TResult? Function( RequestSuccess value)?  requestSuccess,}){
 final _that = this;
 switch (_that) {
-case MediaInitial() when initial != null:
-return initial(_that);case MediaLoading() when loading != null:
-return loading(_that);case MediaLoaded() when loaded != null:
-return loaded(_that);case MediaError() when error != null:
+case SeerrInitial() when initial != null:
+return initial(_that);case SeerrLoading() when loading != null:
+return loading(_that);case SeerrLoaded() when loaded != null:
+return loaded(_that);case SeerrError() when error != null:
 return error(_that);case RequestSuccess() when requestSuccess != null:
 return requestSuccess(_that);case _:
   return null;
@@ -469,12 +469,12 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Media> mediaList)?  loaded,TResult Function( String message)?  error,TResult Function()?  requestSuccess,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Seerr> seerrList)?  loaded,TResult Function( String message)?  error,TResult Function()?  requestSuccess,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case MediaInitial() when initial != null:
-return initial();case MediaLoading() when loading != null:
-return loading();case MediaLoaded() when loaded != null:
-return loaded(_that.mediaList);case MediaError() when error != null:
+case SeerrInitial() when initial != null:
+return initial();case SeerrLoading() when loading != null:
+return loading();case SeerrLoaded() when loaded != null:
+return loaded(_that.seerrList);case SeerrError() when error != null:
 return error(_that.message);case RequestSuccess() when requestSuccess != null:
 return requestSuccess();case _:
   return orElse();
@@ -494,12 +494,12 @@ return requestSuccess();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Media> mediaList)  loaded,required TResult Function( String message)  error,required TResult Function()  requestSuccess,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Seerr> seerrList)  loaded,required TResult Function( String message)  error,required TResult Function()  requestSuccess,}) {final _that = this;
 switch (_that) {
-case MediaInitial():
-return initial();case MediaLoading():
-return loading();case MediaLoaded():
-return loaded(_that.mediaList);case MediaError():
+case SeerrInitial():
+return initial();case SeerrLoading():
+return loading();case SeerrLoaded():
+return loaded(_that.seerrList);case SeerrError():
 return error(_that.message);case RequestSuccess():
 return requestSuccess();case _:
   throw StateError('Unexpected subclass');
@@ -518,12 +518,12 @@ return requestSuccess();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Media> mediaList)?  loaded,TResult? Function( String message)?  error,TResult? Function()?  requestSuccess,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Seerr> seerrList)?  loaded,TResult? Function( String message)?  error,TResult? Function()?  requestSuccess,}) {final _that = this;
 switch (_that) {
-case MediaInitial() when initial != null:
-return initial();case MediaLoading() when loading != null:
-return loading();case MediaLoaded() when loaded != null:
-return loaded(_that.mediaList);case MediaError() when error != null:
+case SeerrInitial() when initial != null:
+return initial();case SeerrLoading() when loading != null:
+return loading();case SeerrLoaded() when loaded != null:
+return loaded(_that.seerrList);case SeerrError() when error != null:
 return error(_that.message);case RequestSuccess() when requestSuccess != null:
 return requestSuccess();case _:
   return null;
@@ -536,8 +536,8 @@ return requestSuccess();case _:
 /// @nodoc
 
 
-class MediaInitial implements MediaState {
-  const MediaInitial();
+class SeerrInitial implements SeerrState {
+  const SeerrInitial();
   
 
 
@@ -547,7 +547,7 @@ class MediaInitial implements MediaState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaInitial);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrInitial);
 }
 
 
@@ -556,7 +556,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaState.initial()';
+  return 'SeerrState.initial()';
 }
 
 
@@ -568,8 +568,8 @@ String toString() {
 /// @nodoc
 
 
-class MediaLoading implements MediaState {
-  const MediaLoading();
+class SeerrLoading implements SeerrState {
+  const SeerrLoading();
   
 
 
@@ -579,7 +579,7 @@ class MediaLoading implements MediaState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaLoading);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrLoading);
 }
 
 
@@ -588,7 +588,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaState.loading()';
+  return 'SeerrState.loading()';
 }
 
 
@@ -600,49 +600,49 @@ String toString() {
 /// @nodoc
 
 
-class MediaLoaded implements MediaState {
-  const MediaLoaded(final  List<Media> mediaList): _mediaList = mediaList;
+class SeerrLoaded implements SeerrState {
+  const SeerrLoaded(final  List<Seerr> seerrList): _seerrList = seerrList;
   
 
- final  List<Media> _mediaList;
- List<Media> get mediaList {
-  if (_mediaList is EqualUnmodifiableListView) return _mediaList;
+ final  List<Seerr> _seerrList;
+ List<Seerr> get seerrList {
+  if (_seerrList is EqualUnmodifiableListView) return _seerrList;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_mediaList);
+  return EqualUnmodifiableListView(_seerrList);
 }
 
 
-/// Create a copy of MediaState
+/// Create a copy of SeerrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MediaLoadedCopyWith<MediaLoaded> get copyWith => _$MediaLoadedCopyWithImpl<MediaLoaded>(this, _$identity);
+$SeerrLoadedCopyWith<SeerrLoaded> get copyWith => _$SeerrLoadedCopyWithImpl<SeerrLoaded>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaLoaded&&const DeepCollectionEquality().equals(other._mediaList, _mediaList));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrLoaded&&const DeepCollectionEquality().equals(other._seerrList, _seerrList));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_mediaList));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_seerrList));
 
 @override
 String toString() {
-  return 'MediaState.loaded(mediaList: $mediaList)';
+  return 'SeerrState.loaded(seerrList: $seerrList)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MediaLoadedCopyWith<$Res> implements $MediaStateCopyWith<$Res> {
-  factory $MediaLoadedCopyWith(MediaLoaded value, $Res Function(MediaLoaded) _then) = _$MediaLoadedCopyWithImpl;
+abstract mixin class $SeerrLoadedCopyWith<$Res> implements $SeerrStateCopyWith<$Res> {
+  factory $SeerrLoadedCopyWith(SeerrLoaded value, $Res Function(SeerrLoaded) _then) = _$SeerrLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<Media> mediaList
+ List<Seerr> seerrList
 });
 
 
@@ -650,19 +650,19 @@ $Res call({
 
 }
 /// @nodoc
-class _$MediaLoadedCopyWithImpl<$Res>
-    implements $MediaLoadedCopyWith<$Res> {
-  _$MediaLoadedCopyWithImpl(this._self, this._then);
+class _$SeerrLoadedCopyWithImpl<$Res>
+    implements $SeerrLoadedCopyWith<$Res> {
+  _$SeerrLoadedCopyWithImpl(this._self, this._then);
 
-  final MediaLoaded _self;
-  final $Res Function(MediaLoaded) _then;
+  final SeerrLoaded _self;
+  final $Res Function(SeerrLoaded) _then;
 
-/// Create a copy of MediaState
+/// Create a copy of SeerrState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? mediaList = null,}) {
-  return _then(MediaLoaded(
-null == mediaList ? _self._mediaList : mediaList // ignore: cast_nullable_to_non_nullable
-as List<Media>,
+@pragma('vm:prefer-inline') $Res call({Object? seerrList = null,}) {
+  return _then(SeerrLoaded(
+null == seerrList ? _self._seerrList : seerrList // ignore: cast_nullable_to_non_nullable
+as List<Seerr>,
   ));
 }
 
@@ -672,23 +672,23 @@ as List<Media>,
 /// @nodoc
 
 
-class MediaError implements MediaState {
-  const MediaError(this.message);
+class SeerrError implements SeerrState {
+  const SeerrError(this.message);
   
 
  final  String message;
 
-/// Create a copy of MediaState
+/// Create a copy of SeerrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MediaErrorCopyWith<MediaError> get copyWith => _$MediaErrorCopyWithImpl<MediaError>(this, _$identity);
+$SeerrErrorCopyWith<SeerrError> get copyWith => _$SeerrErrorCopyWithImpl<SeerrError>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaError&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeerrError&&(identical(other.message, message) || other.message == message));
 }
 
 
@@ -697,15 +697,15 @@ int get hashCode => Object.hash(runtimeType,message);
 
 @override
 String toString() {
-  return 'MediaState.error(message: $message)';
+  return 'SeerrState.error(message: $message)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MediaErrorCopyWith<$Res> implements $MediaStateCopyWith<$Res> {
-  factory $MediaErrorCopyWith(MediaError value, $Res Function(MediaError) _then) = _$MediaErrorCopyWithImpl;
+abstract mixin class $SeerrErrorCopyWith<$Res> implements $SeerrStateCopyWith<$Res> {
+  factory $SeerrErrorCopyWith(SeerrError value, $Res Function(SeerrError) _then) = _$SeerrErrorCopyWithImpl;
 @useResult
 $Res call({
  String message
@@ -716,17 +716,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$MediaErrorCopyWithImpl<$Res>
-    implements $MediaErrorCopyWith<$Res> {
-  _$MediaErrorCopyWithImpl(this._self, this._then);
+class _$SeerrErrorCopyWithImpl<$Res>
+    implements $SeerrErrorCopyWith<$Res> {
+  _$SeerrErrorCopyWithImpl(this._self, this._then);
 
-  final MediaError _self;
-  final $Res Function(MediaError) _then;
+  final SeerrError _self;
+  final $Res Function(SeerrError) _then;
 
-/// Create a copy of MediaState
+/// Create a copy of SeerrState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(MediaError(
+  return _then(SeerrError(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -738,7 +738,7 @@ as String,
 /// @nodoc
 
 
-class RequestSuccess implements MediaState {
+class RequestSuccess implements SeerrState {
   const RequestSuccess();
   
 
@@ -758,7 +758,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MediaState.requestSuccess()';
+  return 'SeerrState.requestSuccess()';
 }
 
 

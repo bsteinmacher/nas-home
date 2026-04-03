@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'music.freezed.dart';
-part 'music.g.dart';
+part 'lidarr.freezed.dart';
+part 'lidarr.g.dart';
 
 @freezed
-abstract class Artist with _$Artist {
-  const factory Artist({
+abstract class LidarrArtist with _$LidarrArtist {
+  const factory LidarrArtist({
     required String? id, // Lidarr ID (null se não adicionado)
     required String artistName,
     required String? mbid, // MusicBrainz ID
@@ -13,21 +13,21 @@ abstract class Artist with _$Artist {
     @Default(false) bool monitored,
     @Default(false) bool isAdded,
     String? remotePoster,
-  }) = _Artist;
+  }) = _LidarrArtist;
 
-  factory Artist.fromJson(Map<String, dynamic> json) => _$ArtistFromJson(json);
+  factory LidarrArtist.fromJson(Map<String, dynamic> json) => _$LidarrArtistFromJson(json);
 }
 
 @freezed
-abstract class Album with _$Album {
-  const factory Album({
+abstract class LidarrAlbum with _$LidarrAlbum {
+  const factory LidarrAlbum({
     required String? id,
     required String title,
     required String artistName,
     required String? releaseDate,
     required String? remoteCover,
     @Default(false) bool monitored,
-  }) = _Album;
+  }) = _LidarrAlbum;
 
-  factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+  factory LidarrAlbum.fromJson(Map<String, dynamic> json) => _$LidarrAlbumFromJson(json);
 }

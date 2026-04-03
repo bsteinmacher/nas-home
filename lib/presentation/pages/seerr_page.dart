@@ -4,29 +4,30 @@ import '../../core/di/injection_container.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../blocs/media_bloc.dart';
+import '../../domain/entities/seerr.dart';
+import '../blocs/seerr_bloc.dart';
 import '../widgets/tui_input_field.dart';
 
-class MediaPage extends StatelessWidget {
-  const MediaPage({super.key});
+class SeerrPage extends StatelessWidget {
+  const SeerrPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<MediaBloc>()..add(const TrendingRequested()),
-      child: const MediaView(),
+      create: (_) => sl<SeerrBloc>()..add(const TrendingRequested()),
+      child: const SeerrView(),
     );
   }
 }
 
-class MediaView extends StatefulWidget {
-  const MediaView({super.key});
+class SeerrView extends StatefulWidget {
+  const SeerrView({super.key});
 
   @override
-  State<MediaView> createState() => _MediaViewState();
+  State<SeerrView> createState() => _SeerrViewState();
 }
 
-class _MediaViewState extends State<MediaView> {
+class _SeerrViewState extends State<SeerrView> {
   final _searchController = TextEditingController();
 
   @override
@@ -34,8 +35,8 @@ class _MediaViewState extends State<MediaView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'MEDIA_REQUEST',
-          style: AppTypography.terminalTitle.copyWith(color: AppColors.media),
+          'SEERR_REQUEST',
+          style: AppTypography.terminalTitle.copyWith(color: AppColors.seerr),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
@@ -53,19 +54,19 @@ class _MediaViewState extends State<MediaView> {
                 icon: const Icon(Icons.search, color: AppColors.terminalGreen, size: 20),
                 onPressed: () {
                   if (_searchController.text.isNotEmpty) {
-                    context.read<MediaBloc>().add(SearchRequested(_searchController.text));
+                    context.read<SeerrBloc>().add(SearchRequested(_searchController.text));
                   }
                 },
               ),
               onSubmitted: (value) {
                 if (value.isNotEmpty) {
-                  context.read<MediaBloc>().add(SearchRequested(value));
+                  context.read<SeerrBloc>().add(SearchRequested(value));
                 }
               },
             ),
           ),
           Expanded(
-            child: BlocConsumer<MediaBloc, MediaState>(
+            child: BlocConsumer<SeerrBloc, SeerrState>(
               listener: (context, state) {
                 state.whenOrNull(
                   requestSuccess: () {
@@ -86,7 +87,7 @@ class _MediaViewState extends State<MediaView> {
               builder: (context, state) {
                 return state.maybeWhen(
                   loading: () => const Center(child: CircularProgressIndicator()),
-                  loaded: (mediaList) => GridView.builder(
+                  loaded: (seerrList) => GridView.builder(
                     padding: const EdgeInsets.all(AppSpacing.sm),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -94,10 +95,10 @@ class _MediaViewState extends State<MediaView> {
                       mainAxisSpacing: AppSpacing.sm,
                       crossAxisSpacing: AppSpacing.sm,
                     ),
-                    itemCount: mediaList.length,
+                    itemCount: seerrList.length,
                     itemBuilder: (context, index) {
-                      final media = mediaList[index];
-                      return _buildMediaCard(context, media);
+                      final item = seerrList[index];
+                      return _buildMediaCard(context, item);
                     },
                   ),
                   error: (message) => Center(
@@ -118,10 +119,14 @@ class _MediaViewState extends State<MediaView> {
     );
   }
 
-  Widget _buildMediaCard(BuildContext context, dynamic media) {
+  Widget _buildMediaCard(BuildContext context, Seerr media) {
     final posterUrl = media.posterPath != null
         ? 'https://image.tmdb.org/t/p/w500${media.posterPath}'
         : null;
+
+    final status = media.status;
+    final isRequested = media.isRequested;
+    final mediaType = media.mediaType;
 
     return Card(
       color: AppColors.surface,
@@ -140,6 +145,25 @@ class _MediaViewState extends State<MediaView> {
             )
           else
             const Center(child: Icon(Icons.movie, size: 48, color: AppColors.textMuted)),
+
+          // Type Pill (Top Right)
+          Positioned(
+            top: AppSpacing.xs,
+            right: AppSpacing.xs,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppColors.textMuted, width: 0.5),
+              ),
+              child: Text(
+                mediaType.toUpperCase(),
+                style: AppTypography.statusBadge.copyWith(fontSize: 8, color: Colors.white70),
+              ),
+            ),
+          ),
+
           Positioned(
             bottom: 0,
             left: 0,
@@ -161,11 +185,12 @@ class _MediaViewState extends State<MediaView> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        context.read<MediaBloc>().add(RequestMedia(media.id, media.mediaType));
+                      onPressed: isRequested ? null : () {
+                        context.read<SeerrBloc>().add(RequestSeerr(media.id, mediaType));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.media,
+                        backgroundColor: _getButtonColor(status),
+                        disabledBackgroundColor: _getButtonColor(status).withValues(alpha: 0.3),
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(0, 28),
@@ -173,7 +198,7 @@ class _MediaViewState extends State<MediaView> {
                           borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
                         ),
                       ),
-                      child: Text('REQUEST', style: AppTypography.statusBadge),
+                      child: Text(_getButtonText(status), style: AppTypography.statusBadge),
                     ),
                   ),
                 ],
@@ -183,6 +208,29 @@ class _MediaViewState extends State<MediaView> {
         ],
       ),
     );
+  }
+
+  String _getButtonText(int? status) {
+    switch (status) {
+      case 2: return 'PENDING';
+      case 3: return 'PROCESSING';
+      case 4: return 'PARTIAL';
+      case 5: return 'AVAILABLE';
+      default: return 'REQUEST';
+    }
+  }
+
+  Color _getButtonColor(int? status) {
+    switch (status) {
+      case 4:
+      case 5:
+        return Colors.greenAccent.withValues(alpha: 0.8);
+      case 2:
+      case 3:
+        return Colors.orangeAccent.withValues(alpha: 0.8);
+      default:
+        return AppColors.seerr;
+    }
   }
 
   @override

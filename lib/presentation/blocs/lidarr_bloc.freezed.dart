@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'music_bloc.dart';
+part of 'lidarr_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,7 +12,7 @@ part of 'music_bloc.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$MusicEvent {
+mixin _$LidarrEvent {
 
 
 
@@ -20,7 +20,7 @@ mixin _$MusicEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicEvent);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrEvent);
 }
 
 
@@ -29,20 +29,20 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MusicEvent()';
+  return 'LidarrEvent()';
 }
 
 
 }
 
 /// @nodoc
-class $MusicEventCopyWith<$Res>  {
-$MusicEventCopyWith(MusicEvent _, $Res Function(MusicEvent) __);
+class $LidarrEventCopyWith<$Res>  {
+$LidarrEventCopyWith(LidarrEvent _, $Res Function(LidarrEvent) __);
 }
 
 
-/// Adds pattern-matching-related methods to [MusicEvent].
-extension MusicEventPatterns on MusicEvent {
+/// Adds pattern-matching-related methods to [LidarrEvent].
+extension LidarrEventPatterns on LidarrEvent {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -125,7 +125,7 @@ return albumsRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function( Artist artist)?  artistRequested,TResult Function( String artistId)?  albumsRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function( LidarrArtist artist)?  artistRequested,TResult Function( String artistId)?  albumsRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
@@ -148,7 +148,7 @@ return albumsRequested(_that.artistId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function( Artist artist)  artistRequested,required TResult Function( String artistId)  albumsRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function( LidarrArtist artist)  artistRequested,required TResult Function( String artistId)  albumsRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that.query);case ArtistRequested():
@@ -170,7 +170,7 @@ return albumsRequested(_that.artistId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function( Artist artist)?  artistRequested,TResult? Function( String artistId)?  albumsRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function( LidarrArtist artist)?  artistRequested,TResult? Function( String artistId)?  albumsRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
@@ -186,13 +186,13 @@ return albumsRequested(_that.artistId);case _:
 /// @nodoc
 
 
-class SearchRequested implements MusicEvent {
+class SearchRequested implements LidarrEvent {
   const SearchRequested(this.query);
   
 
  final  String query;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -211,14 +211,14 @@ int get hashCode => Object.hash(runtimeType,query);
 
 @override
 String toString() {
-  return 'MusicEvent.searchRequested(query: $query)';
+  return 'LidarrEvent.searchRequested(query: $query)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SearchRequestedCopyWith<$Res> implements $MusicEventCopyWith<$Res> {
+abstract mixin class $SearchRequestedCopyWith<$Res> implements $LidarrEventCopyWith<$Res> {
   factory $SearchRequestedCopyWith(SearchRequested value, $Res Function(SearchRequested) _then) = _$SearchRequestedCopyWithImpl;
 @useResult
 $Res call({
@@ -237,7 +237,7 @@ class _$SearchRequestedCopyWithImpl<$Res>
   final SearchRequested _self;
   final $Res Function(SearchRequested) _then;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? query = null,}) {
   return _then(SearchRequested(
@@ -252,13 +252,13 @@ as String,
 /// @nodoc
 
 
-class ArtistRequested implements MusicEvent {
+class ArtistRequested implements LidarrEvent {
   const ArtistRequested(this.artist);
   
 
- final  Artist artist;
+ final  LidarrArtist artist;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -277,22 +277,22 @@ int get hashCode => Object.hash(runtimeType,artist);
 
 @override
 String toString() {
-  return 'MusicEvent.artistRequested(artist: $artist)';
+  return 'LidarrEvent.artistRequested(artist: $artist)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ArtistRequestedCopyWith<$Res> implements $MusicEventCopyWith<$Res> {
+abstract mixin class $ArtistRequestedCopyWith<$Res> implements $LidarrEventCopyWith<$Res> {
   factory $ArtistRequestedCopyWith(ArtistRequested value, $Res Function(ArtistRequested) _then) = _$ArtistRequestedCopyWithImpl;
 @useResult
 $Res call({
- Artist artist
+ LidarrArtist artist
 });
 
 
-$ArtistCopyWith<$Res> get artist;
+$LidarrArtistCopyWith<$Res> get artist;
 
 }
 /// @nodoc
@@ -303,22 +303,22 @@ class _$ArtistRequestedCopyWithImpl<$Res>
   final ArtistRequested _self;
   final $Res Function(ArtistRequested) _then;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? artist = null,}) {
   return _then(ArtistRequested(
 null == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as Artist,
+as LidarrArtist,
   ));
 }
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ArtistCopyWith<$Res> get artist {
+$LidarrArtistCopyWith<$Res> get artist {
   
-  return $ArtistCopyWith<$Res>(_self.artist, (value) {
+  return $LidarrArtistCopyWith<$Res>(_self.artist, (value) {
     return _then(_self.copyWith(artist: value));
   });
 }
@@ -327,13 +327,13 @@ $ArtistCopyWith<$Res> get artist {
 /// @nodoc
 
 
-class AlbumsRequested implements MusicEvent {
+class AlbumsRequested implements LidarrEvent {
   const AlbumsRequested(this.artistId);
   
 
  final  String artistId;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -352,14 +352,14 @@ int get hashCode => Object.hash(runtimeType,artistId);
 
 @override
 String toString() {
-  return 'MusicEvent.albumsRequested(artistId: $artistId)';
+  return 'LidarrEvent.albumsRequested(artistId: $artistId)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $AlbumsRequestedCopyWith<$Res> implements $MusicEventCopyWith<$Res> {
+abstract mixin class $AlbumsRequestedCopyWith<$Res> implements $LidarrEventCopyWith<$Res> {
   factory $AlbumsRequestedCopyWith(AlbumsRequested value, $Res Function(AlbumsRequested) _then) = _$AlbumsRequestedCopyWithImpl;
 @useResult
 $Res call({
@@ -378,7 +378,7 @@ class _$AlbumsRequestedCopyWithImpl<$Res>
   final AlbumsRequested _self;
   final $Res Function(AlbumsRequested) _then;
 
-/// Create a copy of MusicEvent
+/// Create a copy of LidarrEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? artistId = null,}) {
   return _then(AlbumsRequested(
@@ -391,7 +391,7 @@ as String,
 }
 
 /// @nodoc
-mixin _$MusicState {
+mixin _$LidarrState {
 
 
 
@@ -399,7 +399,7 @@ mixin _$MusicState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicState);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrState);
 }
 
 
@@ -408,20 +408,20 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MusicState()';
+  return 'LidarrState()';
 }
 
 
 }
 
 /// @nodoc
-class $MusicStateCopyWith<$Res>  {
-$MusicStateCopyWith(MusicState _, $Res Function(MusicState) __);
+class $LidarrStateCopyWith<$Res>  {
+$LidarrStateCopyWith(LidarrState _, $Res Function(LidarrState) __);
 }
 
 
-/// Adds pattern-matching-related methods to [MusicState].
-extension MusicStatePatterns on MusicState {
+/// Adds pattern-matching-related methods to [LidarrState].
+extension LidarrStatePatterns on LidarrState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -434,16 +434,16 @@ extension MusicStatePatterns on MusicState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MusicInitial value)?  initial,TResult Function( MusicLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( AlbumsLoaded value)?  albumsLoaded,TResult Function( MusicSuccess value)?  success,TResult Function( MusicError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LidarrInitial value)?  initial,TResult Function( LidarrLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( AlbumsLoaded value)?  albumsLoaded,TResult Function( LidarrError value)?  error,TResult Function( LidarrSuccess value)?  success,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case MusicInitial() when initial != null:
-return initial(_that);case MusicLoading() when loading != null:
+case LidarrInitial() when initial != null:
+return initial(_that);case LidarrLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that);case MusicSuccess() when success != null:
-return success(_that);case MusicError() when error != null:
-return error(_that);case _:
+return albumsLoaded(_that);case LidarrError() when error != null:
+return error(_that);case LidarrSuccess() when success != null:
+return success(_that);case _:
   return orElse();
 
 }
@@ -461,16 +461,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MusicInitial value)  initial,required TResult Function( MusicLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( AlbumsLoaded value)  albumsLoaded,required TResult Function( MusicSuccess value)  success,required TResult Function( MusicError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LidarrInitial value)  initial,required TResult Function( LidarrLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( AlbumsLoaded value)  albumsLoaded,required TResult Function( LidarrError value)  error,required TResult Function( LidarrSuccess value)  success,}){
 final _that = this;
 switch (_that) {
-case MusicInitial():
-return initial(_that);case MusicLoading():
+case LidarrInitial():
+return initial(_that);case LidarrLoading():
 return loading(_that);case ArtistsLoaded():
 return artistsLoaded(_that);case AlbumsLoaded():
-return albumsLoaded(_that);case MusicSuccess():
-return success(_that);case MusicError():
-return error(_that);case _:
+return albumsLoaded(_that);case LidarrError():
+return error(_that);case LidarrSuccess():
+return success(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -487,16 +487,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MusicInitial value)?  initial,TResult? Function( MusicLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( AlbumsLoaded value)?  albumsLoaded,TResult? Function( MusicSuccess value)?  success,TResult? Function( MusicError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LidarrInitial value)?  initial,TResult? Function( LidarrLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( AlbumsLoaded value)?  albumsLoaded,TResult? Function( LidarrError value)?  error,TResult? Function( LidarrSuccess value)?  success,}){
 final _that = this;
 switch (_that) {
-case MusicInitial() when initial != null:
-return initial(_that);case MusicLoading() when loading != null:
+case LidarrInitial() when initial != null:
+return initial(_that);case LidarrLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that);case MusicSuccess() when success != null:
-return success(_that);case MusicError() when error != null:
-return error(_that);case _:
+return albumsLoaded(_that);case LidarrError() when error != null:
+return error(_that);case LidarrSuccess() when success != null:
+return success(_that);case _:
   return null;
 
 }
@@ -513,15 +513,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Artist> artists)?  artistsLoaded,TResult Function( List<Album> albums)?  albumsLoaded,TResult Function( String message)?  success,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<LidarrArtist> artists)?  artistsLoaded,TResult Function( List<LidarrAlbum> albums)?  albumsLoaded,TResult Function( String message)?  error,TResult Function( String message)?  success,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case MusicInitial() when initial != null:
-return initial();case MusicLoading() when loading != null:
+case LidarrInitial() when initial != null:
+return initial();case LidarrLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that.albums);case MusicSuccess() when success != null:
-return success(_that.message);case MusicError() when error != null:
-return error(_that.message);case _:
+return albumsLoaded(_that.albums);case LidarrError() when error != null:
+return error(_that.message);case LidarrSuccess() when success != null:
+return success(_that.message);case _:
   return orElse();
 
 }
@@ -539,15 +539,15 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Artist> artists)  artistsLoaded,required TResult Function( List<Album> albums)  albumsLoaded,required TResult Function( String message)  success,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<LidarrArtist> artists)  artistsLoaded,required TResult Function( List<LidarrAlbum> albums)  albumsLoaded,required TResult Function( String message)  error,required TResult Function( String message)  success,}) {final _that = this;
 switch (_that) {
-case MusicInitial():
-return initial();case MusicLoading():
+case LidarrInitial():
+return initial();case LidarrLoading():
 return loading();case ArtistsLoaded():
 return artistsLoaded(_that.artists);case AlbumsLoaded():
-return albumsLoaded(_that.albums);case MusicSuccess():
-return success(_that.message);case MusicError():
-return error(_that.message);case _:
+return albumsLoaded(_that.albums);case LidarrError():
+return error(_that.message);case LidarrSuccess():
+return success(_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -564,15 +564,15 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Artist> artists)?  artistsLoaded,TResult? Function( List<Album> albums)?  albumsLoaded,TResult? Function( String message)?  success,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<LidarrArtist> artists)?  artistsLoaded,TResult? Function( List<LidarrAlbum> albums)?  albumsLoaded,TResult? Function( String message)?  error,TResult? Function( String message)?  success,}) {final _that = this;
 switch (_that) {
-case MusicInitial() when initial != null:
-return initial();case MusicLoading() when loading != null:
+case LidarrInitial() when initial != null:
+return initial();case LidarrLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case AlbumsLoaded() when albumsLoaded != null:
-return albumsLoaded(_that.albums);case MusicSuccess() when success != null:
-return success(_that.message);case MusicError() when error != null:
-return error(_that.message);case _:
+return albumsLoaded(_that.albums);case LidarrError() when error != null:
+return error(_that.message);case LidarrSuccess() when success != null:
+return success(_that.message);case _:
   return null;
 
 }
@@ -583,8 +583,8 @@ return error(_that.message);case _:
 /// @nodoc
 
 
-class MusicInitial implements MusicState {
-  const MusicInitial();
+class LidarrInitial implements LidarrState {
+  const LidarrInitial();
   
 
 
@@ -594,7 +594,7 @@ class MusicInitial implements MusicState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicInitial);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrInitial);
 }
 
 
@@ -603,7 +603,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MusicState.initial()';
+  return 'LidarrState.initial()';
 }
 
 
@@ -615,8 +615,8 @@ String toString() {
 /// @nodoc
 
 
-class MusicLoading implements MusicState {
-  const MusicLoading();
+class LidarrLoading implements LidarrState {
+  const LidarrLoading();
   
 
 
@@ -626,7 +626,7 @@ class MusicLoading implements MusicState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicLoading);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrLoading);
 }
 
 
@@ -635,7 +635,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MusicState.loading()';
+  return 'LidarrState.loading()';
 }
 
 
@@ -647,19 +647,19 @@ String toString() {
 /// @nodoc
 
 
-class ArtistsLoaded implements MusicState {
-  const ArtistsLoaded(final  List<Artist> artists): _artists = artists;
+class ArtistsLoaded implements LidarrState {
+  const ArtistsLoaded(final  List<LidarrArtist> artists): _artists = artists;
   
 
- final  List<Artist> _artists;
- List<Artist> get artists {
+ final  List<LidarrArtist> _artists;
+ List<LidarrArtist> get artists {
   if (_artists is EqualUnmodifiableListView) return _artists;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_artists);
 }
 
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -678,18 +678,18 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'MusicState.artistsLoaded(artists: $artists)';
+  return 'LidarrState.artistsLoaded(artists: $artists)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ArtistsLoadedCopyWith<$Res> implements $MusicStateCopyWith<$Res> {
+abstract mixin class $ArtistsLoadedCopyWith<$Res> implements $LidarrStateCopyWith<$Res> {
   factory $ArtistsLoadedCopyWith(ArtistsLoaded value, $Res Function(ArtistsLoaded) _then) = _$ArtistsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<Artist> artists
+ List<LidarrArtist> artists
 });
 
 
@@ -704,12 +704,12 @@ class _$ArtistsLoadedCopyWithImpl<$Res>
   final ArtistsLoaded _self;
   final $Res Function(ArtistsLoaded) _then;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? artists = null,}) {
   return _then(ArtistsLoaded(
 null == artists ? _self._artists : artists // ignore: cast_nullable_to_non_nullable
-as List<Artist>,
+as List<LidarrArtist>,
   ));
 }
 
@@ -719,19 +719,19 @@ as List<Artist>,
 /// @nodoc
 
 
-class AlbumsLoaded implements MusicState {
-  const AlbumsLoaded(final  List<Album> albums): _albums = albums;
+class AlbumsLoaded implements LidarrState {
+  const AlbumsLoaded(final  List<LidarrAlbum> albums): _albums = albums;
   
 
- final  List<Album> _albums;
- List<Album> get albums {
+ final  List<LidarrAlbum> _albums;
+ List<LidarrAlbum> get albums {
   if (_albums is EqualUnmodifiableListView) return _albums;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_albums);
 }
 
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
@@ -750,18 +750,18 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'MusicState.albumsLoaded(albums: $albums)';
+  return 'LidarrState.albumsLoaded(albums: $albums)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $AlbumsLoadedCopyWith<$Res> implements $MusicStateCopyWith<$Res> {
+abstract mixin class $AlbumsLoadedCopyWith<$Res> implements $LidarrStateCopyWith<$Res> {
   factory $AlbumsLoadedCopyWith(AlbumsLoaded value, $Res Function(AlbumsLoaded) _then) = _$AlbumsLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<Album> albums
+ List<LidarrAlbum> albums
 });
 
 
@@ -776,12 +776,12 @@ class _$AlbumsLoadedCopyWithImpl<$Res>
   final AlbumsLoaded _self;
   final $Res Function(AlbumsLoaded) _then;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? albums = null,}) {
   return _then(AlbumsLoaded(
 null == albums ? _self._albums : albums // ignore: cast_nullable_to_non_nullable
-as List<Album>,
+as List<LidarrAlbum>,
   ));
 }
 
@@ -791,23 +791,23 @@ as List<Album>,
 /// @nodoc
 
 
-class MusicSuccess implements MusicState {
-  const MusicSuccess(this.message);
+class LidarrError implements LidarrState {
+  const LidarrError(this.message);
   
 
  final  String message;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MusicSuccessCopyWith<MusicSuccess> get copyWith => _$MusicSuccessCopyWithImpl<MusicSuccess>(this, _$identity);
+$LidarrErrorCopyWith<LidarrError> get copyWith => _$LidarrErrorCopyWithImpl<LidarrError>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicSuccess&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrError&&(identical(other.message, message) || other.message == message));
 }
 
 
@@ -816,15 +816,15 @@ int get hashCode => Object.hash(runtimeType,message);
 
 @override
 String toString() {
-  return 'MusicState.success(message: $message)';
+  return 'LidarrState.error(message: $message)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MusicSuccessCopyWith<$Res> implements $MusicStateCopyWith<$Res> {
-  factory $MusicSuccessCopyWith(MusicSuccess value, $Res Function(MusicSuccess) _then) = _$MusicSuccessCopyWithImpl;
+abstract mixin class $LidarrErrorCopyWith<$Res> implements $LidarrStateCopyWith<$Res> {
+  factory $LidarrErrorCopyWith(LidarrError value, $Res Function(LidarrError) _then) = _$LidarrErrorCopyWithImpl;
 @useResult
 $Res call({
  String message
@@ -835,17 +835,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$MusicSuccessCopyWithImpl<$Res>
-    implements $MusicSuccessCopyWith<$Res> {
-  _$MusicSuccessCopyWithImpl(this._self, this._then);
+class _$LidarrErrorCopyWithImpl<$Res>
+    implements $LidarrErrorCopyWith<$Res> {
+  _$LidarrErrorCopyWithImpl(this._self, this._then);
 
-  final MusicSuccess _self;
-  final $Res Function(MusicSuccess) _then;
+  final LidarrError _self;
+  final $Res Function(LidarrError) _then;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(MusicSuccess(
+  return _then(LidarrError(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -857,23 +857,23 @@ as String,
 /// @nodoc
 
 
-class MusicError implements MusicState {
-  const MusicError(this.message);
+class LidarrSuccess implements LidarrState {
+  const LidarrSuccess(this.message);
   
 
  final  String message;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MusicErrorCopyWith<MusicError> get copyWith => _$MusicErrorCopyWithImpl<MusicError>(this, _$identity);
+$LidarrSuccessCopyWith<LidarrSuccess> get copyWith => _$LidarrSuccessCopyWithImpl<LidarrSuccess>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicError&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrSuccess&&(identical(other.message, message) || other.message == message));
 }
 
 
@@ -882,15 +882,15 @@ int get hashCode => Object.hash(runtimeType,message);
 
 @override
 String toString() {
-  return 'MusicState.error(message: $message)';
+  return 'LidarrState.success(message: $message)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MusicErrorCopyWith<$Res> implements $MusicStateCopyWith<$Res> {
-  factory $MusicErrorCopyWith(MusicError value, $Res Function(MusicError) _then) = _$MusicErrorCopyWithImpl;
+abstract mixin class $LidarrSuccessCopyWith<$Res> implements $LidarrStateCopyWith<$Res> {
+  factory $LidarrSuccessCopyWith(LidarrSuccess value, $Res Function(LidarrSuccess) _then) = _$LidarrSuccessCopyWithImpl;
 @useResult
 $Res call({
  String message
@@ -901,17 +901,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$MusicErrorCopyWithImpl<$Res>
-    implements $MusicErrorCopyWith<$Res> {
-  _$MusicErrorCopyWithImpl(this._self, this._then);
+class _$LidarrSuccessCopyWithImpl<$Res>
+    implements $LidarrSuccessCopyWith<$Res> {
+  _$LidarrSuccessCopyWithImpl(this._self, this._then);
 
-  final MusicError _self;
-  final $Res Function(MusicError) _then;
+  final LidarrSuccess _self;
+  final $Res Function(LidarrSuccess) _then;
 
-/// Create a copy of MusicState
+/// Create a copy of LidarrState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(MusicError(
+  return _then(LidarrSuccess(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));

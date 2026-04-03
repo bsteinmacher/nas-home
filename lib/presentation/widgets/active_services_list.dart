@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../pages/media_page.dart';
-import '../pages/music_page.dart';
+import '../pages/seerr_page.dart';
+import '../pages/lidarr_page.dart';
 
 class ActiveServicesList extends StatelessWidget {
   final List<dynamic> services;
@@ -39,12 +39,12 @@ class ActiveServicesList extends StatelessWidget {
     switch (service.name) {
       case 'Seerr':
         icon = Icons.movie_outlined;
-        color = AppColors.media;
+        color = AppColors.seerr;
         subLabel = 'SEARCH_&_REQUEST_MEDIA';
         break;
       case 'Navidrome':
         icon = Icons.music_note_outlined;
-        color = AppColors.music;
+        color = AppColors.lidarr;
         subLabel = 'SEARCH_&_REQUEST_MUSIC';
         break;
       case 'qBittorrent':
@@ -73,9 +73,9 @@ class ActiveServicesList extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (service.name == 'Seerr') {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const MediaPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const SeerrPage()));
           } else if (service.name == 'Navidrome') {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const MusicPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const LidarrPage()));
           }
         },
         child: Container(

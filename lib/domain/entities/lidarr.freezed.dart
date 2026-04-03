@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'music.dart';
+part of 'lidarr.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,24 +13,24 @@ part of 'music.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Artist {
+mixin _$LidarrArtist {
 
  String? get id;// Lidarr ID (null se não adicionado)
  String get artistName; String? get mbid;// MusicBrainz ID
  String? get status; bool get monitored; bool get isAdded; String? get remotePoster;
-/// Create a copy of Artist
+/// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ArtistCopyWith<Artist> get copyWith => _$ArtistCopyWithImpl<Artist>(this as Artist, _$identity);
+$LidarrArtistCopyWith<LidarrArtist> get copyWith => _$LidarrArtistCopyWithImpl<LidarrArtist>(this as LidarrArtist, _$identity);
 
-  /// Serializes this Artist to a JSON map.
+  /// Serializes this LidarrArtist to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Artist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -39,15 +39,15 @@ int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,
 
 @override
 String toString() {
-  return 'Artist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
+  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ArtistCopyWith<$Res>  {
-  factory $ArtistCopyWith(Artist value, $Res Function(Artist) _then) = _$ArtistCopyWithImpl;
+abstract mixin class $LidarrArtistCopyWith<$Res>  {
+  factory $LidarrArtistCopyWith(LidarrArtist value, $Res Function(LidarrArtist) _then) = _$LidarrArtistCopyWithImpl;
 @useResult
 $Res call({
  String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster
@@ -58,14 +58,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$ArtistCopyWithImpl<$Res>
-    implements $ArtistCopyWith<$Res> {
-  _$ArtistCopyWithImpl(this._self, this._then);
+class _$LidarrArtistCopyWithImpl<$Res>
+    implements $LidarrArtistCopyWith<$Res> {
+  _$LidarrArtistCopyWithImpl(this._self, this._then);
 
-  final Artist _self;
-  final $Res Function(Artist) _then;
+  final LidarrArtist _self;
+  final $Res Function(LidarrArtist) _then;
 
-/// Create a copy of Artist
+/// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,}) {
   return _then(_self.copyWith(
@@ -83,8 +83,8 @@ as String?,
 }
 
 
-/// Adds pattern-matching-related methods to [Artist].
-extension ArtistPatterns on Artist {
+/// Adds pattern-matching-related methods to [LidarrArtist].
+extension LidarrArtistPatterns on LidarrArtist {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -97,10 +97,10 @@ extension ArtistPatterns on Artist {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Artist value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LidarrArtist value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Artist() when $default != null:
+case _LidarrArtist() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -119,10 +119,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Artist value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LidarrArtist value)  $default,){
 final _that = this;
 switch (_that) {
-case _Artist():
+case _LidarrArtist():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -140,10 +140,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Artist value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LidarrArtist value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Artist() when $default != null:
+case _LidarrArtist() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Artist() when $default != null:
+case _LidarrArtist() when $default != null:
 return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
   return orElse();
 
@@ -184,7 +184,7 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)  $default,) {final _that = this;
 switch (_that) {
-case _Artist():
+case _LidarrArtist():
 return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
   throw StateError('Unexpected subclass');
 
@@ -204,7 +204,7 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)?  $default,) {final _that = this;
 switch (_that) {
-case _Artist() when $default != null:
+case _LidarrArtist() when $default != null:
 return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
   return null;
 
@@ -216,9 +216,9 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 /// @nodoc
 @JsonSerializable()
 
-class _Artist implements Artist {
-  const _Artist({required this.id, required this.artistName, required this.mbid, required this.status, this.monitored = false, this.isAdded = false, this.remotePoster});
-  factory _Artist.fromJson(Map<String, dynamic> json) => _$ArtistFromJson(json);
+class _LidarrArtist implements LidarrArtist {
+  const _LidarrArtist({required this.id, required this.artistName, required this.mbid, required this.status, this.monitored = false, this.isAdded = false, this.remotePoster});
+  factory _LidarrArtist.fromJson(Map<String, dynamic> json) => _$LidarrArtistFromJson(json);
 
 @override final  String? id;
 // Lidarr ID (null se não adicionado)
@@ -230,20 +230,20 @@ class _Artist implements Artist {
 @override@JsonKey() final  bool isAdded;
 @override final  String? remotePoster;
 
-/// Create a copy of Artist
+/// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$ArtistCopyWith<_Artist> get copyWith => __$ArtistCopyWithImpl<_Artist>(this, _$identity);
+_$LidarrArtistCopyWith<_LidarrArtist> get copyWith => __$LidarrArtistCopyWithImpl<_LidarrArtist>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$ArtistToJson(this, );
+  return _$LidarrArtistToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Artist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -252,15 +252,15 @@ int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,
 
 @override
 String toString() {
-  return 'Artist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
+  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$ArtistCopyWith<$Res> implements $ArtistCopyWith<$Res> {
-  factory _$ArtistCopyWith(_Artist value, $Res Function(_Artist) _then) = __$ArtistCopyWithImpl;
+abstract mixin class _$LidarrArtistCopyWith<$Res> implements $LidarrArtistCopyWith<$Res> {
+  factory _$LidarrArtistCopyWith(_LidarrArtist value, $Res Function(_LidarrArtist) _then) = __$LidarrArtistCopyWithImpl;
 @override @useResult
 $Res call({
  String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster
@@ -271,17 +271,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$ArtistCopyWithImpl<$Res>
-    implements _$ArtistCopyWith<$Res> {
-  __$ArtistCopyWithImpl(this._self, this._then);
+class __$LidarrArtistCopyWithImpl<$Res>
+    implements _$LidarrArtistCopyWith<$Res> {
+  __$LidarrArtistCopyWithImpl(this._self, this._then);
 
-  final _Artist _self;
-  final $Res Function(_Artist) _then;
+  final _LidarrArtist _self;
+  final $Res Function(_LidarrArtist) _then;
 
-/// Create a copy of Artist
+/// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,}) {
-  return _then(_Artist(
+  return _then(_LidarrArtist(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
 as String,mbid: freezed == mbid ? _self.mbid : mbid // ignore: cast_nullable_to_non_nullable
@@ -298,22 +298,22 @@ as String?,
 
 
 /// @nodoc
-mixin _$Album {
+mixin _$LidarrAlbum {
 
  String? get id; String get title; String get artistName; String? get releaseDate; String? get remoteCover; bool get monitored;
-/// Create a copy of Album
+/// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$AlbumCopyWith<Album> get copyWith => _$AlbumCopyWithImpl<Album>(this as Album, _$identity);
+$LidarrAlbumCopyWith<LidarrAlbum> get copyWith => _$LidarrAlbumCopyWithImpl<LidarrAlbum>(this as LidarrAlbum, _$identity);
 
-  /// Serializes this Album to a JSON map.
+  /// Serializes this LidarrAlbum to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Album&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -322,15 +322,15 @@ int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remo
 
 @override
 String toString() {
-  return 'Album(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $AlbumCopyWith<$Res>  {
-  factory $AlbumCopyWith(Album value, $Res Function(Album) _then) = _$AlbumCopyWithImpl;
+abstract mixin class $LidarrAlbumCopyWith<$Res>  {
+  factory $LidarrAlbumCopyWith(LidarrAlbum value, $Res Function(LidarrAlbum) _then) = _$LidarrAlbumCopyWithImpl;
 @useResult
 $Res call({
  String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored
@@ -341,14 +341,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$AlbumCopyWithImpl<$Res>
-    implements $AlbumCopyWith<$Res> {
-  _$AlbumCopyWithImpl(this._self, this._then);
+class _$LidarrAlbumCopyWithImpl<$Res>
+    implements $LidarrAlbumCopyWith<$Res> {
+  _$LidarrAlbumCopyWithImpl(this._self, this._then);
 
-  final Album _self;
-  final $Res Function(Album) _then;
+  final LidarrAlbum _self;
+  final $Res Function(LidarrAlbum) _then;
 
-/// Create a copy of Album
+/// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,}) {
   return _then(_self.copyWith(
@@ -365,8 +365,8 @@ as bool,
 }
 
 
-/// Adds pattern-matching-related methods to [Album].
-extension AlbumPatterns on Album {
+/// Adds pattern-matching-related methods to [LidarrAlbum].
+extension LidarrAlbumPatterns on LidarrAlbum {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -379,10 +379,10 @@ extension AlbumPatterns on Album {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Album value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LidarrAlbum value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Album() when $default != null:
+case _LidarrAlbum() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -401,10 +401,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Album value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LidarrAlbum value)  $default,){
 final _that = this;
 switch (_that) {
-case _Album():
+case _LidarrAlbum():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -422,10 +422,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Album value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LidarrAlbum value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Album() when $default != null:
+case _LidarrAlbum() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -445,7 +445,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Album() when $default != null:
+case _LidarrAlbum() when $default != null:
 return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
   return orElse();
 
@@ -466,7 +466,7 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)  $default,) {final _that = this;
 switch (_that) {
-case _Album():
+case _LidarrAlbum():
 return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
   throw StateError('Unexpected subclass');
 
@@ -486,7 +486,7 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)?  $default,) {final _that = this;
 switch (_that) {
-case _Album() when $default != null:
+case _LidarrAlbum() when $default != null:
 return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
   return null;
 
@@ -498,9 +498,9 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 /// @nodoc
 @JsonSerializable()
 
-class _Album implements Album {
-  const _Album({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false});
-  factory _Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+class _LidarrAlbum implements LidarrAlbum {
+  const _LidarrAlbum({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false});
+  factory _LidarrAlbum.fromJson(Map<String, dynamic> json) => _$LidarrAlbumFromJson(json);
 
 @override final  String? id;
 @override final  String title;
@@ -509,20 +509,20 @@ class _Album implements Album {
 @override final  String? remoteCover;
 @override@JsonKey() final  bool monitored;
 
-/// Create a copy of Album
+/// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$AlbumCopyWith<_Album> get copyWith => __$AlbumCopyWithImpl<_Album>(this, _$identity);
+_$LidarrAlbumCopyWith<_LidarrAlbum> get copyWith => __$LidarrAlbumCopyWithImpl<_LidarrAlbum>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$AlbumToJson(this, );
+  return _$LidarrAlbumToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Album&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -531,15 +531,15 @@ int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remo
 
 @override
 String toString() {
-  return 'Album(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$AlbumCopyWith<$Res> implements $AlbumCopyWith<$Res> {
-  factory _$AlbumCopyWith(_Album value, $Res Function(_Album) _then) = __$AlbumCopyWithImpl;
+abstract mixin class _$LidarrAlbumCopyWith<$Res> implements $LidarrAlbumCopyWith<$Res> {
+  factory _$LidarrAlbumCopyWith(_LidarrAlbum value, $Res Function(_LidarrAlbum) _then) = __$LidarrAlbumCopyWithImpl;
 @override @useResult
 $Res call({
  String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored
@@ -550,17 +550,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$AlbumCopyWithImpl<$Res>
-    implements _$AlbumCopyWith<$Res> {
-  __$AlbumCopyWithImpl(this._self, this._then);
+class __$LidarrAlbumCopyWithImpl<$Res>
+    implements _$LidarrAlbumCopyWith<$Res> {
+  __$LidarrAlbumCopyWithImpl(this._self, this._then);
 
-  final _Album _self;
-  final $Res Function(_Album) _then;
+  final _LidarrAlbum _self;
+  final $Res Function(_LidarrAlbum) _then;
 
-/// Create a copy of Album
+/// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,}) {
-  return _then(_Album(
+  return _then(_LidarrAlbum(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
