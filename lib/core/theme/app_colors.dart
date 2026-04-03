@@ -17,8 +17,8 @@ abstract class AppColors {
   static const textMuted = Colors.white24;
 
   // Semantic service colors
-  static const media = Colors.purpleAccent;
-  static const music = Colors.blueAccent;
+  static const seerr = Colors.purpleAccent;
+  static const lidarr = Colors.blueAccent;
   static const download = Colors.orangeAccent;
   static const upload = Colors.tealAccent;
   static const photos = Colors.pinkAccent;
@@ -28,8 +28,8 @@ abstract class AppColors {
   static const terminalGradient = LinearGradient(
     colors: [
       files,
-      music,
-      media,
+      lidarr,
+      seerr,
       photos,
     ],
   );

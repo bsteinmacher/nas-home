@@ -1,7 +1,7 @@
-import '../entities/media.dart';
+import '../entities/seerr.dart';
 
 abstract class SeerrRepository {
-  Future<List<Media>> search(String query);
-  Future<List<Media>> getTrending();
+  Future<List<Seerr>> search(String query);
+  Future<List<Seerr>> getTrending();
   Future<void> requestMedia(int mediaId, String mediaType);
 }

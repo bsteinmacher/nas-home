@@ -1,32 +1,32 @@
-import '../../domain/entities/music.dart';
-import '../../domain/repositories/music_repository.dart';
+import '../entities/lidarr.dart';
+import '../repositories/lidarr_repository.dart';
 
 class SearchArtistsUseCase {
-  final MusicRepository repository;
+  final LidarrRepository repository;
 
   SearchArtistsUseCase(this.repository);
 
-  Future<List<Artist>> execute(String query) {
+  Future<List<LidarrArtist>> execute(String query) {
     return repository.searchArtists(query);
   }
 }
 
 class RequestArtistUseCase {
-  final MusicRepository repository;
+  final LidarrRepository repository;
 
   RequestArtistUseCase(this.repository);
 
-  Future<void> execute(Artist artist) {
+  Future<void> execute(LidarrArtist artist) {
     return repository.requestArtist(artist);
   }
 }
 
 class GetAlbumsUseCase {
-  final MusicRepository repository;
+  final LidarrRepository repository;
 
   GetAlbumsUseCase(this.repository);
 
-  Future<List<Album>> execute(String artistId) {
+  Future<List<LidarrAlbum>> execute(String artistId) {
     return repository.getAlbums(artistId);
   }
 }

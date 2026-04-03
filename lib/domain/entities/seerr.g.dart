@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'media.dart';
+part of 'seerr.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Media _$MediaFromJson(Map<String, dynamic> json) => _Media(
+_Seerr _$SeerrFromJson(Map<String, dynamic> json) => _Seerr(
   id: (json['id'] as num).toInt(),
   title: json['title'] as String,
   overview: json['overview'] as String?,
@@ -14,9 +14,10 @@ _Media _$MediaFromJson(Map<String, dynamic> json) => _Media(
   mediaType: json['mediaType'] as String,
   releaseDate: json['releaseDate'] as String?,
   isRequested: json['isRequested'] as bool? ?? false,
+  status: (json['status'] as num?)?.toInt(),
 );
 
-Map<String, dynamic> _$MediaToJson(_Media instance) => <String, dynamic>{
+Map<String, dynamic> _$SeerrToJson(_Seerr instance) => <String, dynamic>{
   'id': instance.id,
   'title': instance.title,
   'overview': instance.overview,
@@ -24,4 +25,5 @@ Map<String, dynamic> _$MediaToJson(_Media instance) => <String, dynamic>{
   'mediaType': instance.mediaType,
   'releaseDate': instance.releaseDate,
   'isRequested': instance.isRequested,
+  'status': instance.status,
 };

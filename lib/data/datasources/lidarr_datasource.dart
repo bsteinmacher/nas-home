@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../domain/entities/music.dart';
+import '../../domain/entities/lidarr.dart';
 
-abstract class MusicDataSource {
-  Future<List<Artist>> searchArtists(String query);
-  Future<void> requestArtist(Artist artist);
-  Future<List<Album>> getAlbums(String artistId);
+abstract class LidarrDataSource {
+  Future<List<LidarrArtist>> searchArtists(String query);
+  Future<void> requestArtist(LidarrArtist artist);
+  Future<List<LidarrAlbum>> getAlbums(String artistId);
 }
 
-class LidarrDataSourceImpl implements MusicDataSource {
+class LidarrDataSourceImpl implements LidarrDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
 
@@ -33,19 +33,22 @@ class LidarrDataSourceImpl implements MusicDataSource {
   String get _apiKey => sharedPreferences.getString('lidarr_api_key') ?? '';
 
   @override
-  Future<List<Artist>> searchArtists(String query) async {
+  Future<List<LidarrArtist>> searchArtists(String query) async {
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return [];
+
     final response = await dio.get(
       '$_baseUrl:8686/api/v1/artist/lookup',
-      queryParameters: {'term': query},
+      queryParameters: {'term': trimmedQuery},
       options: Options(headers: {'X-Api-Key': _apiKey}),
     );
 
     final results = response.data as List;
-    return results.map((e) => _mapToArtist(e)).toList();
+    return results.map((e) => _mapToLidarrArtist(e)).toList();
   }
 
   @override
-  Future<void> requestArtist(Artist artist) async {
+  Future<void> requestArtist(LidarrArtist artist) async {
     await dio.post(
       '$_baseUrl:8686/api/v1/artist',
       data: {
@@ -61,7 +64,7 @@ class LidarrDataSourceImpl implements MusicDataSource {
   }
 
   @override
-  Future<List<Album>> getAlbums(String artistId) async {
+  Future<List<LidarrAlbum>> getAlbums(String artistId) async {
     final response = await dio.get(
       '$_baseUrl:8686/api/v1/album',
       queryParameters: {'artistId': artistId},
@@ -69,17 +72,17 @@ class LidarrDataSourceImpl implements MusicDataSource {
     );
 
     final results = response.data as List;
-    return results.map((e) => _mapToAlbum(e)).toList();
+    return results.map((e) => _mapToLidarrAlbum(e)).toList();
   }
 
-  Artist _mapToArtist(Map<String, dynamic> json) {
+  LidarrArtist _mapToLidarrArtist(Map<String, dynamic> json) {
     final images = json['images'] as List?;
     final poster = images?.firstWhere(
       (img) => img['coverType'] == 'poster',
       orElse: () => images.isNotEmpty ? images.first : null,
     );
 
-    return Artist(
+    return LidarrArtist(
       id: json['id']?.toString(),
       artistName: json['artistName'] ?? 'Unknown Artist',
       mbid: json['foreignArtistId'],
@@ -90,14 +93,14 @@ class LidarrDataSourceImpl implements MusicDataSource {
     );
   }
 
-  Album _mapToAlbum(Map<String, dynamic> json) {
+  LidarrAlbum _mapToLidarrAlbum(Map<String, dynamic> json) {
     final images = json['images'] as List?;
     final cover = images?.firstWhere(
       (img) => img['coverType'] == 'cover',
       orElse: () => images.isNotEmpty ? images.first : null,
-  );
+    );
 
-    return Album(
+    return LidarrAlbum(
       id: json['id']?.toString(),
       title: json['title'] ?? 'Unknown Album',
       artistName: '', // Lidarr doesn't always include this in album list
