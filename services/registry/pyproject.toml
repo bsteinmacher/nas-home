@@ -1,0 +1,24 @@
+[project]
+name = "nas-registry"
+version = "0.1.0"
+description = "A configuration and discovery service for the NAS environment."
+authors = [
+    { name = "GSD Assistant" }
+]
+dependencies = [
+    "fastapi[standard]>=0.110.0",
+    "uvicorn>=0.27.0",
+    "python-dotenv>=1.0.1",
+    "pydantic-settings>=2.2.1"
+]
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
