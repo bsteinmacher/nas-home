@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import '../storage/secure_storage_service.dart';
 import '../../data/datasources/seerr_datasource.dart';
 import '../../data/datasources/lidarr_datasource.dart';
 import '../../data/datasources/registry_datasource.dart';
@@ -30,6 +31,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Dio());
 
   //! Core
+  sl.registerLazySingleton<SecureStorageService>(() => SecureStorageServiceImpl());
 
   //! Data
   sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl()));
