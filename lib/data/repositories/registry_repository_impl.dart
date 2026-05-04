@@ -20,21 +20,29 @@ class RegistryRepositoryImpl implements RegistryRepository {
     final config = await dataSource.getConfig(normalizedUrl, token);
 
     // Save each API key found in the registry to SecureStorage
-    if (config.containsKey('seerr') || config.containsKey('jellyseerr')) {
-      final seerrKey = config['seerr'] ?? config['jellyseerr'];
+    final seerrKey = config['seerr_key'] ?? config['seerr'] ?? config['jellyseerr'];
+    if (seerrKey != null) {
       await secureStorage.write('seerr_api_key', seerrKey);
     }
-    if (config.containsKey('lidarr')) {
-      await secureStorage.write('lidarr_api_key', config['lidarr']);
+
+    final lidarrKey = config['lidarr_key'] ?? config['lidarr'];
+    if (lidarrKey != null) {
+      await secureStorage.write('lidarr_api_key', lidarrKey);
     }
-    if (config.containsKey('prowlarr')) {
-      await secureStorage.write('prowlarr_api_key', config['prowlarr']);
+
+    final prowlarrKey = config['prowlarr_key'] ?? config['prowlarr'];
+    if (prowlarrKey != null) {
+      await secureStorage.write('prowlarr_api_key', prowlarrKey);
     }
-    if (config.containsKey('radarr')) {
-      await secureStorage.write('radarr_api_key', config['radarr']);
+
+    final radarrKey = config['radarr_key'] ?? config['radarr'];
+    if (radarrKey != null) {
+      await secureStorage.write('radarr_api_key', radarrKey);
     }
-    if (config.containsKey('sonarr')) {
-      await secureStorage.write('sonarr_api_key', config['sonarr']);
+
+    final sonarrKey = config['sonarr_key'] ?? config['sonarr'];
+    if (sonarrKey != null) {
+      await secureStorage.write('sonarr_api_key', sonarrKey);
     }
 
     // Also save the Registry Token for future syncs
