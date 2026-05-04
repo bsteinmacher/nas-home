@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nas-registry:
+    build: .
+    container_name: nas-registry
+    restart: unless-stopped
+    networks:
+      - proxynet
+    volumes:
+      - /home/didizera/meu-nas/data/config/lidarr:/config/lidarr:ro
+      - /home/didizera/meu-nas/data/config/radarr:/config/radarr:ro
+      - /home/didizera/meu-nas/data/config/sonarr:/config/sonarr:ro
+      - /home/didizera/meu-nas/data/config/prowlarr:/config/prowlarr:ro
+      - /home/didizera/meu-nas/data/config/seerr:/config/seerr:ro
+    environment:
+      - REGISTRY_TOKEN=${REGISTRY_TOKEN}
+      - LIDARR_CONFIG_PATH=/config/lidarr/config.xml
+      - RADARR_CONFIG_PATH=/config/radarr/config.xml
+      - SONARR_CONFIG_PATH=/config/sonarr/config.xml
+      - PROWLARR_CONFIG_PATH=/config/prowlarr/config.xml
+      - SEERR_SETTINGS_PATH=/config/seerr/settings.json
+
+networks:
+  proxynet:
+    external: true
