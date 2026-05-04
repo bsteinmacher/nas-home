@@ -7,7 +7,8 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def mock_env(monkeypatch):
-    monkeypatch.setenv("REGISTRY_TOKEN", "test-token")
+    from app.config import settings
+    monkeypatch.setattr(settings, "registry_token", "test-token")
 
 @pytest.fixture
 def auth_header():

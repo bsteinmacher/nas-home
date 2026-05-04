@@ -6,8 +6,10 @@ from fastapi.security import APIKeyHeader
 API_KEY_NAME = "X-Registry-Token"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
+from .config import settings
+
 def validate_token(api_key: str = Depends(api_key_header)):
-    expected_token = os.getenv("REGISTRY_TOKEN")
+    expected_token = settings.registry_token
     
     if not expected_token:
         # If no token is configured in the environment, we might want to fail-safe

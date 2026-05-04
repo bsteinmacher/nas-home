@@ -15,6 +15,7 @@ def mock_env(monkeypatch):
     # we might need to patch it directly or reload the module.
     # For now, let's see if patching os.environ before import works or if we should patch app.config.settings
     from app.config import settings
+    monkeypatch.setattr(settings, "registry_token", "test-token")
     monkeypatch.setattr(settings, "lidarr_config_path", "tests/mocks/lidarr_config.xml")
     monkeypatch.setattr(settings, "seerr_settings_path", "tests/mocks/seerr_settings.json")
 
