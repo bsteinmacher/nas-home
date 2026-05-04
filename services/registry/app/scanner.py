@@ -39,6 +39,9 @@ def get_seerr_key(file_path: str) -> Optional[str]:
     try:
         with open(file_path, "r") as f:
             data = json.load(f)
+            # Seerr stores apiKey in the 'main' object
+            if "main" in data and isinstance(data["main"], dict):
+                return data["main"].get("apiKey")
             return data.get("apiKey")
     except (json.JSONDecodeError, IOError) as e:
         logger.error(f"Failed to read/parse JSON settings {file_path}: {e}")
