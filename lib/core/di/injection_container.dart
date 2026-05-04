@@ -4,22 +4,32 @@ import 'package:dio/dio.dart';
 import '../storage/secure_storage_service.dart';
 import '../../data/datasources/seerr_datasource.dart';
 import '../../data/datasources/lidarr_datasource.dart';
+import '../../data/datasources/radarr_datasource.dart';
+import '../../data/datasources/sonarr_datasource.dart';
 import '../../data/datasources/registry_datasource.dart';
 import '../../data/repositories/seerr_repository_impl.dart';
 import '../../data/repositories/lidarr_repository_impl.dart';
+import '../../data/repositories/radarr_repository_impl.dart';
+import '../../data/repositories/sonarr_repository_impl.dart';
 import '../../data/repositories/nas_repository_impl.dart';
 import '../../data/repositories/registry_repository_impl.dart';
 import '../../domain/repositories/seerr_repository.dart';
 import '../../domain/repositories/lidarr_repository.dart';
+import '../../domain/repositories/radarr_repository.dart';
+import '../../domain/repositories/sonarr_repository.dart';
 import '../../domain/repositories/nas_repository.dart';
 import '../../domain/repositories/registry_repository.dart';
 import '../../domain/usecases/get_services_status.dart';
 import '../../domain/usecases/get_hardware_info.dart';
 import '../../domain/usecases/seerr_usecases.dart';
 import '../../domain/usecases/lidarr_usecases.dart';
+import '../../domain/usecases/radarr_usecases.dart';
+import '../../domain/usecases/sonarr_usecases.dart';
 import '../../domain/usecases/sync_registry_config.dart';
 import '../../presentation/blocs/seerr_bloc.dart';
 import '../../presentation/blocs/lidarr_bloc.dart';
+import '../../presentation/blocs/radarr_bloc.dart';
+import '../../presentation/blocs/sonarr_bloc.dart';
 import '../../presentation/blocs/nas_status_bloc.dart';
 
 final sl = GetIt.instance;
@@ -58,6 +68,22 @@ Future<void> init() async {
       ));
   sl.registerLazySingleton<LidarrRepository>(() => LidarrRepositoryImpl(sl()));
 
+  // Radarr (Movies)
+  sl.registerLazySingleton<RadarrDataSource>(() => RadarrDataSourceImpl(
+        dio: sl(),
+        sharedPreferences: sl(),
+        secureStorage: sl(),
+      ));
+  sl.registerLazySingleton<RadarrRepository>(() => RadarrRepositoryImpl(sl()));
+
+  // Sonarr (TV Shows)
+  sl.registerLazySingleton<SonarrDataSource>(() => SonarrDataSourceImpl(
+        dio: sl(),
+        sharedPreferences: sl(),
+        secureStorage: sl(),
+      ));
+  sl.registerLazySingleton<SonarrRepository>(() => SonarrRepositoryImpl(sl()));
+
   //! Domain
   sl.registerLazySingleton(() => GetServicesStatusUseCase(sl()));
   sl.registerLazySingleton(() => GetHardwareInfoUseCase(sl()));
@@ -70,6 +96,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchArtistsUseCase(sl()));
   sl.registerLazySingleton(() => RequestArtistUseCase(sl()));
   sl.registerLazySingleton(() => GetAlbumsUseCase(sl()));
+
+  // Radarr (Movies)
+  sl.registerLazySingleton(() => GetRadarrMoviesUseCase(sl()));
+  sl.registerLazySingleton(() => GetRadarrQueueUseCase(sl()));
+
+  // Sonarr (TV)
+  sl.registerLazySingleton(() => GetSonarrSeriesUseCase(sl()));
+  sl.registerLazySingleton(() => GetSonarrQueueUseCase(sl()));
 
   //! Presentation
   sl.registerFactory(() => NasStatusBloc(
@@ -86,5 +120,13 @@ Future<void> init() async {
         searchArtists: sl(),
         requestArtist: sl(),
         getAlbums: sl(),
+      ));
+  sl.registerFactory(() => RadarrBloc(
+        getMovies: sl(),
+        getQueue: sl(),
+      ));
+  sl.registerFactory(() => SonarrBloc(
+        getSeries: sl(),
+        getQueue: sl(),
       ));
 }
