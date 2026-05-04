@@ -45,7 +45,7 @@
   4. Error handling gracefully manages network issues or invalid tokens.
 **Plans**: 3 plans
 - [x] 03-01-PLAN.md — Setup Secure Storage infrastructure and DI.
-- [ ] 03-02-PLAN.md — Update Repository and DataSources to use Secure Storage.
+- [x] 03-02-PLAN.md — Update Repository and DataSources to use Secure Storage.
 - [ ] 03-03-PLAN.md — Refine Settings UI and finalize end-to-end sync workflow.
 
 ### Phase 4: Support for Extended Services

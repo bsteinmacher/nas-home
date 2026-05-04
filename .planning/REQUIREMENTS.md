@@ -38,5 +38,5 @@
 | NAS-INF-03  | Phase 2 | Completed |
 | APP-REG-01  | Phase 3 | In Progress |
 | APP-REG-02  | Phase 3 | In Progress |
-| APP-REG-03  | Phase 3 | Pending |
+| APP-REG-03  | Phase 3 | Complete |
 | APP-REG-04  | Phase 3 | Pending |
