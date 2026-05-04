@@ -1,41 +1,47 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/repositories/registry_repository.dart';
 import '../datasources/registry_datasource.dart';
+import '../../core/storage/secure_storage_service.dart';
 
 class RegistryRepositoryImpl implements RegistryRepository {
   final RegistryDataSource dataSource;
   final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
   RegistryRepositoryImpl({
     required this.dataSource,
     required this.sharedPreferences,
+    required this.secureStorage,
   });
 
   @override
   Future<void> syncConfig(String baseUrl, String token) async {
     final normalizedUrl = _normalizeUrl(baseUrl);
     final config = await dataSource.getConfig(normalizedUrl, token);
-    
-    // Save each API key found in the registry to SharedPreferences
+
+    // Save each API key found in the registry to SecureStorage
     if (config.containsKey('seerr') || config.containsKey('jellyseerr')) {
       final seerrKey = config['seerr'] ?? config['jellyseerr'];
-      await sharedPreferences.setString('seerr_api_key', seerrKey);
+      await secureStorage.write('seerr_api_key', seerrKey);
     }
     if (config.containsKey('lidarr')) {
-      await sharedPreferences.setString('lidarr_api_key', config['lidarr']);
+      await secureStorage.write('lidarr_api_key', config['lidarr']);
     }
     if (config.containsKey('prowlarr')) {
-      await sharedPreferences.setString('prowlarr_api_key', config['prowlarr']);
+      await secureStorage.write('prowlarr_api_key', config['prowlarr']);
     }
     if (config.containsKey('radarr')) {
-      await sharedPreferences.setString('radarr_api_key', config['radarr']);
+      await secureStorage.write('radarr_api_key', config['radarr']);
     }
     if (config.containsKey('sonarr')) {
-      await sharedPreferences.setString('sonarr_api_key', config['sonarr']);
+      await secureStorage.write('sonarr_api_key', config['sonarr']);
     }
-    
-    // Also save the Registry Token for future syncs if needed
-    await sharedPreferences.setString('registry_token', token);
+
+    // Also save the Registry Token for future syncs
+    await secureStorage.write('registry_token', token);
+
+    // Save non-sensitive NAS URL to SharedPreferences
+    await sharedPreferences.setString('nas_url', normalizedUrl);
   }
 
   String _normalizeUrl(String url) {
