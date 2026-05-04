@@ -4,7 +4,7 @@ part 'sonarr.freezed.dart';
 part 'sonarr.g.dart';
 
 @freezed
-class SonarrSeries with _$SonarrSeries {
+abstract class SonarrSeries with _$SonarrSeries {
   const factory SonarrSeries({
     required int id,
     required String title,

@@ -5,7 +5,7 @@
 - [x] **Phase 1: NAS Registry Microservice Core** - Build the Python/FastAPI discovery service.
 - [x] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
 - [x] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
-- [ ] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
+- [x] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
 
 ## Phase Details
 

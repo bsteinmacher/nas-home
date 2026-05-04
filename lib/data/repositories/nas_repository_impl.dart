@@ -40,7 +40,7 @@ class NasRepositoryImpl implements NasRepository {
       ));
       return response.statusCode != null;
     } catch (e) {
-      print('Error checking service $port: $e');
+      // Log removed
       return false;
     }
   }
@@ -51,7 +51,7 @@ class NasRepositoryImpl implements NasRepository {
     final apiUrl = '$normalizedUrl:61208/api/4/all';
     
     try {
-      print('Fetching hardware info from: $apiUrl');
+      // Log removed
       final response = await dio.get(apiUrl, options: Options(
         sendTimeout: const Duration(seconds: 3),
         receiveTimeout: const Duration(seconds: 3),
@@ -156,7 +156,7 @@ class NasRepositoryImpl implements NasRepository {
         hddTotal: hddTotal,
       );
     } catch (e) {
-      print('Error fetching hardware info from $apiUrl: $e');
+      // Log removed
       return const HardwareInfo(
         hostname: 'OFFLINE',
         cpuUsage: 0,

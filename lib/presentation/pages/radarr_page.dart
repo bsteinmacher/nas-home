@@ -109,7 +109,7 @@ class RadarrView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
             side: BorderSide(
-              color: movie.monitored ? AppColors.radarr.withOpacity(0.3) : Colors.transparent,
+              color: movie.monitored ? AppColors.radarr.withValues(alpha: 0.3) : Colors.transparent,
             ),
           ),
           child: ListTile(

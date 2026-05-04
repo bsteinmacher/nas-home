@@ -39,4 +39,10 @@ abstract class AppTypography {
     fontSize: 10,
     fontWeight: FontWeight.bold,
   );
+
+  // General terminal body text
+  static final terminalBody = baseStyle.copyWith(
+    fontSize: 13,
+    color: AppColors.textSecondary,
+  );
 }

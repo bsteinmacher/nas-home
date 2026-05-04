@@ -125,7 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'SETTINGS_CONFIG',
+          'SETTINGS_CONFIGURATION',
           style: AppTypography.terminalTitle,
         ),
         leading: IconButton(
@@ -138,126 +138,38 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('// CORE_SERVER_CONFIGURATION', style: AppTypography.sectionHeader),
+            _buildSectionHeader('CORE_SERVER_STATS', 'Hardware monitoring endpoint (CPU, RAM, DISK)'),
             const SizedBox(height: AppSpacing.md),
             TuiInputField(
               controller: _nasUrlController,
-              label: 'NAS_HOST_ADDRESS (FOR_HARDWARE_STATS)',
-              hintText: '192.168.100.85',
+              label: 'NAS_HOST_ADDRESS',
+              hintText: 'e.g., 192.168.100.85',
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
             
-            Text('// REGISTRY_DISCOVERY_SERVICE', style: AppTypography.sectionHeader),
+            _buildSectionHeader('REGISTRY_AUTO_DISCOVERY', 'Automated API key retrieval from NAS Registry'),
             const SizedBox(height: AppSpacing.md),
             TuiInputField(
               controller: _registryUrlController,
               label: 'REGISTRY_SERVICE_URL',
-              hintText: 'http://registry.meunas.home',
+              hintText: 'e.g., http://registry.meunas.home',
             ),
             const SizedBox(height: AppSpacing.sm),
             TuiInputField(
               controller: _registryTokenController,
               label: 'X_REGISTRY_TOKEN',
-              hintText: 'token_xxxxxxxx...',
+              hintText: 'Enter your secure registry token',
               obscureText: true,
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            // Redesigned Sync Button
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: _isSyncing ? null : _syncFromRegistry,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.5)),
-                      borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-                      color: AppColors.terminalGreen.withValues(alpha: 0.05),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_isSyncing)
-                          const SizedBox(
-                            width: 14,
-                            height: 14,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.terminalGreen),
-                          )
-                        else
-                          const Icon(Icons.terminal, size: 16, color: AppColors.terminalGreen),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          _isSyncing ? 'INITIALIZING_SYNC...' : 'RUN_AUTO_DISCOVERY_SYNC',
-                          style: AppTypography.statusBadge.copyWith(color: AppColors.terminalGreen),
-                        ),
-                        if (!_isSyncing && _lastSynced != null) ...[
-                          const SizedBox(width: AppSpacing.sm),
-                          const Icon(Icons.check_circle, size: 14, color: AppColors.terminalGreen),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                if (_lastSynced != null) ...[
-                  const SizedBox(height: AppSpacing.xs),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'LAST_SUCCESSFUL_SYNC: $_lastSynced',
-                          style: AppTypography.moduleSublabel.copyWith(fontSize: 10, color: AppColors.textMuted),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          'ACTIVE_INTEGRATIONS:',
-                          style: AppTypography.statusBadge.copyWith(fontSize: 10, color: AppColors.textMuted),
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Wrap(
-                          spacing: AppSpacing.sm,
-                          children: [
-                            if (_seerrKeyController.text.isNotEmpty)
-                              _buildServiceBadge('SEERR'),
-                            if (_lidarrKeyController.text.isNotEmpty)
-                              _buildServiceBadge('LIDARR'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Footer Info
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.surface.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('SYSTEM_NOTICE:', style: AppTypography.statusBadge.copyWith(color: AppColors.textMuted)),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'Manual configuration keys have been deprecated. Use the Registry discovery service to manage all API integrations automatically.',
-                    style: AppTypography.moduleSublabel,
-                  ),
-                ],
-              ),
-            ),
+            // Sync Button
+            _buildSyncButton(),
             
             const SizedBox(height: AppSpacing.xl),
 
+            _buildSectionHeader('SYSTEM_CONTROL', 'Commit changes to persistent storage'),
+            const SizedBox(height: AppSpacing.md),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -271,7 +183,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 child: Text(
-                  'COMMIT_CHANGES',
+                  'COMMIT_AND_SAVE',
                   style: AppTypography.statusBadge,
                 ),
               ),
@@ -279,6 +191,73 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, String description) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('// $title', style: AppTypography.sectionHeader.copyWith(color: AppColors.terminalGreen)),
+        const SizedBox(height: 4),
+        Text(
+          description.toUpperCase(),
+          style: AppTypography.moduleSublabel.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSyncButton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: _isSyncing ? null : _syncFromRegistry,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.5)),
+              borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+              color: AppColors.terminalGreen.withValues(alpha: 0.05),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_isSyncing)
+                  const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.terminalGreen),
+                  )
+                else
+                  const Icon(Icons.sync_alt, size: 16, color: AppColors.terminalGreen),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  _isSyncing ? 'INITIALIZING_SYNC...' : 'RUN_AUTO_DISCOVERY_SYNC',
+                  style: AppTypography.statusBadge.copyWith(color: AppColors.terminalGreen),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_lastSynced != null) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'LAST_SUCCESSFUL_SYNC: $_lastSynced',
+            style: AppTypography.moduleSublabel.copyWith(fontSize: 10),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Wrap(
+            spacing: AppSpacing.sm,
+            children: [
+              if (_seerrKeyController.text.isNotEmpty) _buildServiceBadge('SEERR_ACTIVE'),
+              if (_lidarrKeyController.text.isNotEmpty) _buildServiceBadge('LIDARR_ACTIVE'),
+            ],
+          ),
+        ],
+      ],
     );
   }
 

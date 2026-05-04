@@ -25,6 +25,7 @@ abstract class AppColors {
   static const upload = Colors.tealAccent;
   static const photos = Colors.pinkAccent;
   static const files = Colors.lightBlueAccent;
+  static const error = Colors.redAccent;
 
   // Terminal Gradients
   static const terminalGradient = LinearGradient(

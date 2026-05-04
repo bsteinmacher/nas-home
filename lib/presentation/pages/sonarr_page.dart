@@ -109,7 +109,7 @@ class SonarrView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
             side: BorderSide(
-              color: item.monitored ? AppColors.sonarr.withOpacity(0.3) : Colors.transparent,
+              color: item.monitored ? AppColors.sonarr.withValues(alpha: 0.3) : Colors.transparent,
             ),
           ),
           child: ListTile(

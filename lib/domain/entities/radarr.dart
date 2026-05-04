@@ -4,7 +4,7 @@ part 'radarr.freezed.dart';
 part 'radarr.g.dart';
 
 @freezed
-class RadarrMovie with _$RadarrMovie {
+abstract class RadarrMovie with _$RadarrMovie {
   const factory RadarrMovie({
     required int id,
     required String title,

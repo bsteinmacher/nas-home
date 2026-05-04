@@ -4,7 +4,7 @@ part 'prowlarr.freezed.dart';
 part 'prowlarr.g.dart';
 
 @freezed
-class ProwlarrIndexer with _$ProwlarrIndexer {
+abstract class ProwlarrIndexer with _$ProwlarrIndexer {
   const factory ProwlarrIndexer({
     required int id,
     required String name,

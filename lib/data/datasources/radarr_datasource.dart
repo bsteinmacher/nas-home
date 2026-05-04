@@ -47,7 +47,7 @@ class RadarrDataSourceImpl implements RadarrDataSource {
       final images = e['images'] as List?;
       final poster = images?.firstWhere(
         (img) => img['coverType'] == 'poster',
-        orElse: () => images != null && images.isNotEmpty ? images.first : null,
+        orElse: () => images.isNotEmpty ? images.first : null,
       ) as Map<String, dynamic>?;
 
       return RadarrMovie(
