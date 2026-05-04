@@ -26,17 +26,17 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAS-REG-01  | Phase 1 | Pending |
-| NAS-REG-02  | Phase 1 | Pending |
-| NAS-REG-03  | Phase 1 | Pending |
-| NAS-REG-04  | Phase 1 | Pending |
-| NAS-REG-05  | Phase 1 | Pending |
-| NAS-REG-06  | Phase 2 | Pending |
-| NAS-REG-07  | Phase 2 | Pending |
-| NAS-INF-01  | Phase 2 | Pending |
-| NAS-INF-02  | Phase 2 | Pending |
-| NAS-INF-03  | Phase 2 | Pending |
-| APP-REG-01  | Phase 3 | Pending |
-| APP-REG-02  | Phase 3 | Pending |
+| NAS-REG-01  | Phase 1 | Completed |
+| NAS-REG-02  | Phase 1 | Completed |
+| NAS-REG-03  | Phase 1 | Completed |
+| NAS-REG-04  | Phase 1 | Completed |
+| NAS-REG-05  | Phase 1 | Completed |
+| NAS-REG-06  | Phase 2 | Completed |
+| NAS-REG-07  | Phase 2 | Completed |
+| NAS-INF-01  | Phase 2 | Completed |
+| NAS-INF-02  | Phase 2 | Completed |
+| NAS-INF-03  | Phase 2 | Completed |
+| APP-REG-01  | Phase 3 | In Progress |
+| APP-REG-02  | Phase 3 | In Progress |
 | APP-REG-03  | Phase 3 | Pending |
 | APP-REG-04  | Phase 3 | Pending |

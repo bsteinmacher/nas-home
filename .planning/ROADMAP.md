@@ -3,7 +3,7 @@
 ## Phases
 
 - [x] **Phase 1: NAS Registry Microservice Core** - Build the Python/FastAPI discovery service.
-- [ ] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
+- [x] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
 - [ ] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
 - [ ] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
 
@@ -32,7 +32,7 @@
   3. `registry.meunas.home` is reachable from the local network via HTTPS/HTTP.
   4. Real API keys are correctly extracted from the actual NAS configuration files.
 **Plans**: 1 plan
-- [ ] 02-01-PLAN.md — Dockerize and deploy the NAS Registry service to the remote NAS host.
+- [x] 02-01-PLAN.md — Dockerize and deploy the NAS Registry service to the remote NAS host.
 
 ### Phase 3: App Integration & UI Refinement
 **Goal**: Seamlessly sync the mobile app with the NAS Registry.
@@ -43,8 +43,10 @@
   2. Clicking "Run Auto Discovery Sync" successfully fetches and saves keys.
   3. App UI reflects updated status (e.g., Lidarr page starts working if it was missing the key).
   4. Error handling gracefully manages network issues or invalid tokens.
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 3 plans
+- [x] 03-01-PLAN.md — Setup Secure Storage infrastructure and DI.
+- [ ] 03-02-PLAN.md — Update Repository and DataSources to use Secure Storage.
+- [ ] 03-03-PLAN.md — Refine Settings UI and finalize end-to-end sync workflow.
 
 ### Phase 4: Support for Extended Services
 **Goal**: Expand the App to support the full media stack monitoring.
@@ -62,6 +64,6 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. NAS Registry Microservice Core | 2/2 | Completed | 2026-05-04 |
-| 2. Deployment & Infrastructure | 0/1 | In Progress | - |
-| 3. App Integration & UI Refinement | 0/1 | Not started | - |
-| 4. Support for Extended Services | 0/1 | Not started | - |
+| 2. Deployment & Infrastructure | 1/1 | Completed | 2026-05-04 |
+| 3. App Integration & UI Refinement | 1/3 | In Progress | - |
+| 4. Support for Extended Services | 0/0 | Not started | - |
