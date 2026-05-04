@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/di/injection_container.dart';
+import '../../core/storage/secure_storage_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -20,15 +21,32 @@ class _SettingsPageState extends State<SettingsPage> {
   final _seerrKeyController = TextEditingController();
   final _lidarrKeyController = TextEditingController();
   final _prefs = sl<SharedPreferences>();
+  final _secureStorage = sl<SecureStorageService>();
   bool _isSyncing = false;
+  String? _lastSynced;
 
   @override
   void initState() {
     super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
     _nasUrlController.text = _prefs.getString('nas_url') ?? '';
-    _registryTokenController.text = _prefs.getString('registry_token') ?? '';
-    _seerrKeyController.text = _prefs.getString('seerr_api_key') ?? _prefs.getString('jellyseerr_api_key') ?? '';
-    _lidarrKeyController.text = _prefs.getString('lidarr_api_key') ?? '';
+    _lastSynced = _prefs.getString('last_registry_sync');
+    
+    // Read sensitive data from secure storage
+    final token = await _secureStorage.read('registry_token');
+    final seerrKey = await _secureStorage.read('seerr_api_key');
+    final lidarrKey = await _secureStorage.read('lidarr_api_key');
+
+    if (mounted) {
+      setState(() {
+        _registryTokenController.text = token ?? '';
+        _seerrKeyController.text = seerrKey ?? '';
+        _lidarrKeyController.text = lidarrKey ?? '';
+      });
+    }
   }
 
   Future<void> _syncFromRegistry() async {
@@ -46,13 +64,21 @@ class _SettingsPageState extends State<SettingsPage> {
         _registryTokenController.text,
       );
       
-      // Update local storage values in memory
-      setState(() {
-        _seerrKeyController.text = _prefs.getString('seerr_api_key') ?? '';
-        _lidarrKeyController.text = _prefs.getString('lidarr_api_key') ?? '';
-      });
+      // Reload values from secure storage after sync
+      final seerrKey = await _secureStorage.read('seerr_api_key');
+      final lidarrKey = await _secureStorage.read('lidarr_api_key');
+
+      final now = DateTime.now();
+      final timestamp = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+      await _prefs.setString('last_registry_sync', timestamp);
 
       if (mounted) {
+        setState(() {
+          _seerrKeyController.text = seerrKey ?? '';
+          _lidarrKeyController.text = lidarrKey ?? '';
+          _lastSynced = timestamp;
+        });
+        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('API Keys synced successfully!')),
         );
@@ -69,11 +95,19 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _saveSettings() async {
+    // Save non-sensitive data to shared preferences
     await _prefs.setString('nas_url', _nasUrlController.text);
-    await _prefs.setString('registry_token', _registryTokenController.text);
-    // Even if manual fields are removed, we still save the controllers in case they were updated via SYNC
-    await _prefs.setString('seerr_api_key', _seerrKeyController.text);
-    await _prefs.setString('lidarr_api_key', _lidarrKeyController.text);
+    
+    // Save sensitive data to secure storage
+    await _secureStorage.write('registry_token', _registryTokenController.text);
+    
+    // Manual overrides (hidden but preserved if sync was run)
+    if (_seerrKeyController.text.isNotEmpty) {
+      await _secureStorage.write('seerr_api_key', _seerrKeyController.text);
+    }
+    if (_lidarrKeyController.text.isNotEmpty) {
+      await _secureStorage.write('lidarr_api_key', _lidarrKeyController.text);
+    }
     
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -121,35 +155,54 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: AppSpacing.lg),
 
             // Redesigned Sync Button
-            InkWell(
-              onTap: _isSyncing ? null : _syncFromRegistry,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.5)),
-                  borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-                  color: AppColors.terminalGreen.withValues(alpha: 0.05),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_isSyncing)
-                      const SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.terminalGreen),
-                      )
-                    else
-                      const Icon(Icons.terminal, size: 16, color: AppColors.terminalGreen),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      _isSyncing ? 'INITIALIZING_SYNC...' : 'RUN_AUTO_DISCOVERY_SYNC',
-                      style: AppTypography.statusBadge.copyWith(color: AppColors.terminalGreen),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: _isSyncing ? null : _syncFromRegistry,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.5)),
+                      borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+                      color: AppColors.terminalGreen.withValues(alpha: 0.05),
                     ),
-                  ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (_isSyncing)
+                          const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.terminalGreen),
+                          )
+                        else
+                          const Icon(Icons.terminal, size: 16, color: AppColors.terminalGreen),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          _isSyncing ? 'INITIALIZING_SYNC...' : 'RUN_AUTO_DISCOVERY_SYNC',
+                          style: AppTypography.statusBadge.copyWith(color: AppColors.terminalGreen),
+                        ),
+                        if (!_isSyncing && _lastSynced != null) ...[
+                          const SizedBox(width: AppSpacing.sm),
+                          const Icon(Icons.check_circle, size: 14, color: AppColors.terminalGreen),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                if (_lastSynced != null) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                    child: Text(
+                      'LAST_SUCCESSFUL_SYNC: $_lastSynced',
+                      style: AppTypography.moduleSublabel.copyWith(fontSize: 10, color: AppColors.textMuted),
+                    ),
+                  ),
+                ],
+              ],
             ),
             
             const SizedBox(height: AppSpacing.xl),
