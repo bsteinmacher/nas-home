@@ -7,6 +7,7 @@ import '../../core/theme/app_typography.dart';
 import '../../domain/entities/seerr.dart';
 import '../blocs/seerr_bloc.dart';
 import '../widgets/tui_input_field.dart';
+import 'seerr_details_page.dart';
 
 class SeerrPage extends StatelessWidget {
   const SeerrPage({super.key});
@@ -98,7 +99,21 @@ class _SeerrViewState extends State<SeerrView> {
                     itemCount: seerrList.length,
                     itemBuilder: (context, index) {
                       final item = seerrList[index];
-                      return _buildMediaCard(context, item);
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (detailContext) => BlocProvider.value(
+                                value: context.read<SeerrBloc>(),
+                                child: SeerrDetailsPage(media: item),
+                              ),
+                            ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+                        child: _buildMediaCard(context, item),
+                      );
                     },
                   ),
                   error: (message) => Center(

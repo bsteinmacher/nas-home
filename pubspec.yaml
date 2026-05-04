@@ -42,6 +42,8 @@ dependencies:
   shared_preferences: ^2.5.3
   crypto: ^3.0.7
   google_fonts: ^6.3.2
+  design_system:
+    path: ../design_system
 
 dev_dependencies:
   flutter_test:
