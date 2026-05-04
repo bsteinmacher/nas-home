@@ -5,9 +5,13 @@ from app.main import app
 
 client = TestClient(app)
 
+@pytest.fixture(autouse=True)
+def mock_env(monkeypatch):
+    monkeypatch.setenv("REGISTRY_TOKEN", "test-token")
+
 @pytest.fixture
 def auth_header():
-    return {"X-Registry-Token": os.getenv("REGISTRY_TOKEN", "test-token")}
+    return {"X-Registry-Token": "test-token"}
 
 def test_config_no_token():
     response = client.get("/config")
