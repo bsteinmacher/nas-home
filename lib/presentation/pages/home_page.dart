@@ -6,11 +6,13 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../domain/entities/nas_service.dart';
 import '../blocs/nas_status_bloc.dart';
+import '../blocs/prowlarr_bloc.dart';
 import '../widgets/active_services_list.dart';
 import '../widgets/braille_spinner.dart';
 import '../widgets/error_state_widget.dart';
 import '../widgets/hardware_resources_card.dart';
 import '../widgets/service_status_list.dart';
+import '../widgets/prowlarr_health_card.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -18,8 +20,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<NasStatusBloc>()..add(const RefreshRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<NasStatusBloc>()..add(const RefreshRequested())),
+        BlocProvider(create: (_) => sl<ProwlarrBloc>()..add(const FetchIndexers())),
+      ],
       child: const HomeView(),
     );
   }
@@ -61,26 +66,30 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, size: 20),
-            onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
+            onPressed: () {
+              context.read<NasStatusBloc>().add(const RefreshRequested());
+              context.read<ProwlarrBloc>().add(const FetchIndexers());
+            },
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: AppColors.terminalGreen, size: 20),
             onPressed: () async {
-              final bloc = context.read<NasStatusBloc>();
+              final statusBloc = context.read<NasStatusBloc>();
+              final prowlarrBloc = context.read<ProwlarrBloc>();
               await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
-              bloc.add(const RefreshRequested());
+              statusBloc.add(const RefreshRequested());
+              prowlarrBloc.add(const FetchIndexers());
             },
           ),
         ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          final bloc = context.read<NasStatusBloc>();
-          bloc.add(const RefreshRequested());
-          await bloc.stream.firstWhere((state) => state is! Loading);
+          context.read<NasStatusBloc>().add(const RefreshRequested());
+          context.read<ProwlarrBloc>().add(const FetchIndexers());
         },
         backgroundColor: AppColors.surface,
         child: BlocBuilder<NasStatusBloc, NasStatusState>(
@@ -127,6 +136,7 @@ class _HomeViewState extends State<HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const ProwlarrHealthCard(),
           _buildSectionHeader('// HARDWARE_RESOURCES'),
           HardwareResourcesCard(info: hardwareInfo),
           const SizedBox(height: AppSpacing.lg),

@@ -4,6 +4,8 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../pages/seerr_page.dart';
 import '../pages/lidarr_page.dart';
+import '../pages/radarr_page.dart';
+import '../pages/sonarr_page.dart';
 
 class ActiveServicesList extends StatelessWidget {
   final List<dynamic> services;
@@ -12,7 +14,7 @@ class ActiveServicesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeNames = ['Immich', 'Seerr', 'Lidarr', 'Nextcloud', 'qBittorrent'];
+    final activeNames = ['Immich', 'Seerr', 'Lidarr', 'Radarr', 'Sonarr', 'Nextcloud', 'qBittorrent'];
     
     final activeServices = services
         .where((s) => activeNames.contains(s.name) || (s.name == 'Navidrome' && activeNames.contains('Lidarr')))
@@ -47,6 +49,16 @@ class ActiveServicesList extends StatelessWidget {
         color = AppColors.lidarr;
         subLabel = 'SEARCH_&_REQUEST_MUSIC';
         break;
+      case 'Radarr':
+        icon = Icons.local_movies_outlined;
+        color = AppColors.radarr;
+        subLabel = 'MOVIE_LIBRARY_MANAGEMENT';
+        break;
+      case 'Sonarr':
+        icon = Icons.tv_outlined;
+        color = AppColors.sonarr;
+        subLabel = 'TV_SHOW_MANAGEMENT';
+        break;
       case 'qBittorrent':
         icon = Icons.download_for_offline_outlined;
         color = AppColors.download;
@@ -76,6 +88,10 @@ class ActiveServicesList extends StatelessWidget {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SeerrPage()));
           } else if (service.name == 'Navidrome') {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const LidarrPage()));
+          } else if (service.name == 'Radarr') {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const RadarrPage()));
+          } else if (service.name == 'Sonarr') {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const SonarrPage()));
           }
         },
         child: Container(

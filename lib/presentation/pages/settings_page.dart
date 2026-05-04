@@ -17,6 +17,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final _nasUrlController = TextEditingController();
+  final _registryUrlController = TextEditingController();
   final _registryTokenController = TextEditingController();
   final _seerrKeyController = TextEditingController();
   final _lidarrKeyController = TextEditingController();
@@ -33,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     _nasUrlController.text = _prefs.getString('nas_url') ?? '';
+    _registryUrlController.text = _prefs.getString('registry_url') ?? '';
     _lastSynced = _prefs.getString('last_registry_sync');
     
     // Read sensitive data from secure storage
@@ -50,9 +52,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _syncFromRegistry() async {
-    if (_nasUrlController.text.isEmpty || _registryTokenController.text.isEmpty) {
+    if (_registryUrlController.text.isEmpty || _registryTokenController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide NAS URL and Registry Token')),
+        const SnackBar(content: Text('Please provide Registry URL and Token')),
       );
       return;
     }
@@ -60,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() => _isSyncing = true);
     try {
       await sl<SyncRegistryConfigUseCase>().execute(
-        _nasUrlController.text,
+        _registryUrlController.text,
         _registryTokenController.text,
       );
       
@@ -97,6 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void _saveSettings() async {
     // Save non-sensitive data to shared preferences
     await _prefs.setString('nas_url', _nasUrlController.text);
+    await _prefs.setString('registry_url', _registryUrlController.text);
     
     // Save sensitive data to secure storage
     await _secureStorage.write('registry_token', _registryTokenController.text);
@@ -139,13 +142,19 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: AppSpacing.md),
             TuiInputField(
               controller: _nasUrlController,
-              label: 'NAS_ADDRESS (IP/HOST)',
+              label: 'NAS_HOST_ADDRESS (FOR_HARDWARE_STATS)',
               hintText: '192.168.100.85',
             ),
             const SizedBox(height: AppSpacing.lg),
             
-            Text('// REGISTRY_DISCOVERY_CREDENTIALS', style: AppTypography.sectionHeader),
+            Text('// REGISTRY_DISCOVERY_SERVICE', style: AppTypography.sectionHeader),
             const SizedBox(height: AppSpacing.md),
+            TuiInputField(
+              controller: _registryUrlController,
+              label: 'REGISTRY_SERVICE_URL',
+              hintText: 'http://registry.meunas.home',
+            ),
+            const SizedBox(height: AppSpacing.sm),
             TuiInputField(
               controller: _registryTokenController,
               label: 'X_REGISTRY_TOKEN',
@@ -276,6 +285,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     _nasUrlController.dispose();
+    _registryUrlController.dispose();
     _registryTokenController.dispose();
     _seerrKeyController.dispose();
     _lidarrKeyController.dispose();

@@ -4,7 +4,7 @@
 
 - [x] **Phase 1: NAS Registry Microservice Core** - Build the Python/FastAPI discovery service.
 - [x] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
-- [ ] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
+- [x] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
 - [ ] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
 
 ## Phase Details
@@ -46,18 +46,21 @@
 **Plans**: 3 plans
 - [x] 03-01-PLAN.md — Setup Secure Storage infrastructure and DI.
 - [x] 03-02-PLAN.md — Update Repository and DataSources to use Secure Storage.
-- [ ] 03-03-PLAN.md — Refine Settings UI and finalize end-to-end sync workflow.
+- [x] 03-03-PLAN.md — Refine Settings UI and finalize end-to-end sync workflow.
 
 ### Phase 4: Support for Extended Services
 **Goal**: Expand the App to support the full media stack monitoring.
 **Depends on**: Phase 3
-**Requirements**: TBD (Future expansion)
+**Requirements**: [APP-EXT-01, APP-EXT-02, APP-EXT-03, APP-EXT-04]
 **Success Criteria** (what must be TRUE):
   1. App includes pages/tabs for Radarr and Sonarr.
   2. Service status indicators show health for all services in the Registry.
   3. Navigation between different media modules is fluid.
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 4 plans
+- [ ] 04-01-PLAN.md — Fix Registry sync bug and define shared entities.
+- [ ] 04-02-PLAN.md — Implement Radarr data layer, BLoC, and monitoring page.
+- [ ] 04-03-PLAN.md — Implement Sonarr data layer, BLoC, and monitoring page.
+- [ ] 04-04-PLAN.md — Integrate Prowlarr health checks and finalize dashboard UI.
 
 ## Progress Table
 
@@ -65,5 +68,5 @@
 |-------|----------------|--------|-----------|
 | 1. NAS Registry Microservice Core | 2/2 | Completed | 2026-05-04 |
 | 2. Deployment & Infrastructure | 1/1 | Completed | 2026-05-04 |
-| 3. App Integration & UI Refinement | 1/3 | In Progress | - |
-| 4. Support for Extended Services | 0/0 | Not started | - |
+| 3. App Integration & UI Refinement | 3/3 | Completed | 2026-05-04 |
+| 4. Support for Extended Services | 0/4 | In Progress | - |
