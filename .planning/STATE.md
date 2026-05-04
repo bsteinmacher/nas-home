@@ -6,15 +6,15 @@
 **Current Focus**: Implementing the "NAS Registry" microservice and its integration with the Flutter app to automate API key management.
 
 ## Current Position
-**Phase**: Phase 1: NAS Registry Microservice Core
-**Plan**: 01-01
-**Status**: Ready to Execute
-**Progress**: [░░░░░░░░░░░░░░░░░░░░] 0%
+**Phase**: Phase 2: Deployment & Infrastructure
+**Plan**: 02-01
+**Status**: Blocked (SSH Authentication)
+**Progress**: [▓▓▓▓▓▓░░░░░░░░░░░░░░] 30%
 
 ## Performance Metrics
 - **Requirement Coverage**: 100% (v1)
-- **Phase Completion**: 0/4
-- **Success Criteria Met**: 0/14
+- **Phase Completion**: 1/4
+- **Success Criteria Met**: 4/14
 
 ## Accumulated Context
 ### Decisions
@@ -23,15 +23,20 @@
 - Use Docker volumes to provide the Registry service with read-only access to other services' config files.
 - Manual key entry in the app is being deprecated in favor of this automated sync.
 
+### Completed (Phase 1)
+- [x] Create `services/registry/` directory structure.
+- [x] Implement FastAPI boilerplate and security.
+- [x] Develop XML/JSON parsing logic for Lidarr, Seerr, etc.
+- [x] Verified implementation with 13 automated tests.
+
 ### Todos
-- [ ] Create `services/registry/` directory structure.
-- [ ] Implement FastAPI boilerplate.
-- [ ] Develop XML/JSON parsing logic for Lidarr, Seerr, etc.
-- [ ] Create Dockerfile for the microservice (Phase 2).
+- [x] Create Dockerfile for the microservice (Phase 2).
+- [x] Configure Docker Compose to mount config volumes as read-only.
+- [ ] Set up Nginx Proxy Manager for `registry.meunas.home`.
 
 ### Blockers
-- None currently identified.
+- SSH access to 'meunas' requires a password. Please set up passwordless SSH access using 'ssh-copy-id meunas'.
 
 ## Session Continuity
-**Last session**: Initialized Phase 1 plans.
-**Next steps**: Execute 01-01-PLAN.md to setup the registry service core and security.
+**Last session**: Completed Phase 1 (NAS Registry Core). Implemented the microservice with full scanning logic and security.
+**Next steps**: Plan Phase 2 for Dockerization and deployment on the NAS.
