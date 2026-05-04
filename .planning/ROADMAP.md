@@ -2,7 +2,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: NAS Registry Microservice Core** - Build the Python/FastAPI discovery service.
+- [x] **Phase 1: NAS Registry Microservice Core** - Build the Python/FastAPI discovery service.
 - [ ] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
 - [ ] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
 - [ ] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
@@ -19,8 +19,8 @@
   3. `GET /config` with valid token returns a JSON containing keys for at least Lidarr and Seerr (mocked or real).
   4. Unit tests verify XML and JSON parsing for various service config formats.
 **Plans**: 2 plans
-- [ ] 01-01-PLAN.md — Setup project environment, FastAPI skeleton, and X-Registry-Token security.
-- [ ] 01-02-PLAN.md — Implement XML/JSON scanning logic and expose via the /config endpoint.
+- [x] 01-01-PLAN.md — Setup project environment, FastAPI skeleton, and X-Registry-Token security.
+- [x] 01-02-PLAN.md — Implement XML/JSON scanning logic and expose via the /config endpoint.
 
 ### Phase 2: Deployment & Infrastructure
 **Goal**: Make the Registry service accessible to the mobile app securely.
@@ -31,7 +31,8 @@
   2. Registry service can access read-only config files of other services via Docker volumes.
   3. `registry.meunas.home` is reachable from the local network via HTTPS/HTTP.
   4. Real API keys are correctly extracted from the actual NAS configuration files.
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 02-01-PLAN.md — Dockerize and deploy the NAS Registry service to the remote NAS host.
 
 ### Phase 3: App Integration & UI Refinement
 **Goal**: Seamlessly sync the mobile app with the NAS Registry.
@@ -60,7 +61,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. NAS Registry Microservice Core | 0/2 | Not started | - |
-| 2. Deployment & Infrastructure | 0/1 | Not started | - |
+| 1. NAS Registry Microservice Core | 2/2 | Completed | 2026-05-04 |
+| 2. Deployment & Infrastructure | 0/1 | In Progress | - |
 | 3. App Integration & UI Refinement | 0/1 | Not started | - |
 | 4. Support for Extended Services | 0/1 | Not started | - |
