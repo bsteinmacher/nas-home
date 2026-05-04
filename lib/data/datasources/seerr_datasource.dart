@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/seerr.dart';
+import '../../core/storage/secure_storage_service.dart';
 
 abstract class SeerrDataSource {
   Future<List<Seerr>> search(String query);
@@ -11,10 +12,12 @@ abstract class SeerrDataSource {
 class SeerrDataSourceImpl implements SeerrDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
   SeerrDataSourceImpl({
     required this.dio,
     required this.sharedPreferences,
+    required this.secureStorage,
   });
 
   String get _baseUrl {
@@ -30,17 +33,19 @@ class SeerrDataSourceImpl implements SeerrDataSource {
     return '${uri.scheme}://${uri.host}';
   }
 
-  String get _apiKey => sharedPreferences.getString('seerr_api_key') ?? '';
+  Future<String> get _apiKey async =>
+      await secureStorage.read('seerr_api_key') ?? '';
 
   @override
   Future<List<Seerr>> search(String query) async {
     final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) return [];
 
+    final apiKey = await _apiKey;
     final encodedQuery = Uri.encodeComponent(trimmedQuery);
     final response = await dio.get(
       '$_baseUrl:5055/api/v1/search?query=$encodedQuery',
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
 
     final results = response.data['results'] as List;
@@ -49,9 +54,10 @@ class SeerrDataSourceImpl implements SeerrDataSource {
 
   @override
   Future<List<Seerr>> getTrending() async {
+    final apiKey = await _apiKey;
     final response = await dio.get(
       '$_baseUrl:5055/api/v1/discover/trending',
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
 
     final results = response.data['results'] as List;
@@ -60,13 +66,14 @@ class SeerrDataSourceImpl implements SeerrDataSource {
 
   @override
   Future<void> requestMedia(int mediaId, String mediaType) async {
+    final apiKey = await _apiKey;
     await dio.post(
       '$_baseUrl:5055/api/v1/request',
       data: {
         'mediaId': mediaId,
         'mediaType': mediaType,
       },
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/lidarr.dart';
+import '../../core/storage/secure_storage_service.dart';
 
 abstract class LidarrDataSource {
   Future<List<LidarrArtist>> searchArtists(String query);
@@ -11,10 +12,12 @@ abstract class LidarrDataSource {
 class LidarrDataSourceImpl implements LidarrDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
   LidarrDataSourceImpl({
     required this.dio,
     required this.sharedPreferences,
+    required this.secureStorage,
   });
 
   String get _baseUrl {
@@ -30,17 +33,19 @@ class LidarrDataSourceImpl implements LidarrDataSource {
     return '${uri.scheme}://${uri.host}';
   }
 
-  String get _apiKey => sharedPreferences.getString('lidarr_api_key') ?? '';
+  Future<String> get _apiKey async =>
+      await secureStorage.read('lidarr_api_key') ?? '';
 
   @override
   Future<List<LidarrArtist>> searchArtists(String query) async {
     final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) return [];
 
+    final apiKey = await _apiKey;
     final response = await dio.get(
       '$_baseUrl:8686/api/v1/artist/lookup',
       queryParameters: {'term': trimmedQuery},
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
 
     final results = response.data as List;
@@ -49,6 +54,7 @@ class LidarrDataSourceImpl implements LidarrDataSource {
 
   @override
   Future<void> requestArtist(LidarrArtist artist) async {
+    final apiKey = await _apiKey;
     await dio.post(
       '$_baseUrl:8686/api/v1/artist',
       data: {
@@ -59,16 +65,17 @@ class LidarrDataSourceImpl implements LidarrDataSource {
         'monitored': true,
         'addOptions': {'searchForMissingAlbums': true},
       },
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
   }
 
   @override
   Future<List<LidarrAlbum>> getAlbums(String artistId) async {
+    final apiKey = await _apiKey;
     final response = await dio.get(
       '$_baseUrl:8686/api/v1/album',
       queryParameters: {'artistId': artistId},
-      options: Options(headers: {'X-Api-Key': _apiKey}),
+      options: Options(headers: {'X-Api-Key': apiKey}),
     );
 
     final results = response.data as List;
