@@ -19,6 +19,8 @@ abstract class AppColors {
   // Semantic service colors
   static const seerr = Colors.purpleAccent;
   static const lidarr = Colors.blueAccent;
+  static const radarr = Colors.amberAccent;
+  static const sonarr = Colors.cyanAccent;
   static const download = Colors.orangeAccent;
   static const upload = Colors.tealAccent;
   static const photos = Colors.pinkAccent;
