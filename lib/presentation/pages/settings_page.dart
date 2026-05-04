@@ -196,9 +196,29 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: AppSpacing.xs),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                    child: Text(
-                      'LAST_SUCCESSFUL_SYNC: $_lastSynced',
-                      style: AppTypography.moduleSublabel.copyWith(fontSize: 10, color: AppColors.textMuted),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'LAST_SUCCESSFUL_SYNC: $_lastSynced',
+                          style: AppTypography.moduleSublabel.copyWith(fontSize: 10, color: AppColors.textMuted),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          'ACTIVE_INTEGRATIONS:',
+                          style: AppTypography.statusBadge.copyWith(fontSize: 10, color: AppColors.textMuted),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Wrap(
+                          spacing: AppSpacing.sm,
+                          children: [
+                            if (_seerrKeyController.text.isNotEmpty)
+                              _buildServiceBadge('SEERR'),
+                            if (_lidarrKeyController.text.isNotEmpty)
+                              _buildServiceBadge('LIDARR'),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -260,5 +280,19 @@ class _SettingsPageState extends State<SettingsPage> {
     _seerrKeyController.dispose();
     _lidarrKeyController.dispose();
     super.dispose();
+  }
+
+  Widget _buildServiceBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.moduleSublabel.copyWith(fontSize: 9, color: AppColors.terminalGreen),
+      ),
+    );
   }
 }
