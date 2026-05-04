@@ -37,20 +37,24 @@ Future<void> init() async {
   sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl()));
   
   sl.registerLazySingleton<RegistryDataSource>(() => RegistryDataSourceImpl(dio: sl()));
-  sl.registerLazySingleton<RegistryRepository>(
-      () => RegistryRepositoryImpl(dataSource: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton<RegistryRepository>(() => RegistryRepositoryImpl(
+        dataSource: sl(),
+        sharedPreferences: sl(),
+        secureStorage: sl(),
+      ));
 
   sl.registerLazySingleton<SeerrDataSource>(() => SeerrDataSourceImpl(
         dio: sl(),
         sharedPreferences: sl(),
+        secureStorage: sl(),
       ));
-  sl.registerLazySingleton<SeerrRepository>(
-      () => SeerrRepositoryImpl(sl()));
+  sl.registerLazySingleton<SeerrRepository>(() => SeerrRepositoryImpl(sl()));
 
   // Lidarr (Music Request Service)
   sl.registerLazySingleton<LidarrDataSource>(() => LidarrDataSourceImpl(
         dio: sl(),
         sharedPreferences: sl(),
+        secureStorage: sl(),
       ));
   sl.registerLazySingleton<LidarrRepository>(() => LidarrRepositoryImpl(sl()));
 
