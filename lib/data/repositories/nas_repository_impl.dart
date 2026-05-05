@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../domain/entities/nas_service.dart';
 import '../../domain/entities/hardware_info.dart';
+import '../../domain/entities/nas_service.dart';
 import '../../domain/repositories/nas_repository.dart';
 
 class NasRepositoryImpl implements NasRepository {
@@ -32,15 +32,18 @@ class NasRepositoryImpl implements NasRepository {
   @override
   Future<bool> checkServiceStatus(String baseUrl, String port) async {
     final normalizedUrl = _normalizeUrl(baseUrl);
+    final url = '$normalizedUrl:$port';
     try {
-      final response = await dio.get('$normalizedUrl:$port', options: Options(
-        validateStatus: (status) => true,
-        sendTimeout: const Duration(seconds: 2),
-        receiveTimeout: const Duration(seconds: 2),
-      ));
+      final response = await dio.get(
+        url,
+        options: Options(
+          validateStatus: (status) => true,
+          sendTimeout: const Duration(seconds: 2),
+          receiveTimeout: const Duration(seconds: 2),
+        ),
+      );
       return response.statusCode != null;
     } catch (e) {
-      // Log removed
       return false;
     }
   }
@@ -49,104 +52,59 @@ class NasRepositoryImpl implements NasRepository {
   Future<HardwareInfo> getHardwareInfo(String baseUrl) async {
     final normalizedUrl = _normalizeUrl(baseUrl);
     final apiUrl = '$normalizedUrl:61208/api/4/all';
-    
+
     try {
-      // Log removed
       final response = await dio.get(apiUrl, options: Options(
         sendTimeout: const Duration(seconds: 3),
         receiveTimeout: const Duration(seconds: 3),
       ));
-      
-      final data = response.data as Map<String, dynamic>;
+      final data = response.data;
 
-      // Parsing CPU
-      double cpuUsage = 0;
-      if (data['cpu'] != null) {
-        final cpu = data['cpu'] as Map<String, dynamic>;
-        cpuUsage = (cpu['total'] as num?)?.toDouble() ?? 0;
-      }
+      // Parse System Info
+      final hostname = data['system']?['hostname']?.toString() ?? 'Unknown';
+      final uptime = data['system']?['uptime']?.toString() ?? 'N/A';
 
-      // Parsing RAM
-      double ramUsed = 0;
-      double ramTotal = 0;
-      if (data['mem'] != null) {
-        final mem = data['mem'] as Map<String, dynamic>;
-        ramUsed = ((mem['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-        ramTotal = ((mem['total'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-      }
+      // Parse CPU
+      final cpuUsage = (data['cpu']?['total'] as num?)?.toDouble() ?? 0.0;
+      final temp = (data['sensors'] as List?)?.firstWhere(
+            (s) => s['label']?.toString().toLowerCase().contains('package') ?? false,
+            orElse: () => {'value': 0.0},
+          )['value']?.toDouble() ?? 0.0;
 
-      // Parsing Uptime
-      final uptimeStr = data['uptime']?.toString() ?? 'N/A';
+      // Parse RAM
+      final ramUsed = (data['mem']?['used'] as num?)?.toDouble() ?? 0.0;
+      final ramTotal = (data['mem']?['total'] as num?)?.toDouble() ?? 0.0;
 
-      // Parsing Temperature (sensors)
-      double temp = 0;
-      final sensors = data['sensors'] as List?;
-      if (sensors != null && sensors.isNotEmpty) {
-        try {
-          final cpuTempSensor = sensors.firstWhere(
-            (s) {
-              final label = s['label']?.toString().toLowerCase() ?? '';
-              return label.contains('cpu') || label.contains('package') || label.contains('temp1');
-            },
-            orElse: () => sensors.first,
+      // Parse Network
+      final net = (data['network'] as List?)?.firstWhere(
+            (n) => n['interface_name'] != 'lo',
+            orElse: () => {'rx': 0.0, 'tx': 0.0},
           );
-          temp = (cpuTempSensor['value'] as num?)?.toDouble() ?? 0;
-        } catch (_) {}
-      }
+      final downloadSpeed = (net?['rx'] as num?)?.toDouble() ?? 0.0;
+      final uploadSpeed = (net?['tx'] as num?)?.toDouble() ?? 0.0;
 
-      // Parsing Network
-      double downloadSpeed = 0;
-      double uploadSpeed = 0;
-      final network = data['network'] as List?;
-      if (network != null) {
-        final mainInterface = network.firstWhere(
-          (n) => n['interface_name'] == 'enp2s0',
-          orElse: () => network.first,
-        );
-        downloadSpeed = ((mainInterface['bytes_recv_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
-        uploadSpeed = ((mainInterface['bytes_sent_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
-      }
-
-      // Parsing Disks
-      double ssdUsed = 0;
-      double ssdTotal = 0;
-      double hddUsed = 0;
-      double hddTotal = 0;
+      // Parse Disk (Filesystem)
       final fs = data['fs'] as List?;
-      if (fs != null) {
-        // SSD (/)
-        final ssdFs = fs.firstWhere(
-          (f) => f['mnt_point'] == '/',
-          orElse: () => null,
-        );
-        if (ssdFs != null) {
-          ssdUsed = ((ssdFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-          ssdTotal = ((ssdFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-        }
+      final ssd = fs?.firstWhere(
+            (f) => f['mnt_point'] == '/',
+            orElse: () => {'used': 0.0, 'size': 0.0},
+          );
+      final hdd = fs?.firstWhere(
+            (f) => f['mnt_point'] == '/mnt/storage' || f['mnt_point']?.toString().contains('media') == true,
+            orElse: () => {'used': 0.0, 'size': 0.0},
+          );
 
-        // HDD (/home/didizera/meu-nas/data)
-        final hddFs = fs.firstWhere(
-          (f) => f['mnt_point'] == '/home/didizera/meu-nas/data',
-          orElse: () => null,
-        );
-        if (hddFs != null) {
-          hddUsed = ((hddFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-          hddTotal = ((hddFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-        }
-      }
-
-      // Hostname
-      String hostname = 'UNKNOWN';
-      if (data['system'] != null) {
-        hostname = (data['system'] as Map<String, dynamic>)['hostname']?.toString().toUpperCase() ?? 'UNKNOWN';
-      }
+      final ssdUsed = (ssd?['used'] as num?)?.toDouble() ?? 0.0;
+      final ssdTotal = (ssd?['size'] as num?)?.toDouble() ?? 0.0;
+      final hddUsed = (hdd?['used'] as num?)?.toDouble() ?? 0.0;
+      final hddTotal = (hdd?['size'] as num?)?.toDouble() ?? 0.0;
 
       return HardwareInfo(
         hostname: hostname,
         cpuUsage: cpuUsage,
         ramUsed: ramUsed,
         ramTotal: ramTotal,
-        uptime: uptimeStr,
+        uptime: uptime,
         temperature: temp,
         downloadSpeed: downloadSpeed,
         uploadSpeed: uploadSpeed,
@@ -156,7 +114,6 @@ class NasRepositoryImpl implements NasRepository {
         hddTotal: hddTotal,
       );
     } catch (e) {
-      // Log removed
       return const HardwareInfo(
         hostname: 'OFFLINE',
         cpuUsage: 0,
