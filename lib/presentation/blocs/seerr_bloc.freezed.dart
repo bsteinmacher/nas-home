@@ -55,12 +55,13 @@ extension SeerrEventPatterns on SeerrEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( TrendingRequested value)?  trendingRequested,TResult Function( RequestSeerr value)?  mediaRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( TrendingRequested value)?  trendingRequested,TResult Function( DetailsRequested value)?  detailsRequested,TResult Function( RequestSeerr value)?  mediaRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case TrendingRequested() when trendingRequested != null:
-return trendingRequested(_that);case RequestSeerr() when mediaRequested != null:
+return trendingRequested(_that);case DetailsRequested() when detailsRequested != null:
+return detailsRequested(_that);case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that);case _:
   return orElse();
 
@@ -79,12 +80,13 @@ return mediaRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( TrendingRequested value)  trendingRequested,required TResult Function( RequestSeerr value)  mediaRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( TrendingRequested value)  trendingRequested,required TResult Function( DetailsRequested value)  detailsRequested,required TResult Function( RequestSeerr value)  mediaRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that);case TrendingRequested():
-return trendingRequested(_that);case RequestSeerr():
+return trendingRequested(_that);case DetailsRequested():
+return detailsRequested(_that);case RequestSeerr():
 return mediaRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -102,12 +104,13 @@ return mediaRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( TrendingRequested value)?  trendingRequested,TResult? Function( RequestSeerr value)?  mediaRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( TrendingRequested value)?  trendingRequested,TResult? Function( DetailsRequested value)?  detailsRequested,TResult? Function( RequestSeerr value)?  mediaRequested,}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case TrendingRequested() when trendingRequested != null:
-return trendingRequested(_that);case RequestSeerr() when mediaRequested != null:
+return trendingRequested(_that);case DetailsRequested() when detailsRequested != null:
+return detailsRequested(_that);case RequestSeerr() when mediaRequested != null:
 return mediaRequested(_that);case _:
   return null;
 
@@ -125,12 +128,13 @@ return mediaRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function()?  trendingRequested,TResult Function( int mediaId,  String mediaType)?  mediaRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function()?  trendingRequested,TResult Function( int mediaId,  String mediaType)?  detailsRequested,TResult Function( int mediaId,  String mediaType,  List<int>? seasons)?  mediaRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case TrendingRequested() when trendingRequested != null:
-return trendingRequested();case RequestSeerr() when mediaRequested != null:
-return mediaRequested(_that.mediaId,_that.mediaType);case _:
+return trendingRequested();case DetailsRequested() when detailsRequested != null:
+return detailsRequested(_that.mediaId,_that.mediaType);case RequestSeerr() when mediaRequested != null:
+return mediaRequested(_that.mediaId,_that.mediaType,_that.seasons);case _:
   return orElse();
 
 }
@@ -148,12 +152,13 @@ return mediaRequested(_that.mediaId,_that.mediaType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function()  trendingRequested,required TResult Function( int mediaId,  String mediaType)  mediaRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function()  trendingRequested,required TResult Function( int mediaId,  String mediaType)  detailsRequested,required TResult Function( int mediaId,  String mediaType,  List<int>? seasons)  mediaRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that.query);case TrendingRequested():
-return trendingRequested();case RequestSeerr():
-return mediaRequested(_that.mediaId,_that.mediaType);case _:
+return trendingRequested();case DetailsRequested():
+return detailsRequested(_that.mediaId,_that.mediaType);case RequestSeerr():
+return mediaRequested(_that.mediaId,_that.mediaType,_that.seasons);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -170,12 +175,13 @@ return mediaRequested(_that.mediaId,_that.mediaType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function()?  trendingRequested,TResult? Function( int mediaId,  String mediaType)?  mediaRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function()?  trendingRequested,TResult? Function( int mediaId,  String mediaType)?  detailsRequested,TResult? Function( int mediaId,  String mediaType,  List<int>? seasons)?  mediaRequested,}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case TrendingRequested() when trendingRequested != null:
-return trendingRequested();case RequestSeerr() when mediaRequested != null:
-return mediaRequested(_that.mediaId,_that.mediaType);case _:
+return trendingRequested();case DetailsRequested() when detailsRequested != null:
+return detailsRequested(_that.mediaId,_that.mediaType);case RequestSeerr() when mediaRequested != null:
+return mediaRequested(_that.mediaId,_that.mediaType,_that.seasons);case _:
   return null;
 
 }
@@ -284,12 +290,89 @@ String toString() {
 /// @nodoc
 
 
-class RequestSeerr implements SeerrEvent {
-  const RequestSeerr(this.mediaId, this.mediaType);
+class DetailsRequested implements SeerrEvent {
+  const DetailsRequested(this.mediaId, this.mediaType);
   
 
  final  int mediaId;
  final  String mediaType;
+
+/// Create a copy of SeerrEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DetailsRequestedCopyWith<DetailsRequested> get copyWith => _$DetailsRequestedCopyWithImpl<DetailsRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailsRequested&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,mediaId,mediaType);
+
+@override
+String toString() {
+  return 'SeerrEvent.detailsRequested(mediaId: $mediaId, mediaType: $mediaType)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DetailsRequestedCopyWith<$Res> implements $SeerrEventCopyWith<$Res> {
+  factory $DetailsRequestedCopyWith(DetailsRequested value, $Res Function(DetailsRequested) _then) = _$DetailsRequestedCopyWithImpl;
+@useResult
+$Res call({
+ int mediaId, String mediaType
+});
+
+
+
+
+}
+/// @nodoc
+class _$DetailsRequestedCopyWithImpl<$Res>
+    implements $DetailsRequestedCopyWith<$Res> {
+  _$DetailsRequestedCopyWithImpl(this._self, this._then);
+
+  final DetailsRequested _self;
+  final $Res Function(DetailsRequested) _then;
+
+/// Create a copy of SeerrEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? mediaId = null,Object? mediaType = null,}) {
+  return _then(DetailsRequested(
+null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
+as int,null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class RequestSeerr implements SeerrEvent {
+  const RequestSeerr(this.mediaId, this.mediaType, {final  List<int>? seasons}): _seasons = seasons;
+  
+
+ final  int mediaId;
+ final  String mediaType;
+ final  List<int>? _seasons;
+ List<int>? get seasons {
+  final value = _seasons;
+  if (value == null) return null;
+  if (_seasons is EqualUnmodifiableListView) return _seasons;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -301,16 +384,16 @@ $RequestSeerrCopyWith<RequestSeerr> get copyWith => _$RequestSeerrCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSeerr&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSeerr&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&const DeepCollectionEquality().equals(other._seasons, _seasons));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,mediaId,mediaType);
+int get hashCode => Object.hash(runtimeType,mediaId,mediaType,const DeepCollectionEquality().hash(_seasons));
 
 @override
 String toString() {
-  return 'SeerrEvent.mediaRequested(mediaId: $mediaId, mediaType: $mediaType)';
+  return 'SeerrEvent.mediaRequested(mediaId: $mediaId, mediaType: $mediaType, seasons: $seasons)';
 }
 
 
@@ -321,7 +404,7 @@ abstract mixin class $RequestSeerrCopyWith<$Res> implements $SeerrEventCopyWith<
   factory $RequestSeerrCopyWith(RequestSeerr value, $Res Function(RequestSeerr) _then) = _$RequestSeerrCopyWithImpl;
 @useResult
 $Res call({
- int mediaId, String mediaType
+ int mediaId, String mediaType, List<int>? seasons
 });
 
 
@@ -338,11 +421,12 @@ class _$RequestSeerrCopyWithImpl<$Res>
 
 /// Create a copy of SeerrEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? mediaId = null,Object? mediaType = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? mediaId = null,Object? mediaType = null,Object? seasons = freezed,}) {
   return _then(RequestSeerr(
 null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as String,
+as String,seasons: freezed == seasons ? _self._seasons : seasons // ignore: cast_nullable_to_non_nullable
+as List<int>?,
   ));
 }
 
@@ -393,13 +477,14 @@ extension SeerrStatePatterns on SeerrState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeerrInitial value)?  initial,TResult Function( SeerrLoading value)?  loading,TResult Function( SeerrLoaded value)?  loaded,TResult Function( SeerrError value)?  error,TResult Function( RequestSuccess value)?  requestSuccess,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SeerrInitial value)?  initial,TResult Function( SeerrLoading value)?  loading,TResult Function( SeerrLoaded value)?  loaded,TResult Function( DetailsLoaded value)?  detailsLoaded,TResult Function( SeerrError value)?  error,TResult Function( RequestSuccess value)?  requestSuccess,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SeerrInitial() when initial != null:
 return initial(_that);case SeerrLoading() when loading != null:
 return loading(_that);case SeerrLoaded() when loaded != null:
-return loaded(_that);case SeerrError() when error != null:
+return loaded(_that);case DetailsLoaded() when detailsLoaded != null:
+return detailsLoaded(_that);case SeerrError() when error != null:
 return error(_that);case RequestSuccess() when requestSuccess != null:
 return requestSuccess(_that);case _:
   return orElse();
@@ -419,13 +504,14 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeerrInitial value)  initial,required TResult Function( SeerrLoading value)  loading,required TResult Function( SeerrLoaded value)  loaded,required TResult Function( SeerrError value)  error,required TResult Function( RequestSuccess value)  requestSuccess,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SeerrInitial value)  initial,required TResult Function( SeerrLoading value)  loading,required TResult Function( SeerrLoaded value)  loaded,required TResult Function( DetailsLoaded value)  detailsLoaded,required TResult Function( SeerrError value)  error,required TResult Function( RequestSuccess value)  requestSuccess,}){
 final _that = this;
 switch (_that) {
 case SeerrInitial():
 return initial(_that);case SeerrLoading():
 return loading(_that);case SeerrLoaded():
-return loaded(_that);case SeerrError():
+return loaded(_that);case DetailsLoaded():
+return detailsLoaded(_that);case SeerrError():
 return error(_that);case RequestSuccess():
 return requestSuccess(_that);case _:
   throw StateError('Unexpected subclass');
@@ -444,13 +530,14 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeerrInitial value)?  initial,TResult? Function( SeerrLoading value)?  loading,TResult? Function( SeerrLoaded value)?  loaded,TResult? Function( SeerrError value)?  error,TResult? Function( RequestSuccess value)?  requestSuccess,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SeerrInitial value)?  initial,TResult? Function( SeerrLoading value)?  loading,TResult? Function( SeerrLoaded value)?  loaded,TResult? Function( DetailsLoaded value)?  detailsLoaded,TResult? Function( SeerrError value)?  error,TResult? Function( RequestSuccess value)?  requestSuccess,}){
 final _that = this;
 switch (_that) {
 case SeerrInitial() when initial != null:
 return initial(_that);case SeerrLoading() when loading != null:
 return loading(_that);case SeerrLoaded() when loaded != null:
-return loaded(_that);case SeerrError() when error != null:
+return loaded(_that);case DetailsLoaded() when detailsLoaded != null:
+return detailsLoaded(_that);case SeerrError() when error != null:
 return error(_that);case RequestSuccess() when requestSuccess != null:
 return requestSuccess(_that);case _:
   return null;
@@ -469,12 +556,13 @@ return requestSuccess(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Seerr> seerrList)?  loaded,TResult Function( String message)?  error,TResult Function()?  requestSuccess,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Seerr> seerrList)?  loaded,TResult Function( Seerr media)?  detailsLoaded,TResult Function( String message)?  error,TResult Function()?  requestSuccess,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SeerrInitial() when initial != null:
 return initial();case SeerrLoading() when loading != null:
 return loading();case SeerrLoaded() when loaded != null:
-return loaded(_that.seerrList);case SeerrError() when error != null:
+return loaded(_that.seerrList);case DetailsLoaded() when detailsLoaded != null:
+return detailsLoaded(_that.media);case SeerrError() when error != null:
 return error(_that.message);case RequestSuccess() when requestSuccess != null:
 return requestSuccess();case _:
   return orElse();
@@ -494,12 +582,13 @@ return requestSuccess();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Seerr> seerrList)  loaded,required TResult Function( String message)  error,required TResult Function()  requestSuccess,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Seerr> seerrList)  loaded,required TResult Function( Seerr media)  detailsLoaded,required TResult Function( String message)  error,required TResult Function()  requestSuccess,}) {final _that = this;
 switch (_that) {
 case SeerrInitial():
 return initial();case SeerrLoading():
 return loading();case SeerrLoaded():
-return loaded(_that.seerrList);case SeerrError():
+return loaded(_that.seerrList);case DetailsLoaded():
+return detailsLoaded(_that.media);case SeerrError():
 return error(_that.message);case RequestSuccess():
 return requestSuccess();case _:
   throw StateError('Unexpected subclass');
@@ -518,12 +607,13 @@ return requestSuccess();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Seerr> seerrList)?  loaded,TResult? Function( String message)?  error,TResult? Function()?  requestSuccess,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Seerr> seerrList)?  loaded,TResult? Function( Seerr media)?  detailsLoaded,TResult? Function( String message)?  error,TResult? Function()?  requestSuccess,}) {final _that = this;
 switch (_that) {
 case SeerrInitial() when initial != null:
 return initial();case SeerrLoading() when loading != null:
 return loading();case SeerrLoaded() when loaded != null:
-return loaded(_that.seerrList);case SeerrError() when error != null:
+return loaded(_that.seerrList);case DetailsLoaded() when detailsLoaded != null:
+return detailsLoaded(_that.media);case SeerrError() when error != null:
 return error(_that.message);case RequestSuccess() when requestSuccess != null:
 return requestSuccess();case _:
   return null;
@@ -667,6 +757,81 @@ as List<Seerr>,
 }
 
 
+}
+
+/// @nodoc
+
+
+class DetailsLoaded implements SeerrState {
+  const DetailsLoaded(this.media);
+  
+
+ final  Seerr media;
+
+/// Create a copy of SeerrState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DetailsLoadedCopyWith<DetailsLoaded> get copyWith => _$DetailsLoadedCopyWithImpl<DetailsLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailsLoaded&&(identical(other.media, media) || other.media == media));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,media);
+
+@override
+String toString() {
+  return 'SeerrState.detailsLoaded(media: $media)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DetailsLoadedCopyWith<$Res> implements $SeerrStateCopyWith<$Res> {
+  factory $DetailsLoadedCopyWith(DetailsLoaded value, $Res Function(DetailsLoaded) _then) = _$DetailsLoadedCopyWithImpl;
+@useResult
+$Res call({
+ Seerr media
+});
+
+
+$SeerrCopyWith<$Res> get media;
+
+}
+/// @nodoc
+class _$DetailsLoadedCopyWithImpl<$Res>
+    implements $DetailsLoadedCopyWith<$Res> {
+  _$DetailsLoadedCopyWithImpl(this._self, this._then);
+
+  final DetailsLoaded _self;
+  final $Res Function(DetailsLoaded) _then;
+
+/// Create a copy of SeerrState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? media = null,}) {
+  return _then(DetailsLoaded(
+null == media ? _self.media : media // ignore: cast_nullable_to_non_nullable
+as Seerr,
+  ));
+}
+
+/// Create a copy of SeerrState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SeerrCopyWith<$Res> get media {
+  
+  return $SeerrCopyWith<$Res>(_self.media, (value) {
+    return _then(_self.copyWith(media: value));
+  });
+}
 }
 
 /// @nodoc

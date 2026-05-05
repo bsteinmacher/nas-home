@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/di/injection_container.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
-import '../../domain/usecases/sync_registry_config.dart';
-import '../widgets/tui_input_field.dart';
+import '../../../core/di/injection_container.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../domain/usecases/sync_registry_config.dart';
+import '../../widgets/tui_input_field.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

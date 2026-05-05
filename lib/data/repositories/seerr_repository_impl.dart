@@ -14,6 +14,10 @@ class SeerrRepositoryImpl implements SeerrRepository {
   Future<List<Seerr>> getTrending() => dataSource.getTrending();
 
   @override
-  Future<void> requestMedia(int mediaId, String mediaType) =>
-      dataSource.requestMedia(mediaId, mediaType);
+  Future<Seerr> getDetails(int mediaId, String mediaType) =>
+      dataSource.getDetails(mediaId, mediaType);
+
+  @override
+  Future<void> requestMedia(int mediaId, String mediaType, {List<int>? seasons}) =>
+      dataSource.requestMedia(mediaId, mediaType, seasons: seasons);
 }

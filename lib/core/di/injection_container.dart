@@ -57,6 +57,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetHardwareInfoUseCase(sl()));
   sl.registerLazySingleton(() => SearchSeerrUseCase(sl()));
   sl.registerLazySingleton(() => GetTrendingSeerrUseCase(sl()));
+  sl.registerLazySingleton(() => GetSeerrDetailsUseCase(sl()));
   sl.registerLazySingleton(() => RequestSeerrUseCase(sl()));
   sl.registerLazySingleton(() => SyncRegistryConfigUseCase(sl()));
   
@@ -74,6 +75,7 @@ Future<void> init() async {
   sl.registerFactory(() => SeerrBloc(
         searchSeerr: sl(),
         getTrendingSeerr: sl(),
+        getSeerrDetails: sl(),
         requestSeerr: sl(),
       ));
   sl.registerFactory(() => LidarrBloc(

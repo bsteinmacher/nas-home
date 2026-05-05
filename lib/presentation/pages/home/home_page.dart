@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/di/injection_container.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
-import '../../domain/entities/nas_service.dart';
-import '../blocs/nas_status_bloc.dart';
-import '../widgets/active_services_list.dart';
-import '../widgets/braille_spinner.dart';
-import '../widgets/error_state_widget.dart';
-import '../widgets/hardware_resources_card.dart';
-import '../widgets/service_status_list.dart';
-import 'settings_page.dart';
+import '../../../core/di/injection_container.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../domain/entities/nas_service.dart';
+import '../../blocs/nas_status_bloc.dart';
+import 'widgets/active_services_list.dart';
+import '../../widgets/braille_spinner.dart';
+import 'widgets/error_state_widget.dart';
+import 'widgets/hardware_resources_card.dart';
+import 'widgets/service_status_list.dart';
+import '../settings/settings_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

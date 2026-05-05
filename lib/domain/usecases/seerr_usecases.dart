@@ -13,9 +13,16 @@ class GetTrendingSeerrUseCase {
   Future<List<Seerr>> execute() => repository.getTrending();
 }
 
+class GetSeerrDetailsUseCase {
+  final SeerrRepository repository;
+  GetSeerrDetailsUseCase(this.repository);
+  Future<Seerr> execute(int mediaId, String mediaType) =>
+      repository.getDetails(mediaId, mediaType);
+}
+
 class RequestSeerrUseCase {
   final SeerrRepository repository;
   RequestSeerrUseCase(this.repository);
-  Future<void> execute(int mediaId, String mediaType) =>
-      repository.requestMedia(mediaId, mediaType);
+  Future<void> execute(int mediaId, String mediaType, {List<int>? seasons}) =>
+      repository.requestMedia(mediaId, mediaType, seasons: seasons);
 }

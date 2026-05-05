@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
-import '../../domain/entities/hardware_info.dart';
-import 'tui_progress_bar.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../domain/entities/hardware_info.dart';
+import '../../../widgets/tui_progress_bar.dart';
 
 class HardwareResourcesCard extends StatelessWidget {
   final HardwareInfo info;
