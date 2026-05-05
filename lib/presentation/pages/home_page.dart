@@ -11,7 +11,6 @@ import '../widgets/active_services_list.dart';
 import '../widgets/braille_spinner.dart';
 import '../widgets/error_state_widget.dart';
 import '../widgets/hardware_resources_card.dart';
-import '../widgets/service_status_list.dart';
 import '../widgets/prowlarr_health_card.dart';
 import 'settings_page.dart';
 
@@ -140,10 +139,7 @@ class _HomeViewState extends State<HomeView> {
           _buildSectionHeader('// HARDWARE_RESOURCES'),
           HardwareResourcesCard(info: hardwareInfo),
           const SizedBox(height: AppSpacing.lg),
-          _buildSectionHeader('// SERVICE_STATUS_ALL'),
-          ServiceStatusList(services: services as List<NasService>),
-          const SizedBox(height: AppSpacing.xl),
-          _buildSectionHeader('// QUICK_ACCESS_MODULES'),
+          _buildSectionHeader('// SERVICE_DASHBOARD'),
           ActiveServicesList(services: services),
         ],
       ),

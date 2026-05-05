@@ -6,6 +6,7 @@
 - [x] **Phase 2: Deployment & Infrastructure** - Dockerize and deploy to NAS with reverse proxy.
 - [x] **Phase 3: App Integration & UI Refinement** - Finalize Flutter integration and sync UX.
 - [x] **Phase 4: Support for Extended Services** - Add Radarr, Sonarr, and Prowlarr monitoring to the App.
+- [ ] **Phase 5: Unified Service Dashboard** - Refactor to "Service Card" model for all services.
 
 ## Phase Details
 
@@ -57,10 +58,24 @@
   2. Service status indicators show health for all services in the Registry.
   3. Navigation between different media modules is fluid.
 **Plans**: 4 plans
-- [ ] 04-01-PLAN.md — Fix Registry sync bug and define shared entities.
-- [ ] 04-02-PLAN.md — Implement Radarr data layer, BLoC, and monitoring page.
-- [ ] 04-03-PLAN.md — Implement Sonarr data layer, BLoC, and monitoring page.
-- [ ] 04-04-PLAN.md — Integrate Prowlarr health checks and finalize dashboard UI.
+- [x] 04-01-PLAN.md — Fix Registry sync bug and define shared entities.
+- [x] 04-02-PLAN.md — Implement Radarr data layer, BLoC, and monitoring page.
+- [x] 04-03-PLAN.md — Implement Sonarr data layer, BLoC, and monitoring page.
+- [x] 04-04-PLAN.md — Integrate Prowlarr health checks and finalize dashboard UI.
+
+### Phase 5: Unified Service Dashboard
+**Goal**: Consolidate all NAS services into a unified "Service Card" UI with integrated health monitoring.
+**Depends on**: Phase 4
+**Requirements**: [APP-DASH-01, APP-DASH-02, APP-DASH-03, APP-DASH-04, APP-DASH-05]
+**Success Criteria** (what must be TRUE):
+  1. Every NAS service (Jellyfin, Navidrome, qBittorrent, etc.) has a dedicated card on the dashboard.
+  2. Each card displays the real-time online/offline status of the service.
+  3. The redundant "Service Status" list is removed from the UI.
+  4. Cards are clickable, leading to the service's internal page or opening its web UI.
+**Plans**: 3 plans
+- [ ] 05-01-PLAN.md — Refactor NasService and NasRepository to support container metrics.
+- [ ] 05-02-PLAN.md — Implement ServiceCard and ServiceGrid UI components.
+- [ ] 05-03-PLAN.md — Assemble the new Dashboard on HomePage and cleanup legacy components.
 
 ## Progress Table
 
@@ -69,4 +84,5 @@
 | 1. NAS Registry Microservice Core | 2/2 | Completed | 2026-05-04 |
 | 2. Deployment & Infrastructure | 1/1 | Completed | 2026-05-04 |
 | 3. App Integration & UI Refinement | 3/3 | Completed | 2026-05-04 |
-| 4. Support for Extended Services | 0/4 | In Progress | - |
+| 4. Support for Extended Services | 4/4 | Completed | 2026-05-20 |
+| 5. Unified Service Dashboard | 0/3 | In Progress | - |

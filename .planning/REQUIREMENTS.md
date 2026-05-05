@@ -22,6 +22,15 @@
 - **APP-REG-03**: Visual feedback (Loading states, Success/Error notifications) during the sync process.
 - **APP-REG-04**: Deprecation of manual API key entry in favor of the auto-discovery service.
 
+## v2: Unified Dashboard (gsd-02)
+
+### Service Card Model
+- **APP-DASH-01**: Implement a generic "Service Card" component that displays service name, icon, and status.
+- **APP-DASH-02**: Integrate real-time health status (online/offline) directly into each Service Card.
+- **APP-DASH-03**: Refactor the Dashboard to display a grid/list of Service Cards for all configured NAS services.
+- **APP-DASH-04**: Remove the legacy "Service Status" list to eliminate redundancy.
+- **APP-DASH-05**: Ensure Service Cards provide quick actions (e.g., open service UI, deep link to internal page).
+
 ## Traceability
 
 | Requirement | Phase | Status |
@@ -36,7 +45,12 @@
 | NAS-INF-01  | Phase 2 | Completed |
 | NAS-INF-02  | Phase 2 | Completed |
 | NAS-INF-03  | Phase 2 | Completed |
-| APP-REG-01  | Phase 3 | In Progress |
-| APP-REG-02  | Phase 3 | In Progress |
-| APP-REG-03  | Phase 3 | Complete |
-| APP-REG-04  | Phase 3 | Pending |
+| APP-REG-01  | Phase 3 | Completed |
+| APP-REG-02  | Phase 3 | Completed |
+| APP-REG-03  | Phase 3 | Completed |
+| APP-REG-04  | Phase 3 | Completed |
+| APP-DASH-01 | Phase 5 | Pending |
+| APP-DASH-02 | Phase 5 | Pending |
+| APP-DASH-03 | Phase 5 | Pending |
+| APP-DASH-04 | Phase 5 | Pending |
+| APP-DASH-05 | Phase 5 | Pending |
