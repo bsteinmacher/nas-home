@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
-import '../pages/seerr_page.dart';
-import '../pages/lidarr_page.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../seerr/seerr_page.dart';
+import '../../lidarr/lidarr_page.dart';
 
 class ActiveServicesList extends StatelessWidget {
   final List<dynamic> services;

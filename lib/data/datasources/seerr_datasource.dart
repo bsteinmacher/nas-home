@@ -5,7 +5,8 @@ import '../../domain/entities/seerr.dart';
 abstract class SeerrDataSource {
   Future<List<Seerr>> search(String query);
   Future<List<Seerr>> getTrending();
-  Future<void> requestMedia(int mediaId, String mediaType);
+  Future<Seerr> getDetails(int mediaId, String mediaType);
+  Future<void> requestMedia(int mediaId, String mediaType, {List<int>? seasons});
 }
 
 class SeerrDataSourceImpl implements SeerrDataSource {
@@ -22,10 +23,6 @@ class SeerrDataSourceImpl implements SeerrDataSource {
     if (!url.startsWith('http')) {
       url = 'http://$url';
     }
-    if (url.endsWith('/')) {
-      url = url.substring(0, url.length - 1);
-    }
-    // Extract only the base part without the port if it has one
     final uri = Uri.parse(url);
     return '${uri.scheme}://${uri.host}';
   }
@@ -59,13 +56,29 @@ class SeerrDataSourceImpl implements SeerrDataSource {
   }
 
   @override
-  Future<void> requestMedia(int mediaId, String mediaType) async {
+  Future<Seerr> getDetails(int mediaId, String mediaType) async {
+    final response = await dio.get(
+      '$_baseUrl:5055/api/v1/$mediaType/$mediaId',
+      options: Options(headers: {'X-Api-Key': _apiKey}),
+    );
+
+    return _mapToSeerr(response.data);
+  }
+
+  @override
+  Future<void> requestMedia(int mediaId, String mediaType, {List<int>? seasons}) async {
+    final data = {
+      'mediaId': mediaId,
+      'mediaType': mediaType,
+    };
+
+    if (mediaType == 'tv' && seasons != null) {
+      data['seasons'] = seasons;
+    }
+
     await dio.post(
       '$_baseUrl:5055/api/v1/request',
-      data: {
-        'mediaId': mediaId,
-        'mediaType': mediaType,
-      },
+      data: data,
       options: Options(headers: {'X-Api-Key': _apiKey}),
     );
   }
@@ -73,16 +86,29 @@ class SeerrDataSourceImpl implements SeerrDataSource {
   Seerr _mapToSeerr(Map<String, dynamic> json) {
     final mediaInfo = json['mediaInfo'];
     final status = mediaInfo != null ? mediaInfo['status'] as int? : null;
+    
+    // Determine media type correctly
+    final mediaType = json['mediaType'] ?? (json['title'] != null ? 'movie' : 'tv');
+
+    // Map seasons if available (usually in tv details)
+    List<SeerrSeason>? seasons;
+    if (json['seasons'] != null) {
+      final seasonsList = json['seasons'] as List;
+      seasons = seasonsList.map((s) => SeerrSeason.fromJson(s)).toList();
+    }
 
     return Seerr(
       id: json['id'],
       title: json['title'] ?? json['name'] ?? 'Unknown',
       overview: json['overview'],
       posterPath: json['posterPath'],
-      mediaType: json['mediaType'] ?? (json['title'] != null ? 'movie' : 'tv'),
+      mediaType: mediaType,
       releaseDate: json['releaseDate'] ?? json['firstAirDate'],
       isRequested: status != null && status >= 2,
       status: status,
+      seasons: seasons,
+      tvdbId: json['tvdbId'],
+      tmdbId: json['tmdbId'],
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/di/injection_container.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
-import '../blocs/lidarr_bloc.dart';
-import '../widgets/tui_input_field.dart';
+import '../../../core/di/injection_container.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../blocs/lidarr_bloc.dart';
+import '../../widgets/tui_input_field.dart';
 
 class LidarrPage extends StatelessWidget {
   const LidarrPage({super.key});
