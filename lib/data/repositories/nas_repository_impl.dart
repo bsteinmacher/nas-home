@@ -173,19 +173,24 @@ class NasRepositoryImpl implements NasRepository {
           temp = (cpuTemp['value'] as num? ?? 0).toDouble();
         }
 
+        // Conversão de Bytes para GB (1024^3)
+        const int gb = 1024 * 1024 * 1024;
+        // Conversão de Bytes para MB (1024^2)
+        const int mb = 1024 * 1024;
+
         return HardwareInfo(
           hostname: sys?['hostname']?.toString() ?? 'unknown',
           cpuUsage: (cpu?['total'] as num? ?? 0).toDouble(),
-          ramUsed: (mem?['used'] as num? ?? 0).toDouble(),
-          ramTotal: (mem?['total'] as num? ?? 0).toDouble(),
+          ramUsed: (mem?['used'] as num? ?? 0).toDouble() / gb,
+          ramTotal: (mem?['total'] as num? ?? 0).toDouble() / gb,
           uptime: data['uptime']?.toString() ?? '0:00',
           temperature: temp,
-          downloadSpeed: down,
-          uploadSpeed: up,
-          ssdUsed: (rootFs['used'] as num? ?? 0).toDouble(),
-          ssdTotal: (rootFs['size'] as num? ?? 1).toDouble(),
-          hddUsed: (dataFs['used'] as num? ?? 0).toDouble(),
-          hddTotal: (dataFs['size'] as num? ?? 1).toDouble(),
+          downloadSpeed: down / mb,
+          uploadSpeed: up / mb,
+          ssdUsed: (rootFs['used'] as num? ?? 0).toDouble() / gb,
+          ssdTotal: (rootFs['size'] as num? ?? 1).toDouble() / gb,
+          hddUsed: (dataFs['used'] as num? ?? 0).toDouble() / gb,
+          hddTotal: (dataFs['size'] as num? ?? 1).toDouble() / gb,
         );
       } else {
         throw Exception('Failed to load hardware info: ${response.statusCode}');
