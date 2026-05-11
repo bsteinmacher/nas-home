@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/di/injection_container.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
@@ -18,10 +17,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<NasStatusBloc>()..add(const RefreshRequested()),
-      child: const HomeView(),
-    );
+    return const HomeView();
   }
 }
 
@@ -61,7 +57,8 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, size: 20),
-            onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
+            onPressed: () => context.read<NasStatusBloc>().add(const CheckUpdatesRequested()),
+            tooltip: 'Force Refresh & Updates',
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: AppColors.terminalGreen, size: 20),
@@ -99,6 +96,34 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               loaded: (services, hardwareInfo) => _buildDashboard(services, hardwareInfo),
+              updating: (serviceName, services, hardwareInfo) => Stack(
+                children: [
+                  _buildDashboard(services, hardwareInfo),
+                  // Overlay de loading discreto estilo terminal
+                  Positioned(
+                    bottom: AppSpacing.md,
+                    right: AppSpacing.md,
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.8),
+                        border: Border.all(color: AppColors.terminalGreen.withValues(alpha: 0.5)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const BrailleSpinner(fontSize: 12),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            'UPDATING_${serviceName.toUpperCase()}...', 
+                            style: AppTypography.moduleLabel.copyWith(fontSize: 10, color: AppColors.terminalGreen),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

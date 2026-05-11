@@ -2,14 +2,20 @@ import 'package:dio/dio.dart';
 import '../../domain/entities/nas_service.dart';
 import '../../domain/entities/hardware_info.dart';
 import '../../domain/repositories/nas_repository.dart';
+import '../datasources/registry_datasource.dart';
 
 class NasRepositoryImpl implements NasRepository {
   final Dio dio;
+  final RegistryDataSource registryDataSource;
 
-  NasRepositoryImpl(this.dio);
+  NasRepositoryImpl(this.dio, this.registryDataSource);
 
   @override
   Future<List<NasService>> getServices() async {
+    return _getBaseServices();
+  }
+
+  List<NasService> _getBaseServices() {
     return [
       const NasService(name: 'Nginx Proxy Manager', port: '81', description: 'Proxy & SSL Manager'),
       const NasService(name: 'AdGuard Home', port: '8085', description: 'DNS Sinkhole'),
@@ -17,6 +23,7 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'Jellyfin', port: '8096', description: 'Media Server'),
       const NasService(name: 'Seerr', port: '5055', description: 'Media Requests'),
       const NasService(name: 'Navidrome', port: '4533', description: 'Music Server'),
+      const NasService(name: 'Lidarr', port: '8686', description: 'Music Automation'),
       const NasService(name: 'qBittorrent', port: '8080', description: 'Torrent Client'),
       const NasService(name: 'Radarr', port: '7878', description: 'Movies Automation'),
       const NasService(name: 'Sonarr', port: '8989', description: 'TV Shows Automation'),
@@ -24,9 +31,79 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'Bazarr', port: '6767', description: 'Subtitles'),
       const NasService(name: 'Tdarr', port: '8265', description: 'Transcoding'),
       const NasService(name: 'Immich', port: '2283', description: 'Photos & Videos'),
-      const NasService(name: 'Nextcloud', port: '8080', description: 'Files & Cloud'),
+      const NasService(name: 'Forgejo', port: '3001', description: 'Self-hosted Git'),
+      const NasService(name: 'Autobrr', port: '7474', description: 'Download Automation'),
+      const NasService(name: 'FlareSolverr', port: '8191', description: 'Proxy Solver'),
+      const NasService(name: 'Headscale', port: '8080', description: 'VPN Control Plane'),
       const NasService(name: 'Nas Registry', port: '8000', description: 'API Discovery Service'),
     ];
+  }
+
+  @override
+  Future<List<NasService>> getServicesWithUpdates(String baseUrl, String token, {bool force = false}) async {
+    final services = _getBaseServices();
+    final normalizedUrl = _normalizeUrl(baseUrl);
+    try {
+      final updates = await registryDataSource.getUpdates(normalizedUrl, token, force: force);
+      print('DEBUG: [REGISTRY] Received ${updates.length} containers from backend');
+      
+      return services.map((service) {
+        final cleanServiceName = service.name.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
+        
+        Map<String, dynamic>? updateInfo;
+        String? matchedContainer;
+
+        for (var entry in updates.entries) {
+          final containerName = entry.key.toLowerCase().replaceAll('-', '').replaceAll('_', '');
+          
+          if (containerName == cleanServiceName || 
+              containerName.contains(cleanServiceName) || 
+              cleanServiceName.contains(containerName)) {
+            updateInfo = entry.value as Map<String, dynamic>;
+            matchedContainer = entry.key;
+            break;
+          }
+        }
+        
+        if (updateInfo != null && updateInfo.isNotEmpty) {
+          final available = updateInfo['update_available'] == true;
+          if (available) {
+            print('DEBUG: [UPDATE_AVAIL] Service "${service.name}" -> Container "$matchedContainer"');
+          }
+          
+          return service.copyWith(
+            updateAvailable: available,
+            containerName: matchedContainer,
+            localDigest: updateInfo['local_digest'],
+            remoteDigest: updateInfo['remote_digest'],
+            localVersion: updateInfo['local_version'],
+            remoteLastUpdated: updateInfo['remote_last_updated'],
+            imageTag: updateInfo['image_tag'],
+          );
+        } else {
+          return service;
+        }
+      }).toList();
+    } catch (e) {
+      print('Error getting services with updates: $e');
+      return services;
+    }
+  }
+
+  @override
+  Future<void> updateService(String baseUrl, String token, String serviceName) async {
+    // Tenta encontrar o serviço na lista atual para pegar o containerName real
+    final services = await getServicesWithUpdates(baseUrl, token, force: false);
+    final service = services.firstWhere(
+      (s) => s.name == serviceName,
+      orElse: () => NasService(name: serviceName, port: '', description: ''),
+    );
+
+    final targetContainer = service.containerName ?? serviceName.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
+    final normalizedUrl = _normalizeUrl(baseUrl);
+    
+    print('DEBUG: [REPO] Initializing update for: $serviceName (Target Container: $targetContainer)');
+    await registryDataSource.updateService(normalizedUrl, token, targetContainer);
   }
 
   @override
@@ -40,7 +117,6 @@ class NasRepositoryImpl implements NasRepository {
       ));
       return response.statusCode != null;
     } catch (e) {
-      print('Error checking service $port: $e');
       return false;
     }
   }
@@ -53,124 +129,70 @@ class NasRepositoryImpl implements NasRepository {
     try {
       print('Fetching hardware info from: $apiUrl');
       final response = await dio.get(apiUrl, options: Options(
-        sendTimeout: const Duration(seconds: 3),
-        receiveTimeout: const Duration(seconds: 3),
+        sendTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
       ));
       
-      final data = response.data as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        
+        final cpu = data['cpu'] as Map<String, dynamic>?;
+        final mem = data['mem'] as Map<String, dynamic>?;
+        final sys = data['system'] as Map<String, dynamic>?;
+        final fsList = data['fs'] as List<dynamic>? ?? [];
+        final netList = data['network'] as List<dynamic>? ?? [];
+        final sensors = data['sensors'] as List<dynamic>? ?? [];
 
-      // Parsing CPU
-      double cpuUsage = 0;
-      if (data['cpu'] != null) {
-        final cpu = data['cpu'] as Map<String, dynamic>;
-        cpuUsage = (cpu['total'] as num?)?.toDouble() ?? 0;
-      }
+        final rootFs = fsList.firstWhere(
+          (f) => f['mnt_point'] == '/', 
+          orElse: () => {'used': 0, 'size': 1},
+        );
 
-      // Parsing RAM
-      double ramUsed = 0;
-      double ramTotal = 0;
-      if (data['mem'] != null) {
-        final mem = data['mem'] as Map<String, dynamic>;
-        ramUsed = ((mem['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-        ramTotal = ((mem['total'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-      }
+        final dataFs = fsList.firstWhere(
+          (f) => f['mnt_point']?.toString().contains('data') ?? false,
+          orElse: () => {'used': 0, 'size': 1},
+        );
 
-      // Parsing Uptime
-      final uptimeStr = data['uptime']?.toString() ?? 'N/A';
+        double down = 0;
+        double up = 0;
+        if (netList.isNotEmpty) {
+          final eth = netList.firstWhere(
+            (n) => n['interface_name'] == 'enp2s0',
+            orElse: () => netList.first,
+          );
+          down = (eth['bytes_recv_rate_per_sec'] as num? ?? 0).toDouble();
+          up = (eth['bytes_sent_rate_per_sec'] as num? ?? 0).toDouble();
+        }
 
-      // Parsing Temperature (sensors)
-      double temp = 0;
-      final sensors = data['sensors'] as List?;
-      if (sensors != null && sensors.isNotEmpty) {
-        try {
-          final cpuTempSensor = sensors.firstWhere(
-            (s) {
-              final label = s['label']?.toString().toLowerCase() ?? '';
-              return label.contains('cpu') || label.contains('package') || label.contains('temp1');
-            },
+        double temp = 0;
+        if (sensors.isNotEmpty) {
+          final cpuTemp = sensors.firstWhere(
+            (s) => s['label']?.toString().contains('Package') ?? false,
             orElse: () => sensors.first,
           );
-          temp = (cpuTempSensor['value'] as num?)?.toDouble() ?? 0;
-        } catch (_) {}
-      }
-
-      // Parsing Network
-      double downloadSpeed = 0;
-      double uploadSpeed = 0;
-      final network = data['network'] as List?;
-      if (network != null) {
-        final mainInterface = network.firstWhere(
-          (n) => n['interface_name'] == 'enp2s0',
-          orElse: () => network.first,
-        );
-        downloadSpeed = ((mainInterface['bytes_recv_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
-        uploadSpeed = ((mainInterface['bytes_sent_rate_per_sec'] as num?)?.toDouble() ?? 0) / (1024 * 1024);
-      }
-
-      // Parsing Disks
-      double ssdUsed = 0;
-      double ssdTotal = 0;
-      double hddUsed = 0;
-      double hddTotal = 0;
-      final fs = data['fs'] as List?;
-      if (fs != null) {
-        // SSD (/)
-        final ssdFs = fs.firstWhere(
-          (f) => f['mnt_point'] == '/',
-          orElse: () => null,
-        );
-        if (ssdFs != null) {
-          ssdUsed = ((ssdFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-          ssdTotal = ((ssdFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
+          temp = (cpuTemp['value'] as num? ?? 0).toDouble();
         }
 
-        // HDD (/home/didizera/meu-nas/data)
-        final hddFs = fs.firstWhere(
-          (f) => f['mnt_point'] == '/home/didizera/meu-nas/data',
-          orElse: () => null,
+        return HardwareInfo(
+          hostname: sys?['hostname']?.toString() ?? 'unknown',
+          cpuUsage: (cpu?['total'] as num? ?? 0).toDouble(),
+          ramUsed: (mem?['used'] as num? ?? 0).toDouble(),
+          ramTotal: (mem?['total'] as num? ?? 0).toDouble(),
+          uptime: data['uptime']?.toString() ?? '0:00',
+          temperature: temp,
+          downloadSpeed: down,
+          uploadSpeed: up,
+          ssdUsed: (rootFs['used'] as num? ?? 0).toDouble(),
+          ssdTotal: (rootFs['size'] as num? ?? 1).toDouble(),
+          hddUsed: (dataFs['used'] as num? ?? 0).toDouble(),
+          hddTotal: (dataFs['size'] as num? ?? 1).toDouble(),
         );
-        if (hddFs != null) {
-          hddUsed = ((hddFs['used'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-          hddTotal = ((hddFs['size'] as num?)?.toDouble() ?? 0) / (1024 * 1024 * 1024);
-        }
+      } else {
+        throw Exception('Failed to load hardware info: ${response.statusCode}');
       }
-
-      // Hostname
-      String hostname = 'UNKNOWN';
-      if (data['system'] != null) {
-        hostname = (data['system'] as Map<String, dynamic>)['hostname']?.toString().toUpperCase() ?? 'UNKNOWN';
-      }
-
-      return HardwareInfo(
-        hostname: hostname,
-        cpuUsage: cpuUsage,
-        ramUsed: ramUsed,
-        ramTotal: ramTotal,
-        uptime: uptimeStr,
-        temperature: temp,
-        downloadSpeed: downloadSpeed,
-        uploadSpeed: uploadSpeed,
-        ssdUsed: ssdUsed,
-        ssdTotal: ssdTotal,
-        hddUsed: hddUsed,
-        hddTotal: hddTotal,
-      );
     } catch (e) {
-      print('Error fetching hardware info from $apiUrl: $e');
-      return const HardwareInfo(
-        hostname: 'OFFLINE',
-        cpuUsage: 0,
-        ramUsed: 0,
-        ramTotal: 0,
-        uptime: 'N/A',
-        temperature: 0,
-        downloadSpeed: 0,
-        uploadSpeed: 0,
-        ssdUsed: 0,
-        ssdTotal: 0,
-        hddUsed: 0,
-        hddTotal: 0,
-      );
+      print('Error parsing hardware info: $e');
+      throw Exception('Error parsing hardware info: $e');
     }
   }
 

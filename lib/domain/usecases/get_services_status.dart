@@ -6,8 +6,14 @@ class GetServicesStatusUseCase {
 
   GetServicesStatusUseCase(this.repository);
 
-  Future<List<NasService>> execute(String nasUrl) async {
-    final services = await repository.getServices();
+  Future<List<NasService>> execute(String nasUrl, {String? registryToken, bool force = false}) async {
+    List<NasService> services;
+    if (registryToken != null && registryToken.isNotEmpty) {
+      services = await repository.getServicesWithUpdates(nasUrl, registryToken, force: force);
+    } else {
+      services = await repository.getServices();
+    }
+    
     final updatedServices = <NasService>[];
 
     for (var service in services) {

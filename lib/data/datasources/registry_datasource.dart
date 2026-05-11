@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 
 abstract class RegistryDataSource {
   Future<Map<String, dynamic>> getConfig(String baseUrl, String token);
+  Future<Map<String, dynamic>> getUpdates(String baseUrl, String token, {bool force = false});
+  Future<Map<String, dynamic>> updateService(String baseUrl, String token, String serviceName);
 }
 
 class RegistryDataSourceImpl implements RegistryDataSource {
@@ -28,6 +30,57 @@ class RegistryDataSourceImpl implements RegistryDataSource {
       }
     } catch (e) {
       throw Exception('Error fetching registry config: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUpdates(String baseUrl, String token, {bool force = false}) async {
+    try {
+      final response = await dio.get(
+        '$baseUrl:8000/updates',
+        queryParameters: {'force': force},
+        options: Options(
+          headers: {
+            'X-Registry-Token': token,
+          },
+        ),
+      );
+      
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to load updates: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching updates: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateService(String baseUrl, String token, String serviceName) async {
+    try {
+      print('DEBUG: [HTTP] POST -> $baseUrl:8000/update/$serviceName (Timeout: 5min)');
+      final response = await dio.post(
+        '$baseUrl:8000/update/$serviceName',
+        options: Options(
+          headers: {
+            'X-Registry-Token': token,
+          },
+          sendTimeout: const Duration(minutes: 5),
+          receiveTimeout: const Duration(minutes: 5),
+        ),
+      );
+      
+      if (response.statusCode == 200) {
+        print('DEBUG: [HTTP] Update Success: ${response.data}');
+        return response.data as Map<String, dynamic>;
+      } else {
+        print('DEBUG: [HTTP] Update Failed (${response.statusCode}): ${response.data}');
+        throw Exception('Failed to update service: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('DEBUG: [HTTP] Error during update request: $e');
+      throw Exception('Error updating service $serviceName: $e');
     }
   }
 }
