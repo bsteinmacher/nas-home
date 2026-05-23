@@ -11,6 +11,13 @@ _NasService _$NasServiceFromJson(Map<String, dynamic> json) => _NasService(
   port: json['port'] as String,
   description: json['description'] as String,
   isOnline: json['isOnline'] as bool? ?? false,
+  updateAvailable: json['updateAvailable'] as bool? ?? false,
+  containerName: json['containerName'] as String?,
+  localDigest: json['localDigest'] as String?,
+  remoteDigest: json['remoteDigest'] as String?,
+  localVersion: json['localVersion'] as String?,
+  remoteLastUpdated: json['remoteLastUpdated'] as String?,
+  imageTag: json['imageTag'] as String?,
 );
 
 Map<String, dynamic> _$NasServiceToJson(_NasService instance) =>
@@ -19,4 +26,11 @@ Map<String, dynamic> _$NasServiceToJson(_NasService instance) =>
       'port': instance.port,
       'description': instance.description,
       'isOnline': instance.isOnline,
+      'updateAvailable': instance.updateAvailable,
+      'containerName': instance.containerName,
+      'localDigest': instance.localDigest,
+      'remoteDigest': instance.remoteDigest,
+      'localVersion': instance.localVersion,
+      'remoteLastUpdated': instance.remoteLastUpdated,
+      'imageTag': instance.imageTag,
     };

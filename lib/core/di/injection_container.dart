@@ -32,9 +32,8 @@ Future<void> init() async {
   //! Core
 
   //! Data
-  sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl()));
-  
   sl.registerLazySingleton<RegistryDataSource>(() => RegistryDataSourceImpl(dio: sl()));
+  sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton<RegistryRepository>(
       () => RegistryRepositoryImpl(dataSource: sl(), sharedPreferences: sl()));
 
@@ -71,6 +70,7 @@ Future<void> init() async {
         getServicesStatus: sl(),
         getHardwareInfo: sl(),
         sharedPreferences: sl(),
+        nasRepository: sl(),
       ));
   sl.registerFactory(() => SeerrBloc(
         searchSeerr: sl(),

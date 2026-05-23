@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NasService {
 
- String get name; String get port; String get description; bool get isOnline;
+ String get name; String get port; String get description; bool get isOnline; bool get updateAvailable; String? get containerName; String? get localDigest; String? get remoteDigest; String? get localVersion; String? get remoteLastUpdated; String? get imageTag;
 /// Create a copy of NasService
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NasServiceCopyWith<NasService> get copyWith => _$NasServiceCopyWithImpl<NasServ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NasService&&(identical(other.name, name) || other.name == name)&&(identical(other.port, port) || other.port == port)&&(identical(other.description, description) || other.description == description)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NasService&&(identical(other.name, name) || other.name == name)&&(identical(other.port, port) || other.port == port)&&(identical(other.description, description) || other.description == description)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.updateAvailable, updateAvailable) || other.updateAvailable == updateAvailable)&&(identical(other.containerName, containerName) || other.containerName == containerName)&&(identical(other.localDigest, localDigest) || other.localDigest == localDigest)&&(identical(other.remoteDigest, remoteDigest) || other.remoteDigest == remoteDigest)&&(identical(other.localVersion, localVersion) || other.localVersion == localVersion)&&(identical(other.remoteLastUpdated, remoteLastUpdated) || other.remoteLastUpdated == remoteLastUpdated)&&(identical(other.imageTag, imageTag) || other.imageTag == imageTag));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,port,description,isOnline);
+int get hashCode => Object.hash(runtimeType,name,port,description,isOnline,updateAvailable,containerName,localDigest,remoteDigest,localVersion,remoteLastUpdated,imageTag);
 
 @override
 String toString() {
-  return 'NasService(name: $name, port: $port, description: $description, isOnline: $isOnline)';
+  return 'NasService(name: $name, port: $port, description: $description, isOnline: $isOnline, updateAvailable: $updateAvailable, containerName: $containerName, localDigest: $localDigest, remoteDigest: $remoteDigest, localVersion: $localVersion, remoteLastUpdated: $remoteLastUpdated, imageTag: $imageTag)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NasServiceCopyWith<$Res>  {
   factory $NasServiceCopyWith(NasService value, $Res Function(NasService) _then) = _$NasServiceCopyWithImpl;
 @useResult
 $Res call({
- String name, String port, String description, bool isOnline
+ String name, String port, String description, bool isOnline, bool updateAvailable, String? containerName, String? localDigest, String? remoteDigest, String? localVersion, String? remoteLastUpdated, String? imageTag
 });
 
 
@@ -65,13 +65,20 @@ class _$NasServiceCopyWithImpl<$Res>
 
 /// Create a copy of NasService
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? port = null,Object? description = null,Object? isOnline = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? port = null,Object? description = null,Object? isOnline = null,Object? updateAvailable = null,Object? containerName = freezed,Object? localDigest = freezed,Object? remoteDigest = freezed,Object? localVersion = freezed,Object? remoteLastUpdated = freezed,Object? imageTag = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,isOnline: null == isOnline ? _self.isOnline : isOnline // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,updateAvailable: null == updateAvailable ? _self.updateAvailable : updateAvailable // ignore: cast_nullable_to_non_nullable
+as bool,containerName: freezed == containerName ? _self.containerName : containerName // ignore: cast_nullable_to_non_nullable
+as String?,localDigest: freezed == localDigest ? _self.localDigest : localDigest // ignore: cast_nullable_to_non_nullable
+as String?,remoteDigest: freezed == remoteDigest ? _self.remoteDigest : remoteDigest // ignore: cast_nullable_to_non_nullable
+as String?,localVersion: freezed == localVersion ? _self.localVersion : localVersion // ignore: cast_nullable_to_non_nullable
+as String?,remoteLastUpdated: freezed == remoteLastUpdated ? _self.remoteLastUpdated : remoteLastUpdated // ignore: cast_nullable_to_non_nullable
+as String?,imageTag: freezed == imageTag ? _self.imageTag : imageTag // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -156,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String port,  String description,  bool isOnline)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String port,  String description,  bool isOnline,  bool updateAvailable,  String? containerName,  String? localDigest,  String? remoteDigest,  String? localVersion,  String? remoteLastUpdated,  String? imageTag)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NasService() when $default != null:
-return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
+return $default(_that.name,_that.port,_that.description,_that.isOnline,_that.updateAvailable,_that.containerName,_that.localDigest,_that.remoteDigest,_that.localVersion,_that.remoteLastUpdated,_that.imageTag);case _:
   return orElse();
 
 }
@@ -177,10 +184,10 @@ return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String port,  String description,  bool isOnline)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String port,  String description,  bool isOnline,  bool updateAvailable,  String? containerName,  String? localDigest,  String? remoteDigest,  String? localVersion,  String? remoteLastUpdated,  String? imageTag)  $default,) {final _that = this;
 switch (_that) {
 case _NasService():
-return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
+return $default(_that.name,_that.port,_that.description,_that.isOnline,_that.updateAvailable,_that.containerName,_that.localDigest,_that.remoteDigest,_that.localVersion,_that.remoteLastUpdated,_that.imageTag);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +204,10 @@ return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String port,  String description,  bool isOnline)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String port,  String description,  bool isOnline,  bool updateAvailable,  String? containerName,  String? localDigest,  String? remoteDigest,  String? localVersion,  String? remoteLastUpdated,  String? imageTag)?  $default,) {final _that = this;
 switch (_that) {
 case _NasService() when $default != null:
-return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
+return $default(_that.name,_that.port,_that.description,_that.isOnline,_that.updateAvailable,_that.containerName,_that.localDigest,_that.remoteDigest,_that.localVersion,_that.remoteLastUpdated,_that.imageTag);case _:
   return null;
 
 }
@@ -212,13 +219,20 @@ return $default(_that.name,_that.port,_that.description,_that.isOnline);case _:
 @JsonSerializable()
 
 class _NasService implements NasService {
-  const _NasService({required this.name, required this.port, required this.description, this.isOnline = false});
+  const _NasService({required this.name, required this.port, required this.description, this.isOnline = false, this.updateAvailable = false, this.containerName, this.localDigest, this.remoteDigest, this.localVersion, this.remoteLastUpdated, this.imageTag});
   factory _NasService.fromJson(Map<String, dynamic> json) => _$NasServiceFromJson(json);
 
 @override final  String name;
 @override final  String port;
 @override final  String description;
 @override@JsonKey() final  bool isOnline;
+@override@JsonKey() final  bool updateAvailable;
+@override final  String? containerName;
+@override final  String? localDigest;
+@override final  String? remoteDigest;
+@override final  String? localVersion;
+@override final  String? remoteLastUpdated;
+@override final  String? imageTag;
 
 /// Create a copy of NasService
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NasService&&(identical(other.name, name) || other.name == name)&&(identical(other.port, port) || other.port == port)&&(identical(other.description, description) || other.description == description)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NasService&&(identical(other.name, name) || other.name == name)&&(identical(other.port, port) || other.port == port)&&(identical(other.description, description) || other.description == description)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.updateAvailable, updateAvailable) || other.updateAvailable == updateAvailable)&&(identical(other.containerName, containerName) || other.containerName == containerName)&&(identical(other.localDigest, localDigest) || other.localDigest == localDigest)&&(identical(other.remoteDigest, remoteDigest) || other.remoteDigest == remoteDigest)&&(identical(other.localVersion, localVersion) || other.localVersion == localVersion)&&(identical(other.remoteLastUpdated, remoteLastUpdated) || other.remoteLastUpdated == remoteLastUpdated)&&(identical(other.imageTag, imageTag) || other.imageTag == imageTag));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,port,description,isOnline);
+int get hashCode => Object.hash(runtimeType,name,port,description,isOnline,updateAvailable,containerName,localDigest,remoteDigest,localVersion,remoteLastUpdated,imageTag);
 
 @override
 String toString() {
-  return 'NasService(name: $name, port: $port, description: $description, isOnline: $isOnline)';
+  return 'NasService(name: $name, port: $port, description: $description, isOnline: $isOnline, updateAvailable: $updateAvailable, containerName: $containerName, localDigest: $localDigest, remoteDigest: $remoteDigest, localVersion: $localVersion, remoteLastUpdated: $remoteLastUpdated, imageTag: $imageTag)';
 }
 
 
@@ -253,7 +267,7 @@ abstract mixin class _$NasServiceCopyWith<$Res> implements $NasServiceCopyWith<$
   factory _$NasServiceCopyWith(_NasService value, $Res Function(_NasService) _then) = __$NasServiceCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String port, String description, bool isOnline
+ String name, String port, String description, bool isOnline, bool updateAvailable, String? containerName, String? localDigest, String? remoteDigest, String? localVersion, String? remoteLastUpdated, String? imageTag
 });
 
 
@@ -270,13 +284,20 @@ class __$NasServiceCopyWithImpl<$Res>
 
 /// Create a copy of NasService
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? port = null,Object? description = null,Object? isOnline = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? port = null,Object? description = null,Object? isOnline = null,Object? updateAvailable = null,Object? containerName = freezed,Object? localDigest = freezed,Object? remoteDigest = freezed,Object? localVersion = freezed,Object? remoteLastUpdated = freezed,Object? imageTag = freezed,}) {
   return _then(_NasService(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,isOnline: null == isOnline ? _self.isOnline : isOnline // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,updateAvailable: null == updateAvailable ? _self.updateAvailable : updateAvailable // ignore: cast_nullable_to_non_nullable
+as bool,containerName: freezed == containerName ? _self.containerName : containerName // ignore: cast_nullable_to_non_nullable
+as String?,localDigest: freezed == localDigest ? _self.localDigest : localDigest // ignore: cast_nullable_to_non_nullable
+as String?,remoteDigest: freezed == remoteDigest ? _self.remoteDigest : remoteDigest // ignore: cast_nullable_to_non_nullable
+as String?,localVersion: freezed == localVersion ? _self.localVersion : localVersion // ignore: cast_nullable_to_non_nullable
+as String?,remoteLastUpdated: freezed == remoteLastUpdated ? _self.remoteLastUpdated : remoteLastUpdated // ignore: cast_nullable_to_non_nullable
+as String?,imageTag: freezed == imageTag ? _self.imageTag : imageTag // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

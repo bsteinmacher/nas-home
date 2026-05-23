@@ -10,6 +10,13 @@ abstract class NasService with _$NasService {
     required String port,
     required String description,
     @Default(false) bool isOnline,
+    @Default(false) bool updateAvailable,
+    String? containerName,
+    String? localDigest,
+    String? remoteDigest,
+    String? localVersion,
+    String? remoteLastUpdated,
+    String? imageTag,
   }) = _NasService;
 
   factory NasService.fromJson(Map<String, dynamic> json) => _$NasServiceFromJson(json);

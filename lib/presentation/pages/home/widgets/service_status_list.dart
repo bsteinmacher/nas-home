@@ -28,12 +28,12 @@ class ServiceStatusList extends StatelessWidget {
       child: Wrap(
         spacing: AppSpacing.md, // Aumentei o espaçamento entre itens para compensar a falta de espaço interna
         runSpacing: AppSpacing.sm,
-        children: sortedServices.map((service) => _buildTuiServiceItem(service)).toList(),
+        children: sortedServices.map((service) => _buildTuiServiceItem(context, service)).toList(),
       ),
     );
   }
 
-  Widget _buildTuiServiceItem(dynamic service) {
+  Widget _buildTuiServiceItem(BuildContext context, dynamic service) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -50,6 +50,15 @@ class ServiceStatusList extends StatelessWidget {
             fontSize: 9,
           ),
         ),
+        if (service.updateAvailable)
+          const Padding(
+            padding: EdgeInsets.only(left: 2.0),
+            child: Icon(
+              Icons.info_outline,
+              size: 10,
+              color: Colors.blueAccent,
+            ),
+          ),
       ],
     );
   }

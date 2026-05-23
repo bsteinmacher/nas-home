@@ -55,11 +55,13 @@ extension NasStatusEventPatterns on NasStatusEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RefreshRequested value)?  refreshRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RefreshRequested value)?  refreshRequested,TResult Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult Function( UpdateServiceRequested value)?  updateServiceRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case CheckUpdatesRequested() when checkUpdatesRequested != null:
+return checkUpdatesRequested(_that);case UpdateServiceRequested() when updateServiceRequested != null:
+return updateServiceRequested(_that);case _:
   return orElse();
 
 }
@@ -77,11 +79,13 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RefreshRequested value)  refreshRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RefreshRequested value)  refreshRequested,required TResult Function( CheckUpdatesRequested value)  checkUpdatesRequested,required TResult Function( UpdateServiceRequested value)  updateServiceRequested,}){
 final _that = this;
 switch (_that) {
 case RefreshRequested():
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case CheckUpdatesRequested():
+return checkUpdatesRequested(_that);case UpdateServiceRequested():
+return updateServiceRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -98,11 +102,13 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RefreshRequested value)?  refreshRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RefreshRequested value)?  refreshRequested,TResult? Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult? Function( UpdateServiceRequested value)?  updateServiceRequested,}){
 final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
-return refreshRequested(_that);case _:
+return refreshRequested(_that);case CheckUpdatesRequested() when checkUpdatesRequested != null:
+return checkUpdatesRequested(_that);case UpdateServiceRequested() when updateServiceRequested != null:
+return updateServiceRequested(_that);case _:
   return null;
 
 }
@@ -119,10 +125,12 @@ return refreshRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  refreshRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  refreshRequested,TResult Function()?  checkUpdatesRequested,TResult Function( String serviceName)?  updateServiceRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case CheckUpdatesRequested() when checkUpdatesRequested != null:
+return checkUpdatesRequested();case UpdateServiceRequested() when updateServiceRequested != null:
+return updateServiceRequested(_that.serviceName);case _:
   return orElse();
 
 }
@@ -140,10 +148,12 @@ return refreshRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  refreshRequested,required TResult Function()  checkUpdatesRequested,required TResult Function( String serviceName)  updateServiceRequested,}) {final _that = this;
 switch (_that) {
 case RefreshRequested():
-return refreshRequested();case _:
+return refreshRequested();case CheckUpdatesRequested():
+return checkUpdatesRequested();case UpdateServiceRequested():
+return updateServiceRequested(_that.serviceName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -160,10 +170,12 @@ return refreshRequested();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  refreshRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  refreshRequested,TResult? Function()?  checkUpdatesRequested,TResult? Function( String serviceName)?  updateServiceRequested,}) {final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
-return refreshRequested();case _:
+return refreshRequested();case CheckUpdatesRequested() when checkUpdatesRequested != null:
+return checkUpdatesRequested();case UpdateServiceRequested() when updateServiceRequested != null:
+return updateServiceRequested(_that.serviceName);case _:
   return null;
 
 }
@@ -202,6 +214,104 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class CheckUpdatesRequested implements NasStatusEvent {
+  const CheckUpdatesRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckUpdatesRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'NasStatusEvent.checkUpdatesRequested()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class UpdateServiceRequested implements NasStatusEvent {
+  const UpdateServiceRequested(this.serviceName);
+  
+
+ final  String serviceName;
+
+/// Create a copy of NasStatusEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UpdateServiceRequestedCopyWith<UpdateServiceRequested> get copyWith => _$UpdateServiceRequestedCopyWithImpl<UpdateServiceRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateServiceRequested&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,serviceName);
+
+@override
+String toString() {
+  return 'NasStatusEvent.updateServiceRequested(serviceName: $serviceName)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UpdateServiceRequestedCopyWith<$Res> implements $NasStatusEventCopyWith<$Res> {
+  factory $UpdateServiceRequestedCopyWith(UpdateServiceRequested value, $Res Function(UpdateServiceRequested) _then) = _$UpdateServiceRequestedCopyWithImpl;
+@useResult
+$Res call({
+ String serviceName
+});
+
+
+
+
+}
+/// @nodoc
+class _$UpdateServiceRequestedCopyWithImpl<$Res>
+    implements $UpdateServiceRequestedCopyWith<$Res> {
+  _$UpdateServiceRequestedCopyWithImpl(this._self, this._then);
+
+  final UpdateServiceRequested _self;
+  final $Res Function(UpdateServiceRequested) _then;
+
+/// Create a copy of NasStatusEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? serviceName = null,}) {
+  return _then(UpdateServiceRequested(
+null == serviceName ? _self.serviceName : serviceName // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 /// @nodoc
 mixin _$NasStatusState {
@@ -247,13 +357,14 @@ extension NasStatusStatePatterns on NasStatusState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( Initial value)?  initial,TResult Function( Loading value)?  loading,TResult Function( Loaded value)?  loaded,TResult Function( Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( Initial value)?  initial,TResult Function( Loading value)?  loading,TResult Function( Loaded value)?  loaded,TResult Function( Updating value)?  updating,TResult Function( Error value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial(_that);case Loading() when loading != null:
 return loading(_that);case Loaded() when loaded != null:
-return loaded(_that);case Error() when error != null:
+return loaded(_that);case Updating() when updating != null:
+return updating(_that);case Error() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -272,13 +383,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( Initial value)  initial,required TResult Function( Loading value)  loading,required TResult Function( Loaded value)  loaded,required TResult Function( Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( Initial value)  initial,required TResult Function( Loading value)  loading,required TResult Function( Loaded value)  loaded,required TResult Function( Updating value)  updating,required TResult Function( Error value)  error,}){
 final _that = this;
 switch (_that) {
 case Initial():
 return initial(_that);case Loading():
 return loading(_that);case Loaded():
-return loaded(_that);case Error():
+return loaded(_that);case Updating():
+return updating(_that);case Error():
 return error(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -296,13 +408,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( Initial value)?  initial,TResult? Function( Loading value)?  loading,TResult? Function( Loaded value)?  loaded,TResult? Function( Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( Initial value)?  initial,TResult? Function( Loading value)?  loading,TResult? Function( Loaded value)?  loaded,TResult? Function( Updating value)?  updating,TResult? Function( Error value)?  error,}){
 final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial(_that);case Loading() when loading != null:
 return loading(_that);case Loaded() when loaded != null:
-return loaded(_that);case Error() when error != null:
+return loaded(_that);case Updating() when updating != null:
+return updating(_that);case Error() when error != null:
 return error(_that);case _:
   return null;
 
@@ -320,12 +433,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult Function( String serviceName,  List<NasService> services,  HardwareInfo hardwareInfo)?  updating,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Loaded() when loaded != null:
-return loaded(_that.services,_that.hardwareInfo);case Error() when error != null:
+return loaded(_that.services,_that.hardwareInfo);case Updating() when updating != null:
+return updating(_that.serviceName,_that.services,_that.hardwareInfo);case Error() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -344,12 +458,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<NasService> services,  HardwareInfo hardwareInfo)  loaded,required TResult Function( String serviceName,  List<NasService> services,  HardwareInfo hardwareInfo)  updating,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case Initial():
 return initial();case Loading():
 return loading();case Loaded():
-return loaded(_that.services,_that.hardwareInfo);case Error():
+return loaded(_that.services,_that.hardwareInfo);case Updating():
+return updating(_that.serviceName,_that.services,_that.hardwareInfo);case Error():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -367,12 +482,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<NasService> services,  HardwareInfo hardwareInfo)?  loaded,TResult? Function( String serviceName,  List<NasService> services,  HardwareInfo hardwareInfo)?  updating,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Loaded() when loaded != null:
-return loaded(_that.services,_that.hardwareInfo);case Error() when error != null:
+return loaded(_that.services,_that.hardwareInfo);case Updating() when updating != null:
+return updating(_that.serviceName,_that.services,_that.hardwareInfo);case Error() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -511,6 +627,91 @@ class _$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? services = null,Object? hardwareInfo = null,}) {
   return _then(Loaded(
 null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as List<NasService>,null == hardwareInfo ? _self.hardwareInfo : hardwareInfo // ignore: cast_nullable_to_non_nullable
+as HardwareInfo,
+  ));
+}
+
+/// Create a copy of NasStatusState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$HardwareInfoCopyWith<$Res> get hardwareInfo {
+  
+  return $HardwareInfoCopyWith<$Res>(_self.hardwareInfo, (value) {
+    return _then(_self.copyWith(hardwareInfo: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class Updating implements NasStatusState {
+  const Updating(this.serviceName, final  List<NasService> services, this.hardwareInfo): _services = services;
+  
+
+ final  String serviceName;
+ final  List<NasService> _services;
+ List<NasService> get services {
+  if (_services is EqualUnmodifiableListView) return _services;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_services);
+}
+
+ final  HardwareInfo hardwareInfo;
+
+/// Create a copy of NasStatusState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UpdatingCopyWith<Updating> get copyWith => _$UpdatingCopyWithImpl<Updating>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Updating&&(identical(other.serviceName, serviceName) || other.serviceName == serviceName)&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.hardwareInfo, hardwareInfo) || other.hardwareInfo == hardwareInfo));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,serviceName,const DeepCollectionEquality().hash(_services),hardwareInfo);
+
+@override
+String toString() {
+  return 'NasStatusState.updating(serviceName: $serviceName, services: $services, hardwareInfo: $hardwareInfo)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UpdatingCopyWith<$Res> implements $NasStatusStateCopyWith<$Res> {
+  factory $UpdatingCopyWith(Updating value, $Res Function(Updating) _then) = _$UpdatingCopyWithImpl;
+@useResult
+$Res call({
+ String serviceName, List<NasService> services, HardwareInfo hardwareInfo
+});
+
+
+$HardwareInfoCopyWith<$Res> get hardwareInfo;
+
+}
+/// @nodoc
+class _$UpdatingCopyWithImpl<$Res>
+    implements $UpdatingCopyWith<$Res> {
+  _$UpdatingCopyWithImpl(this._self, this._then);
+
+  final Updating _self;
+  final $Res Function(Updating) _then;
+
+/// Create a copy of NasStatusState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? serviceName = null,Object? services = null,Object? hardwareInfo = null,}) {
+  return _then(Updating(
+null == serviceName ? _self.serviceName : serviceName // ignore: cast_nullable_to_non_nullable
+as String,null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
 as List<NasService>,null == hardwareInfo ? _self.hardwareInfo : hardwareInfo // ignore: cast_nullable_to_non_nullable
 as HardwareInfo,
   ));

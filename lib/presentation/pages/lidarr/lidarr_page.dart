@@ -6,6 +6,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../blocs/lidarr_bloc.dart';
 import '../../widgets/tui_input_field.dart';
+import '../../widgets/service_scaffold.dart';
 
 class LidarrPage extends StatelessWidget {
   const LidarrPage({super.key});
@@ -31,17 +32,9 @@ class _LidarrViewState extends State<LidarrView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'LIDARR_REQUEST',
-          style: AppTypography.terminalTitle.copyWith(color: AppColors.lidarr),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+    return ServiceScaffold(
+      serviceName: 'Lidarr',
+      themeColor: AppColors.lidarr,
       body: Column(
         children: [
           Padding(
@@ -162,6 +155,12 @@ class _LidarrViewState extends State<LidarrView> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 }
 
 class AlbumsView extends StatefulWidget {
@@ -183,17 +182,9 @@ class _AlbumsViewState extends State<AlbumsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'ALBUMS: ${widget.artistName.toUpperCase()}',
-          style: AppTypography.terminalTitle.copyWith(fontSize: 14),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+    return ServiceScaffold(
+      serviceName: 'Lidarr',
+      themeColor: AppColors.lidarr,
       body: BlocBuilder<LidarrBloc, LidarrState>(
         builder: (context, state) {
           return state.maybeWhen(

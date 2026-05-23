@@ -7,6 +7,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/seerr.dart';
 import '../../blocs/seerr_bloc.dart';
 import '../../widgets/tui_input_field.dart';
+import '../../widgets/service_scaffold.dart';
 import 'seerr_details_page.dart';
 
 class SeerrPage extends StatelessWidget {
@@ -33,17 +34,9 @@ class _SeerrViewState extends State<SeerrView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'SEERR_REQUEST',
-          style: AppTypography.terminalTitle.copyWith(color: AppColors.seerr),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+    return ServiceScaffold(
+      serviceName: 'Seerr',
+      themeColor: AppColors.seerr,
       body: Column(
         children: [
           Padding(
@@ -161,7 +154,6 @@ class _SeerrViewState extends State<SeerrView> {
           else
             const Center(child: Icon(Icons.movie, size: 48, color: AppColors.textMuted)),
 
-          // Type Pill (Top Right)
           Positioned(
             top: AppSpacing.xs,
             right: AppSpacing.xs,
