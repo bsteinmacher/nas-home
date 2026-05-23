@@ -23,7 +23,7 @@ class ServiceUpdateAction extends StatelessWidget {
       builder: (context, state) {
         final services = state.maybeWhen(
           loaded: (services, _) => services,
-          updating: (_, services, __) => services,
+          updating: (_, services, _) => services,
           orElse: () => <NasService>[],
         );
         

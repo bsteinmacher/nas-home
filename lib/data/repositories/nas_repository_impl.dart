@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/nas_service.dart';
 import '../../domain/entities/hardware_info.dart';
 import '../../domain/repositories/nas_repository.dart';
@@ -45,7 +46,7 @@ class NasRepositoryImpl implements NasRepository {
     final normalizedUrl = _normalizeUrl(baseUrl);
     try {
       final updates = await registryDataSource.getUpdates(normalizedUrl, token, force: force);
-      print('DEBUG: [REGISTRY] Received ${updates.length} containers from backend');
+      debugPrint('DEBUG: [REGISTRY] Received ${updates.length} containers from backend');
       
       return services.map((service) {
         final cleanServiceName = service.name.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
@@ -68,7 +69,7 @@ class NasRepositoryImpl implements NasRepository {
         if (updateInfo != null && updateInfo.isNotEmpty) {
           final available = updateInfo['update_available'] == true;
           if (available) {
-            print('DEBUG: [UPDATE_AVAIL] Service "${service.name}" -> Container "$matchedContainer"');
+            debugPrint('DEBUG: [UPDATE_AVAIL] Service "${service.name}" -> Container "$matchedContainer"');
           }
           
           return service.copyWith(
@@ -85,7 +86,7 @@ class NasRepositoryImpl implements NasRepository {
         }
       }).toList();
     } catch (e) {
-      print('Error getting services with updates: $e');
+      debugPrint('Error getting services with updates: $e');
       return services;
     }
   }
@@ -102,7 +103,7 @@ class NasRepositoryImpl implements NasRepository {
     final targetContainer = service.containerName ?? serviceName.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
     final normalizedUrl = _normalizeUrl(baseUrl);
     
-    print('DEBUG: [REPO] Initializing update for: $serviceName (Target Container: $targetContainer)');
+    debugPrint('DEBUG: [REPO] Initializing update for: $serviceName (Target Container: $targetContainer)');
     await registryDataSource.updateService(normalizedUrl, token, targetContainer);
   }
 
@@ -127,7 +128,7 @@ class NasRepositoryImpl implements NasRepository {
     final apiUrl = '$normalizedUrl:61208/api/4/all';
     
     try {
-      print('Fetching hardware info from: $apiUrl');
+      debugPrint('Fetching hardware info from: $apiUrl');
       final response = await dio.get(apiUrl, options: Options(
         sendTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 5),
@@ -196,7 +197,7 @@ class NasRepositoryImpl implements NasRepository {
         throw Exception('Failed to load hardware info: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error parsing hardware info: $e');
+      debugPrint('Error parsing hardware info: $e');
       throw Exception('Error parsing hardware info: $e');
     }
   }
