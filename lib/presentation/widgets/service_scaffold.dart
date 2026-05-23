@@ -48,7 +48,7 @@ class ServiceScaffold extends StatelessWidget {
         builder: (context, state) {
           final isLoading = state is Loading;
           final isUpdatingThis = state.maybeWhen(
-            updating: (name, _, __) => name.toLowerCase() == serviceName.toLowerCase(),
+            updating: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
             orElse: () => false,
           );
 

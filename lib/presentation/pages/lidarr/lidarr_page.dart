@@ -90,7 +90,7 @@ class _LidarrViewState extends State<LidarrView> {
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(Icons.person, color: AppColors.textMuted),
+                                  errorBuilder: (_, _, _) => const Icon(Icons.person, color: AppColors.textMuted),
                                 )
                               : const Icon(Icons.person, color: AppColors.textMuted),
                         ),
@@ -214,7 +214,7 @@ class _AlbumsViewState extends State<AlbumsView> {
                             ? Image.network(
                                 album.remoteCover!,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(Icons.album, size: 48, color: AppColors.textMuted),
+                                errorBuilder: (_, _, _) => const Icon(Icons.album, size: 48, color: AppColors.textMuted),
                               )
                             : const Icon(Icons.album, size: 48, color: AppColors.textMuted),
                       ),

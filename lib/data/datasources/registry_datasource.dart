@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class RegistryDataSource {
   Future<Map<String, dynamic>> getConfig(String baseUrl, String token);
@@ -59,7 +60,7 @@ class RegistryDataSourceImpl implements RegistryDataSource {
   @override
   Future<Map<String, dynamic>> updateService(String baseUrl, String token, String serviceName) async {
     try {
-      print('DEBUG: [HTTP] POST -> $baseUrl:8000/update/$serviceName (Timeout: 5min)');
+      debugPrint('DEBUG: [HTTP] POST -> $baseUrl:8000/update/$serviceName (Timeout: 5min)');
       final response = await dio.post(
         '$baseUrl:8000/update/$serviceName',
         options: Options(
@@ -72,14 +73,14 @@ class RegistryDataSourceImpl implements RegistryDataSource {
       );
       
       if (response.statusCode == 200) {
-        print('DEBUG: [HTTP] Update Success: ${response.data}');
+        debugPrint('DEBUG: [HTTP] Update Success: ${response.data}');
         return response.data as Map<String, dynamic>;
       } else {
-        print('DEBUG: [HTTP] Update Failed (${response.statusCode}): ${response.data}');
+        debugPrint('DEBUG: [HTTP] Update Failed (${response.statusCode}): ${response.data}');
         throw Exception('Failed to update service: ${response.statusCode}');
       }
     } catch (e) {
-      print('DEBUG: [HTTP] Error during update request: $e');
+      debugPrint('DEBUG: [HTTP] Error during update request: $e');
       throw Exception('Error updating service $serviceName: $e');
     }
   }

@@ -85,7 +85,7 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
                         ? Image.network(
                             posterUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
+                            errorBuilder: (_, _, _) => const Center(child: Icon(Icons.broken_image)),
                           )
                         : const Center(child: Icon(Icons.movie, size: 48, color: AppColors.textMuted)),
                   ),
