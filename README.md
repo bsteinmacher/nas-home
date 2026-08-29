@@ -1,52 +1,63 @@
-# 🏠 NAS_MONITOR_v1.0
+# NAS_MONITOR_v1.0
 
-Interface de gerenciamento e dashboard centralizado para o projeto [meu-nas](https://github.com/didizera/meu-nas).
+App Flutter de monitoramento e operação do home server [meu-nas](https://github.com/didizera/meu-nas).
 
-## 🚀 Funcionalidades Atuais
+Dashboard TUI (terminal aesthetic) com status de hardware/serviços, sync de API keys via Nas Registry e módulos reais para **Seerr** e **Lidarr**.
 
-- **Monitoramento de Hardware:** Visualização em tempo real de CPU, RAM (Uso/Total), Uptime e Temperatura do processador via integração com a **Glances API (v4)**.
-- **Status de Serviços:** Check de disponibilidade (online/offline) em tempo real de todos os serviços Docker rodando no NAS (Jellyfin, Navidrome, Immich, etc).
-- **Integração Seerr:** Pesquisa e solicitação de filmes e séries diretamente do app.
-- **Integração Lidarr:** Pesquisa e solicitação de Artistas e Albúms diretamente do app..
-- **Módulos de Acesso Rápido:** Atalhos dinâmicos para Immich, Jellyfin, Navidrome, qBittorrent e Nextcloud.
+## Documentação
 
-## 🎨 Design System (TUI Aesthetic)
+- **[Análise, necessidades e plano](docs/ANALISE-E-PLANO.md)** — estado do app e do NAS, gaps, pontos críticos e roadmap por fases
+- Acesso SSH, layout de pastas no servidor e portas estão nesse documento
 
-O aplicativo utiliza uma identidade visual única inspirada em interfaces de terminal clássicas (Text User Interface):
+## O que já funciona
 
-- **Typography:** Uso exclusivo de `JetBrains Mono` para todos os elementos textuais.
-- **Terminal Prompt:** Campos de entrada e títulos utilizam o prompt `> ` em `Terminal Green`.
-- **ASCII Progress Bars:** Representação visual de recursos de hardware usando caracteres `#` com gradientes dinâmicos.
-- **Color Palette:** Fundo escuro profundo (`#0F0F0F`) com cores vibrantes para sinalização de serviços e estados.
-- **Global Theme:** Centralização de tokens de design em `lib/core/theme/` para consistência absoluta.
+- Monitoramento de hardware via **Glances** (`:61208/api/4/all`)
+- Status online/offline dos serviços por porta
+- Badges / update de containers via **Nas Registry** (`:8000`)
+- **Seerr**: busca, trending, detalhes, request (com temporadas)
+- **Lidarr**: busca e add de artistas, álbuns
+- Settings: URL do NAS + Registry Token + sync (depende do `/config` no Registry — ver doc)
 
-## 🏗️ Arquitetura
+## Arquitetura
 
-O projeto segue os princípios da **Clean Architecture** e **SOLID**:
+Clean Architecture + BLoC + GetIt + Dio + Freezed.
 
-- **Presentation:** Gerenciamento de estado com **BLoC/Cubit**. Widgets modulares e reutilizáveis (ex: `TuiProgressBar`, `TuiInputField`).
-- **Domain:** Entidades puras e casos de uso de negócio (ex: `GetHardwareInfoUseCase`).
-- **Data:** Implementações de repositórios, data sources (Dio para APIs) e persistência local (Shared Preferences).
-- **DI:** Injeção de dependência centralizada com **GetIt**.
+```
+lib/core/          # tema TUI, DI
+lib/data/          # datasources e repositories
+lib/domain/        # entities e usecases
+lib/presentation/  # pages, BLoCs, widgets
+```
 
-## 🛠️ Tecnologias
+## Stack
 
-- **Framework:** Flutter 3.29.x
-- **Linguagem:** Dart (Interface padronizada em **Inglês**)
-- **State Management:** Flutter BLoC
-- **API Client:** Dio
-- **Backend Monitoring:** [Glances](https://nicolargo.github.io/glances/)
-- **Geradores de Código:** Freezed, JsonSerializable
-- **Design:** Google Fonts (JetBrains Mono)
+| Item | Valor |
+|------|--------|
+| Framework | Flutter / Dart |
+| Estado | flutter_bloc |
+| HTTP | Dio |
+| Persistência | SharedPreferences |
+| Design | JetBrains Mono, tokens em `lib/core/theme/` |
 
-## 🛠️ Requisitos do Servidor (NAS)
+## NAS (resumo)
 
-Para o monitoramento de hardware, o NAS deve estar rodando o **Glances** em modo Web Server:
-- **Serviço:** `glances -w` rodando via `systemd`.
-- **API:** Disponível na porta `61208` (Endpoint: `/api/4/all`).
-- **Dependências:** `python-fastapi` e `uvicorn` (necessários para o modo Web no Arch Linux).
+```bash
+ssh meu-nas          # host LAN 192.168.1.99
+# Infra: ~/meu-nas/{core,media,tools,data}
+# Registry (deploy): ~/nas-registry
+```
 
-## 📱 Screenshots (Em Breve)
+Detalhes de pastas, portas, problemas atuais e plano de correção: [docs/ANALISE-E-PLANO.md](docs/ANALISE-E-PLANO.md).
+
+## Desenvolvimento
+
+```bash
+flutter pub get
+flutter run
+```
+
+Dependência local: `../design_system` (path no `pubspec.yaml`).
 
 ---
+
 *Desenvolvido por [didizera](https://github.com/didizera)*
