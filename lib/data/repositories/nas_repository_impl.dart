@@ -37,6 +37,12 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'FlareSolverr', port: '8191', description: 'Proxy Solver'),
       const NasService(name: 'Headscale', port: '8080', description: 'VPN Control Plane'),
       const NasService(name: 'Nas Registry', port: '8000', description: 'API Discovery Service'),
+      const NasService(
+        name: 'Nextcloud',
+        port: '',
+        description: 'File Cloud & Collaboration',
+        isDeployed: false,
+      ),
     ];
   }
 

@@ -6,17 +6,29 @@ Dashboard TUI (terminal aesthetic) com status de hardware/serviços, sync de API
 
 ## Documentação
 
-- **[Análise, necessidades e plano](docs/ANALISE-E-PLANO.md)** — estado do app e do NAS, gaps, pontos críticos e roadmap por fases
+- **[Análise, necessidades e plano](docs/ANALISE-E-PLANO.md)** — estado do app e do NAS, o que foi corrigido, gaps restantes e roadmap por fases
 - Acesso SSH, layout de pastas no servidor e portas estão nesse documento
 
 ## O que já funciona
 
-- Monitoramento de hardware via **Glances** (`:61208/api/4/all`)
+- Monitoramento de hardware via **Glances** do host (`glances-api.service`, `:61208/api/4/all`)
 - Status online/offline dos serviços por porta
-- Badges / update de containers via **Nas Registry** (`:8000`)
+- Badges / update de containers via **Nas Registry** (`:8000` — `/updates`, `/update/{name}`)
+- Discovery de API keys via **`GET /config`** no Registry (token `X-Registry-Token`)
 - **Seerr**: busca, trending, detalhes, request (com temporadas)
 - **Lidarr**: busca e add de artistas, álbuns
-- Settings: URL do NAS + Registry Token + sync (depende do `/config` no Registry — ver doc)
+- Settings: URL do NAS + Registry Token + sync (backend pronto; validar no app — Fase 1)
+
+## Infra recente (29/08/2026)
+
+| Item | Status |
+|------|--------|
+| Headscale (`mattewhisper3.dedyn.io`) | Corrigido e up (`:8088`) |
+| Glances | Só host; Docker desabilitado |
+| Nas Registry | Rebuild com `/config` OK |
+| Token deSEC (Certbot/NPM) | Renovado (vitalício) |
+
+Detalhes e pendências: [docs/ANALISE-E-PLANO.md](docs/ANALISE-E-PLANO.md).
 
 ## Arquitetura
 
@@ -45,9 +57,8 @@ lib/presentation/  # pages, BLoCs, widgets
 ssh meu-nas          # host LAN 192.168.1.99
 # Infra: ~/meu-nas/{core,media,tools,data}
 # Registry (deploy): ~/nas-registry
+# Glances: systemctl status glances-api.service
 ```
-
-Detalhes de pastas, portas, problemas atuais e plano de correção: [docs/ANALISE-E-PLANO.md](docs/ANALISE-E-PLANO.md).
 
 ## Desenvolvimento
 

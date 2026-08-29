@@ -40,6 +40,7 @@ class ActiveServicesList extends StatelessWidget {
   }
 
   Widget _buildActiveServiceCard(BuildContext context, dynamic service) {
+    final isDeployed = service.isDeployed as bool? ?? true;
     IconData icon;
     Color color;
     String subLabel;
@@ -133,7 +134,7 @@ class ActiveServicesList extends StatelessWidget {
       case 'Nextcloud':
         icon = Icons.folder_shared_outlined;
         color = AppColors.files;
-        subLabel = 'FILE_CLOUD_&_COLLABORATION';
+        subLabel = 'PLANNED_DEPLOYMENT';
         break;
       case 'Nas Registry':
         icon = Icons.api_outlined;
@@ -150,6 +151,16 @@ class ActiveServicesList extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xs),
       child: InkWell(
         onTap: () {
+          if (!isDeployed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Nextcloud is not deployed on the NAS yet. Planned for a future release.',
+                ),
+              ),
+            );
+            return;
+          }
           Widget page;
           switch (service.name) {
             case 'Seerr':
@@ -225,12 +236,14 @@ class ActiveServicesList extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-            border: Border.all(color: color.withValues(alpha: 0.2)),
+            border: Border.all(
+              color: isDeployed ? color.withValues(alpha: 0.2) : AppColors.textMuted.withValues(alpha: 0.2),
+            ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           child: Row(
             children: [
-              Icon(icon, color: color, size: 24),
+              Icon(icon, color: isDeployed ? color : AppColors.textMuted, size: 24),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -239,7 +252,9 @@ class ActiveServicesList extends StatelessWidget {
                   children: [
                     Text(
                       service.name.toUpperCase(),
-                      style: AppTypography.moduleLabel,
+                      style: AppTypography.moduleLabel.copyWith(
+                        color: isDeployed ? null : AppColors.textMuted,
+                      ),
                     ),
                     Text(
                       subLabel,
@@ -254,21 +269,29 @@ class ActiveServicesList extends StatelessWidget {
                   vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: isDeployed ? color.withValues(alpha: 0.3) : AppColors.textMuted.withValues(alpha: 0.3),
+                  ),
                   borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
                 ),
                 child: Row(
                   children: [
                     Text(
-                      service.isOnline ? 'READY' : 'OFFLINE',
+                      !isDeployed
+                          ? 'NOT_DEPLOYED'
+                          : (service.isOnline ? 'READY' : 'OFFLINE'),
                       style: AppTypography.statusBadge.copyWith(
-                        color: service.isOnline ? color : Colors.redAccent,
+                        color: !isDeployed
+                            ? AppColors.textMuted
+                            : (service.isOnline ? color : Colors.redAccent),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Icon(
                       Icons.chevron_right,
-                      color: service.isOnline ? color : Colors.redAccent,
+                      color: !isDeployed
+                          ? AppColors.textMuted
+                          : (service.isOnline ? color : Colors.redAccent),
                       size: 12,
                     ),
                   ],

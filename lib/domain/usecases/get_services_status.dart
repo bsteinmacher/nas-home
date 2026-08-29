@@ -17,6 +17,10 @@ class GetServicesStatusUseCase {
     final updatedServices = <NasService>[];
 
     for (var service in services) {
+      if (!service.isDeployed || service.port.isEmpty) {
+        updatedServices.add(service.copyWith(isOnline: false));
+        continue;
+      }
       final isOnline = await repository.checkServiceStatus(nasUrl, service.port);
       updatedServices.add(service.copyWith(isOnline: isOnline));
     }

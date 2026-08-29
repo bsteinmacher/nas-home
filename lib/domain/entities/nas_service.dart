@@ -9,6 +9,7 @@ abstract class NasService with _$NasService {
     required String name,
     required String port,
     required String description,
+    @Default(true) bool isDeployed,
     @Default(false) bool isOnline,
     @Default(false) bool updateAvailable,
     String? containerName,
