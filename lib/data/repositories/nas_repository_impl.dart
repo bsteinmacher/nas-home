@@ -33,9 +33,10 @@ class NasRepositoryImpl implements NasRepository {
       const NasService(name: 'Tdarr', port: '8265', description: 'Transcoding'),
       const NasService(name: 'Immich', port: '2283', description: 'Photos & Videos'),
       const NasService(name: 'Forgejo', port: '3001', description: 'Self-hosted Git'),
+      const NasService(name: 'Syncthing', port: '8384', description: 'P2P File Sync'),
       const NasService(name: 'Autobrr', port: '7474', description: 'Download Automation'),
       const NasService(name: 'FlareSolverr', port: '8191', description: 'Proxy Solver'),
-      const NasService(name: 'Headscale', port: '8080', description: 'VPN Control Plane'),
+      const NasService(name: 'Headscale', port: '8088', description: 'VPN Control Plane'),
       const NasService(name: 'Nas Registry', port: '8000', description: 'API Discovery Service'),
       const NasService(
         name: 'Nextcloud',
@@ -114,15 +115,16 @@ class NasRepositoryImpl implements NasRepository {
   }
 
   @override
-  Future<bool> checkServiceStatus(String baseUrl, String port) async {
+  Future<bool> checkServiceStatus(String baseUrl, String port, {String? hostHeader}) async {
     final normalizedUrl = _normalizeUrl(baseUrl);
     try {
       final response = await dio.get('$normalizedUrl:$port', options: Options(
         validateStatus: (status) => true,
         sendTimeout: const Duration(seconds: 2),
         receiveTimeout: const Duration(seconds: 2),
+        headers: hostHeader != null ? {'Host': hostHeader} : null,
       ));
-      return response.statusCode != null;
+      return response.statusCode != null && response.statusCode! < 500;
     } catch (e) {
       return false;
     }

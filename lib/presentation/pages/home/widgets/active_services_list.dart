@@ -22,6 +22,7 @@ import '../../forgejo/forgejo_page.dart';
 import '../../autobrr/autobrr_page.dart';
 import '../../flaresolverr/flaresolverr_page.dart';
 import '../../headscale/headscale_page.dart';
+import '../../syncthing/syncthing_page.dart';
 
 class ActiveServicesList extends StatelessWidget {
   final List<dynamic> services;
@@ -115,6 +116,16 @@ class ActiveServicesList extends StatelessWidget {
         icon = Icons.code_outlined;
         color = AppColors.git;
         subLabel = 'SELF-HOSTED_GIT_REPOS';
+        break;
+      case 'Syncthing':
+        icon = Icons.sync_outlined;
+        color = AppColors.syncthing;
+        subLabel = 'P2P_FILE_SYNC';
+        break;
+      case 'Lidarr':
+        icon = Icons.library_music_outlined;
+        color = AppColors.lidarr;
+        subLabel = 'MUSIC_AUTOMATION';
         break;
       case 'Autobrr':
         icon = Icons.auto_fix_high_outlined;
@@ -222,6 +233,9 @@ class ActiveServicesList extends StatelessWidget {
               break;
             case 'Headscale':
               page = const HeadscalePage();
+              break;
+            case 'Syncthing':
+              page = const SyncthingPage();
               break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(

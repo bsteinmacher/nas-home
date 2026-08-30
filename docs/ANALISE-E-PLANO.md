@@ -187,7 +187,7 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 | Sync Settings → Registry | Backend OK (`/config` retorna keys). Falta validar ponta a ponta no app (Fase 1.1–1.2) |
 | Páginas de serviço (~17) | Só stub `COMING_SOON` + botão de update Docker |
 | Health checks no app | Vaultwarden (porta 80 = NPM), Headscale ainda listado como `8080` no catálogo (deveria `8088`) |
-| Catálogo do app | **Nextcloud** marcado como `NOT_DEPLOYED` (planejado para fase futura); **não lista Syncthing** (existe e está up) |
+| Catálogo do app | **Nextcloud** `NOT_DEPLOYED`; **Syncthing** adicionado (`:8384`) |
 | Unificar registries | ~~`tools/registry` legado~~ **arquivado** em `archive/registry-legacy/` |
 | Testes | `test/widget_test.dart` praticamente vazio |
 
@@ -221,7 +221,7 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 |---------|--------|--------|-------------|
 | Seerr, Lidarr | Sim | Sim | Sim |
 | Demais *arr / media / core listados | Sim | Sim (stub) | Não |
-| Syncthing | Sim | **Não** | — |
+| Syncthing | Sim | Sim (stub) | — |
 | Recyclarr, Tailscale client | Sim | Não | — |
 | Nextcloud | **Não** | Sim (`NOT_DEPLOYED`) | — (planejado) |
 | Headscale | **Up** | Stub | — |
@@ -262,8 +262,8 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 
 ### C6 — Catálogo desalinhado — **parcial**
 
-- Nextcloud marcado como não implantado no app.
-- Ainda falta: incluir Syncthing; corrigir portas Headscale/Vaultwarden.
+- Nextcloud e Syncthing tratados no app.
+- Portas Headscale/Vaultwarden corrigidas no health check.
 
 ### C7 — Token deSEC / certificados — **resolvido**
 
@@ -284,7 +284,7 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 | 0.2 | Eliminar conflito Glances | **Feito** |
 | 0.3 | Rebuild/redeploy `~/nas-registry` com `/config` | **Feito** |
 | 0.4 | Arquivar `tools/registry` legado | **Feito** → `archive/registry-legacy/` + `ARCHIVED.md` |
-| 0.5 | Pin imagem Headscale + teste VPN no celular | Pendente |
+| 0.5 | Pin imagem Headscale + teste VPN no celular | **Feito** (pin `v0.29.3`) — teste VPN no celular pendente |
 
 ### Fase 1 — Fechar o circuito app ↔ registry (próxima)
 
@@ -292,9 +292,9 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 |---|--------|--------------------|
 | 1.1 | Validar JSON de `/config` vs `RegistryRepositoryImpl` | Sync em Settings grava `seerr_api_key`, `lidarr_api_key`, etc. |
 | 1.2 | Ajustar parser se necessário | Snackbar de sucesso + Seerr/Lidarr autenticados |
-| 1.3 | Adicionar Syncthing em `_getBaseServices` + card + página mínima | Aparece no status e no quick access |
+| 1.3 | Adicionar Syncthing em `_getBaseServices` + card + página mínima | **Feito** |
 | 1.4 | Marcar Nextcloud como `NOT_DEPLOYED` | **Feito** — badge no app + nota de deploy futuro |
-| 1.5 | Corrigir portas Headscale (`8088`) e health Vaultwarden | Status bate com a realidade |
+| 1.5 | Corrigir portas Headscale (`8088`) e health Vaultwarden | **Feito** — Headscale `:8088`, Vaultwarden via `Host: vaultwarden.home` |
 
 ### Fase 2 — Módulos de alto valor (médio prazo)
 
@@ -376,6 +376,8 @@ Públicos (deSEC + NPM): `mattewhisper3.dedyn.io` (Headscale), `vault.mattewhisp
 4. Nas Registry: `src/main.py` alinhado com `/config`; imagem rebuildada; endpoints validados.
 5. `tools/registry` legado movido para `~/meu-nas/archive/registry-legacy/`.
 6. App: Nextcloud com `isDeployed: false`, status `NOT_DEPLOYED`, deploy planejado para fase futura.
+7. Headscale pinado em `v0.29.3` no `docker-compose.yml`.
+8. App: Syncthing no catálogo (`:8384`); Headscale health em `:8088`; Vaultwarden via `Host: vaultwarden.home`.
 
 ---
 

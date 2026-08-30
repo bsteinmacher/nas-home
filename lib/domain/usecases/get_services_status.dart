@@ -21,10 +21,24 @@ class GetServicesStatusUseCase {
         updatedServices.add(service.copyWith(isOnline: false));
         continue;
       }
-      final isOnline = await repository.checkServiceStatus(nasUrl, service.port);
+      final hostHeader = _healthHostFor(service.name);
+      final isOnline = await repository.checkServiceStatus(
+        nasUrl,
+        service.port,
+        hostHeader: hostHeader,
+      );
       updatedServices.add(service.copyWith(isOnline: isOnline));
     }
 
     return updatedServices;
+  }
+
+  String? _healthHostFor(String serviceName) {
+    switch (serviceName) {
+      case 'Vaultwarden':
+        return 'vaultwarden.home';
+      default:
+        return null;
+    }
   }
 }

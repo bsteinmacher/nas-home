@@ -35,6 +35,7 @@ abstract class AppColors {
   static const git = Color(0xFFF05032);
   static const automationAlt = Color(0xFFE34C26);
   static const flaresolverr = Color(0xFFFBC02D);
+  static const syncthing = Color(0xFF0883D8);
 
   // Terminal Gradients
   static const terminalGradient = LinearGradient(
