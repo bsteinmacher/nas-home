@@ -13,6 +13,7 @@ class ServiceScaffold extends StatelessWidget {
   final Color themeColor;
   final Widget body;
   final List<Widget>? extraActions;
+  final VoidCallback? onLeadingPressed;
 
   const ServiceScaffold({
     super.key,
@@ -20,6 +21,7 @@ class ServiceScaffold extends StatelessWidget {
     required this.themeColor,
     required this.body,
     this.extraActions,
+    this.onLeadingPressed,
   });
 
   @override
@@ -46,26 +48,31 @@ class ServiceScaffold extends StatelessWidget {
       },
       child: BlocBuilder<NasStatusBloc, NasStatusState>(
         builder: (context, state) {
-          final isLoading = state is Loading;
+          final isCheckingThis = state.maybeWhen(
+            checkingUpdate: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
+            orElse: () => false,
+          );
           final isUpdatingThis = state.maybeWhen(
             updating: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
             orElse: () => false,
           );
+          final showOverlay = isCheckingThis || isUpdatingThis;
 
           return Scaffold(
             appBar: TuiAppBar(
               title: '${serviceName}_REQUEST',
               titleColor: themeColor,
+              onLeadingPressed: onLeadingPressed,
               actions: [
                 ServiceUpdateAction(serviceName: serviceName, color: themeColor),
-                const ServiceRefreshAction(),
+                ServiceRefreshAction(serviceName: serviceName),
                 if (extraActions != null) ...extraActions!,
               ],
             ),
             body: Stack(
               children: [
                 body,
-                if (isLoading || isUpdatingThis)
+                if (showOverlay)
                   Container(
                     color: Colors.black.withValues(alpha: 0.7),
                     child: Center(
@@ -75,7 +82,7 @@ class ServiceScaffold extends StatelessWidget {
                           const BrailleSpinner(fontSize: 32),
                           const SizedBox(height: AppSpacing.md),
                           Text(
-                            isLoading ? 'SYNCING_REGISTRY...' : 'UPDATING_MODULE...',
+                            isCheckingThis ? 'SYNCING_REGISTRY...' : 'UPDATING_MODULE...',
                             style: AppTypography.moduleLabel.copyWith(color: themeColor),
                           ),
                         ],

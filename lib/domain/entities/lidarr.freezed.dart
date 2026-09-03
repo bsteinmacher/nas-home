@@ -15,9 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LidarrArtist {
 
- String? get id;// Lidarr ID (null se não adicionado)
- String get artistName; String? get mbid;// MusicBrainz ID
- String? get status; bool get monitored; bool get isAdded; String? get remotePoster;
+ String? get id; String get artistName; String? get mbid; String? get status; bool get monitored; bool get isAdded; String? get remotePoster; String? get disambiguation;
 /// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +28,16 @@ $LidarrArtistCopyWith<LidarrArtist> get copyWith => _$LidarrArtistCopyWithImpl<L
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster)&&(identical(other.disambiguation, disambiguation) || other.disambiguation == disambiguation));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,isAdded,remotePoster);
+int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,isAdded,remotePoster,disambiguation);
 
 @override
 String toString() {
-  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
+  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster, disambiguation: $disambiguation)';
 }
 
 
@@ -50,7 +48,7 @@ abstract mixin class $LidarrArtistCopyWith<$Res>  {
   factory $LidarrArtistCopyWith(LidarrArtist value, $Res Function(LidarrArtist) _then) = _$LidarrArtistCopyWithImpl;
 @useResult
 $Res call({
- String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster
+ String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster, String? disambiguation
 });
 
 
@@ -67,7 +65,7 @@ class _$LidarrArtistCopyWithImpl<$Res>
 
 /// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,Object? disambiguation = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
@@ -76,6 +74,7 @@ as String?,status: freezed == status ? _self.status : status // ignore: cast_nul
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
 as bool,isAdded: null == isAdded ? _self.isAdded : isAdded // ignore: cast_nullable_to_non_nullable
 as bool,remotePoster: freezed == remotePoster ? _self.remotePoster : remotePoster // ignore: cast_nullable_to_non_nullable
+as String?,disambiguation: freezed == disambiguation ? _self.disambiguation : disambiguation // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -161,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster,  String? disambiguation)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LidarrArtist() when $default != null:
-return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
+return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster,_that.disambiguation);case _:
   return orElse();
 
 }
@@ -182,10 +181,10 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster,  String? disambiguation)  $default,) {final _that = this;
 switch (_that) {
 case _LidarrArtist():
-return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
+return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster,_that.disambiguation);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +201,10 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String artistName,  String? mbid,  String? status,  bool monitored,  bool isAdded,  String? remotePoster,  String? disambiguation)?  $default,) {final _that = this;
 switch (_that) {
 case _LidarrArtist() when $default != null:
-return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster);case _:
+return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitored,_that.isAdded,_that.remotePoster,_that.disambiguation);case _:
   return null;
 
 }
@@ -217,18 +216,17 @@ return $default(_that.id,_that.artistName,_that.mbid,_that.status,_that.monitore
 @JsonSerializable()
 
 class _LidarrArtist implements LidarrArtist {
-  const _LidarrArtist({required this.id, required this.artistName, required this.mbid, required this.status, this.monitored = false, this.isAdded = false, this.remotePoster});
+  const _LidarrArtist({required this.id, required this.artistName, required this.mbid, required this.status, this.monitored = false, this.isAdded = false, this.remotePoster, this.disambiguation});
   factory _LidarrArtist.fromJson(Map<String, dynamic> json) => _$LidarrArtistFromJson(json);
 
 @override final  String? id;
-// Lidarr ID (null se não adicionado)
 @override final  String artistName;
 @override final  String? mbid;
-// MusicBrainz ID
 @override final  String? status;
 @override@JsonKey() final  bool monitored;
 @override@JsonKey() final  bool isAdded;
 @override final  String? remotePoster;
+@override final  String? disambiguation;
 
 /// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrArtist&&(identical(other.id, id) || other.id == id)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.mbid, mbid) || other.mbid == mbid)&&(identical(other.status, status) || other.status == status)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isAdded, isAdded) || other.isAdded == isAdded)&&(identical(other.remotePoster, remotePoster) || other.remotePoster == remotePoster)&&(identical(other.disambiguation, disambiguation) || other.disambiguation == disambiguation));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,isAdded,remotePoster);
+int get hashCode => Object.hash(runtimeType,id,artistName,mbid,status,monitored,isAdded,remotePoster,disambiguation);
 
 @override
 String toString() {
-  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster)';
+  return 'LidarrArtist(id: $id, artistName: $artistName, mbid: $mbid, status: $status, monitored: $monitored, isAdded: $isAdded, remotePoster: $remotePoster, disambiguation: $disambiguation)';
 }
 
 
@@ -263,7 +261,7 @@ abstract mixin class _$LidarrArtistCopyWith<$Res> implements $LidarrArtistCopyWi
   factory _$LidarrArtistCopyWith(_LidarrArtist value, $Res Function(_LidarrArtist) _then) = __$LidarrArtistCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster
+ String? id, String artistName, String? mbid, String? status, bool monitored, bool isAdded, String? remotePoster, String? disambiguation
 });
 
 
@@ -280,7 +278,7 @@ class __$LidarrArtistCopyWithImpl<$Res>
 
 /// Create a copy of LidarrArtist
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? artistName = null,Object? mbid = freezed,Object? status = freezed,Object? monitored = null,Object? isAdded = null,Object? remotePoster = freezed,Object? disambiguation = freezed,}) {
   return _then(_LidarrArtist(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
@@ -289,6 +287,7 @@ as String?,status: freezed == status ? _self.status : status // ignore: cast_nul
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
 as bool,isAdded: null == isAdded ? _self.isAdded : isAdded // ignore: cast_nullable_to_non_nullable
 as bool,remotePoster: freezed == remotePoster ? _self.remotePoster : remotePoster // ignore: cast_nullable_to_non_nullable
+as String?,disambiguation: freezed == disambiguation ? _self.disambiguation : disambiguation // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -300,7 +299,7 @@ as String?,
 /// @nodoc
 mixin _$LidarrAlbum {
 
- String? get id; String get title; String get artistName; String? get releaseDate; String? get remoteCover; bool get monitored;
+ String? get id; String get title; String get artistName; String? get releaseDate; String? get remoteCover; bool get monitored; bool get isInLibrary; bool get isQueued; int? get trackFileCount; int? get trackCount;
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -313,16 +312,16 @@ $LidarrAlbumCopyWith<LidarrAlbum> get copyWith => _$LidarrAlbumCopyWithImpl<Lida
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored);
+int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,trackFileCount,trackCount);
 
 @override
 String toString() {
-  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, trackFileCount: $trackFileCount, trackCount: $trackCount)';
 }
 
 
@@ -333,7 +332,7 @@ abstract mixin class $LidarrAlbumCopyWith<$Res>  {
   factory $LidarrAlbumCopyWith(LidarrAlbum value, $Res Function(LidarrAlbum) _then) = _$LidarrAlbumCopyWithImpl;
 @useResult
 $Res call({
- String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored
+ String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, int? trackFileCount, int? trackCount
 });
 
 
@@ -350,7 +349,7 @@ class _$LidarrAlbumCopyWithImpl<$Res>
 
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -358,7 +357,11 @@ as String,artistName: null == artistName ? _self.artistName : artistName // igno
 as String,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
 as String?,remoteCover: freezed == remoteCover ? _self.remoteCover : remoteCover // ignore: cast_nullable_to_non_nullable
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isInLibrary: null == isInLibrary ? _self.isInLibrary : isInLibrary // ignore: cast_nullable_to_non_nullable
+as bool,isQueued: null == isQueued ? _self.isQueued : isQueued // ignore: cast_nullable_to_non_nullable
+as bool,trackFileCount: freezed == trackFileCount ? _self.trackFileCount : trackFileCount // ignore: cast_nullable_to_non_nullable
+as int?,trackCount: freezed == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -443,10 +446,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LidarrAlbum() when $default != null:
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
   return orElse();
 
 }
@@ -464,10 +467,10 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)  $default,) {final _that = this;
 switch (_that) {
 case _LidarrAlbum():
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -484,10 +487,10 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)?  $default,) {final _that = this;
 switch (_that) {
 case _LidarrAlbum() when $default != null:
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
   return null;
 
 }
@@ -499,7 +502,7 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 @JsonSerializable()
 
 class _LidarrAlbum implements LidarrAlbum {
-  const _LidarrAlbum({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false});
+  const _LidarrAlbum({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false, this.isInLibrary = false, this.isQueued = false, this.trackFileCount, this.trackCount});
   factory _LidarrAlbum.fromJson(Map<String, dynamic> json) => _$LidarrAlbumFromJson(json);
 
 @override final  String? id;
@@ -508,6 +511,10 @@ class _LidarrAlbum implements LidarrAlbum {
 @override final  String? releaseDate;
 @override final  String? remoteCover;
 @override@JsonKey() final  bool monitored;
+@override@JsonKey() final  bool isInLibrary;
+@override@JsonKey() final  bool isQueued;
+@override final  int? trackFileCount;
+@override final  int? trackCount;
 
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
@@ -522,16 +529,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored);
+int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,trackFileCount,trackCount);
 
 @override
 String toString() {
-  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, trackFileCount: $trackFileCount, trackCount: $trackCount)';
 }
 
 
@@ -542,7 +549,7 @@ abstract mixin class _$LidarrAlbumCopyWith<$Res> implements $LidarrAlbumCopyWith
   factory _$LidarrAlbumCopyWith(_LidarrAlbum value, $Res Function(_LidarrAlbum) _then) = __$LidarrAlbumCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored
+ String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, int? trackFileCount, int? trackCount
 });
 
 
@@ -559,7 +566,7 @@ class __$LidarrAlbumCopyWithImpl<$Res>
 
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
   return _then(_LidarrAlbum(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -567,7 +574,11 @@ as String,artistName: null == artistName ? _self.artistName : artistName // igno
 as String,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
 as String?,remoteCover: freezed == remoteCover ? _self.remoteCover : remoteCover // ignore: cast_nullable_to_non_nullable
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isInLibrary: null == isInLibrary ? _self.isInLibrary : isInLibrary // ignore: cast_nullable_to_non_nullable
+as bool,isQueued: null == isQueued ? _self.isQueued : isQueued // ignore: cast_nullable_to_non_nullable
+as bool,trackFileCount: freezed == trackFileCount ? _self.trackFileCount : trackFileCount // ignore: cast_nullable_to_non_nullable
+as int?,trackCount: freezed == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

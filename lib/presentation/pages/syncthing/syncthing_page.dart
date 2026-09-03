@@ -4,45 +4,35 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../widgets/service_scaffold.dart';
 
-class NextcloudPage extends StatelessWidget {
-  const NextcloudPage({super.key});
+class SyncthingPage extends StatelessWidget {
+  const SyncthingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ServiceScaffold(
-      serviceName: 'Nextcloud',
-      themeColor: AppColors.files,
+      serviceName: 'Syncthing',
+      themeColor: AppColors.syncthing,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.folder_shared_outlined, size: 64, color: AppColors.textMuted),
+              const Icon(Icons.sync_outlined, size: 64, color: AppColors.syncthing),
               const SizedBox(height: AppSpacing.md),
-              Text(
-                '// NOT_DEPLOYED',
-                style: AppTypography.terminalTitle.copyWith(
-                  fontSize: 18,
-                  color: AppColors.textMuted,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'This service is not running on the NAS yet.',
-                style: AppTypography.moduleSublabel.copyWith(fontSize: 12),
-                textAlign: TextAlign.center,
-              ),
+              Text('// P2P_SYNC_MODULE', style: AppTypography.moduleLabel),
+              const SizedBox(height: AppSpacing.xs),
+              Text('WEB_UI: :8384', style: AppTypography.moduleSublabel),
               const SizedBox(height: AppSpacing.md),
               Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-                  border: Border.all(color: AppColors.textMuted.withValues(alpha: 0.2)),
+                  border: Border.all(color: AppColors.syncthing.withValues(alpha: 0.2)),
                 ),
                 child: Text(
-                  'PLANNED: Deploy Nextcloud on the NAS in a future phase, then enable this module in the app.',
+                  'Syncs music folder to mobile devices. Full API integration planned — use syncthing.home or :8384 for now.',
                   style: AppTypography.moduleSublabel.copyWith(fontSize: 11),
                   textAlign: TextAlign.center,
                 ),

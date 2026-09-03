@@ -34,22 +34,36 @@ class ServiceStatusList extends StatelessWidget {
   }
 
   Widget _buildTuiServiceItem(BuildContext context, dynamic service) {
+    final isDeployed = service.isDeployed as bool? ?? true;
+    final dotColor = !isDeployed
+        ? AppColors.textMuted
+        : (service.isOnline ? AppColors.terminalGreen : Colors.redAccent);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           Icons.circle,
-          size: 6, // Reduzi um pouco para ficar mais elegante sem o espaço
-          color: service.isOnline ? AppColors.terminalGreen : Colors.redAccent,
+          size: 6,
+          color: dotColor,
         ),
-        // Removido SizedBox entre a bolinha e o texto
         Text(
-          ' ${service.name.replaceAll(' ', '_').toUpperCase()}', // Adicionei apenas um espaço de texto para não ficar grudado no pixel
+          ' ${service.name.replaceAll(' ', '_').toUpperCase()}',
           style: AppTypography.moduleSublabel.copyWith(
-            color: service.isOnline ? AppColors.textSecondary : AppColors.textMuted,
+            color: isDeployed
+                ? (service.isOnline ? AppColors.textSecondary : AppColors.textMuted)
+                : AppColors.textMuted,
             fontSize: 9,
           ),
         ),
+        if (!isDeployed)
+          Text(
+            ' [ND]',
+            style: AppTypography.moduleSublabel.copyWith(
+              color: AppColors.textMuted,
+              fontSize: 8,
+            ),
+          ),
         if (service.updateAvailable)
           const Padding(
             padding: EdgeInsets.only(left: 2.0),

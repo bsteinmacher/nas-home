@@ -57,8 +57,9 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, size: 20),
-            onPressed: () => context.read<NasStatusBloc>().add(const CheckUpdatesRequested()),
-            tooltip: 'Force Refresh & Updates',
+            onPressed: () => context.read<NasStatusBloc>().add(const RefreshRequested()),
+            onLongPress: () => context.read<NasStatusBloc>().add(const CheckUpdatesRequested()),
+            tooltip: 'Refresh status (hold: check image updates)',
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: AppColors.terminalGreen, size: 20),
@@ -96,6 +97,8 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               loaded: (services, hardwareInfo) => _buildDashboard(services, hardwareInfo),
+              checkingUpdate: (_, services, hardwareInfo) =>
+                  _buildDashboard(services, hardwareInfo),
               updating: (serviceName, services, hardwareInfo) => Stack(
                 children: [
                   _buildDashboard(services, hardwareInfo),

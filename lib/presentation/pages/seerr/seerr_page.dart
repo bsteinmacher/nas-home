@@ -8,6 +8,7 @@ import '../../../domain/entities/seerr.dart';
 import '../../blocs/seerr_bloc.dart';
 import '../../widgets/tui_input_field.dart';
 import '../../widgets/service_scaffold.dart';
+import '../../widgets/braille_spinner.dart';
 import 'seerr_details_page.dart';
 
 class SeerrPage extends StatelessWidget {
@@ -32,11 +33,45 @@ class SeerrView extends StatefulWidget {
 class _SeerrViewState extends State<SeerrView> {
   final _searchController = TextEditingController();
 
+  bool _isFromSearch(SeerrState state) {
+    return state.maybeWhen(
+      loaded: (_, fromSearch) => fromSearch,
+      detailsLoaded: (_, previousList, fromSearch) => fromSearch,
+      orElse: () => _searchController.text.isNotEmpty,
+    );
+  }
+
+  void _onBackPressed(BuildContext context) {
+    final bloc = context.read<SeerrBloc>();
+    if (_isFromSearch(bloc.state) || _searchController.text.isNotEmpty) {
+      _searchController.clear();
+      bloc.add(const TrendingRequested());
+      return;
+    }
+    Navigator.pop(context);
+  }
+
+  Future<void> _openDetails(BuildContext context, Seerr item) async {
+    final bloc = context.read<SeerrBloc>();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (detailContext) => BlocProvider.value(
+          value: bloc,
+          child: SeerrDetailsPage(media: item),
+        ),
+      ),
+    );
+    if (!mounted) return;
+    bloc.add(const RestoreListRequested());
+  }
+
   @override
   Widget build(BuildContext context) {
     return ServiceScaffold(
       serviceName: 'Seerr',
       themeColor: AppColors.seerr,
+      onLeadingPressed: () => _onBackPressed(context),
       body: Column(
         children: [
           Padding(
@@ -80,35 +115,9 @@ class _SeerrViewState extends State<SeerrView> {
               },
               builder: (context, state) {
                 return state.maybeWhen(
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  loaded: (seerrList) => GridView.builder(
-                    padding: const EdgeInsets.all(AppSpacing.sm),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.7,
-                      mainAxisSpacing: AppSpacing.sm,
-                      crossAxisSpacing: AppSpacing.sm,
-                    ),
-                    itemCount: seerrList.length,
-                    itemBuilder: (context, index) {
-                      final item = seerrList[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (detailContext) => BlocProvider.value(
-                                value: context.read<SeerrBloc>(),
-                                child: SeerrDetailsPage(media: item),
-                              ),
-                            ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-                        child: _buildMediaCard(context, item),
-                      );
-                    },
-                  ),
+                  loading: () => const Center(child: BrailleSpinner(fontSize: 24, color: AppColors.seerr)),
+                  loaded: (seerrList, _) => _buildGrid(context, seerrList),
+                  detailsLoaded: (_, previousList, fromSearch) => _buildGrid(context, previousList),
                   error: (message) => Center(
                     child: Text(message, style: AppTypography.moduleLabel),
                   ),
@@ -124,6 +133,27 @@ class _SeerrViewState extends State<SeerrView> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildGrid(BuildContext context, List<Seerr> seerrList) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.7,
+        mainAxisSpacing: AppSpacing.sm,
+        crossAxisSpacing: AppSpacing.sm,
+      ),
+      itemCount: seerrList.length,
+      itemBuilder: (context, index) {
+        final item = seerrList[index];
+        return InkWell(
+          onTap: () => _openDetails(context, item),
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+          child: _buildMediaCard(context, item),
+        );
+      },
     );
   }
 
