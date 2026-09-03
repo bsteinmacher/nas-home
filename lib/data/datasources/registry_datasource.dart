@@ -3,7 +3,12 @@ import 'package:flutter/foundation.dart';
 
 abstract class RegistryDataSource {
   Future<Map<String, dynamic>> getConfig(String baseUrl, String token);
-  Future<Map<String, dynamic>> getUpdates(String baseUrl, String token, {bool force = false});
+  Future<Map<String, dynamic>> getUpdates(
+    String baseUrl,
+    String token, {
+    bool force = false,
+    String? container,
+  });
   Future<Map<String, dynamic>> updateService(String baseUrl, String token, String serviceName);
 }
 
@@ -35,24 +40,45 @@ class RegistryDataSourceImpl implements RegistryDataSource {
   }
 
   @override
-  Future<Map<String, dynamic>> getUpdates(String baseUrl, String token, {bool force = false}) async {
+  Future<Map<String, dynamic>> getUpdates(
+    String baseUrl,
+    String token, {
+    bool force = false,
+    String? container,
+  }) async {
+    final sw = Stopwatch()..start();
     try {
+      debugPrint(
+        'TIMING: [REGISTRY] GET /updates force=$force container=${container ?? "-"}',
+      );
       final response = await dio.get(
         '$baseUrl:8000/updates',
-        queryParameters: {'force': force},
+        queryParameters: {
+          if (container == null) 'force': force,
+          if (container != null) 'container': container,
+        },
         options: Options(
           headers: {
             'X-Registry-Token': token,
           },
         ),
       );
-      
+      sw.stop();
+      debugPrint(
+        'TIMING: [REGISTRY] /updates status=${response.statusCode} '
+        'in ${sw.elapsedMilliseconds}ms force=$force container=${container ?? "-"}',
+      );
+
       if (response.statusCode == 200) {
         return response.data as Map<String, dynamic>;
       } else {
         throw Exception('Failed to load updates: ${response.statusCode}');
       }
     } catch (e) {
+      sw.stop();
+      debugPrint(
+        'TIMING: [REGISTRY] /updates FAILED after ${sw.elapsedMilliseconds}ms: $e',
+      );
       throw Exception('Error fetching updates: $e');
     }
   }

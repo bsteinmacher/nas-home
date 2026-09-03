@@ -6,19 +6,24 @@ import '../../domain/usecases/seerr_usecases.dart';
 part 'seerr_bloc.freezed.dart';
 
 @freezed
-class SeerrEvent with _$SeerrEvent {
+abstract class SeerrEvent with _$SeerrEvent {
   const factory SeerrEvent.searchRequested(String query) = SearchRequested;
   const factory SeerrEvent.trendingRequested() = TrendingRequested;
   const factory SeerrEvent.detailsRequested(int mediaId, String mediaType) = DetailsRequested;
   const factory SeerrEvent.mediaRequested(int mediaId, String mediaType, {List<int>? seasons}) = RequestSeerr;
+  const factory SeerrEvent.restoreListRequested() = RestoreListRequested;
 }
 
 @freezed
-class SeerrState with _$SeerrState {
+abstract class SeerrState with _$SeerrState {
   const factory SeerrState.initial() = SeerrInitial;
   const factory SeerrState.loading() = SeerrLoading;
-  const factory SeerrState.loaded(List<Seerr> seerrList) = SeerrLoaded;
-  const factory SeerrState.detailsLoaded(Seerr media) = DetailsLoaded;
+  const factory SeerrState.loaded(List<Seerr> seerrList, {@Default(false) bool fromSearch}) = SeerrLoaded;
+  const factory SeerrState.detailsLoaded(
+    Seerr media,
+    List<Seerr> previousList, {
+    @Default(false) bool fromSearch,
+  }) = DetailsLoaded;
   const factory SeerrState.error(String message) = SeerrError;
   const factory SeerrState.requestSuccess() = RequestSuccess;
 }
@@ -28,6 +33,9 @@ class SeerrBloc extends Bloc<SeerrEvent, SeerrState> {
   final GetTrendingSeerrUseCase getTrendingSeerr;
   final GetSeerrDetailsUseCase getSeerrDetails;
   final RequestSeerrUseCase requestSeerr;
+
+  List<Seerr> _lastList = const [];
+  bool _lastFromSearch = false;
 
   SeerrBloc({
     required this.searchSeerr,
@@ -39,13 +47,16 @@ class SeerrBloc extends Bloc<SeerrEvent, SeerrState> {
     on<TrendingRequested>(_onTrendingRequested);
     on<DetailsRequested>(_onDetailsRequested);
     on<RequestSeerr>(_onRequestSeerr);
+    on<RestoreListRequested>(_onRestoreListRequested);
   }
 
   Future<void> _onSearchRequested(SearchRequested event, Emitter<SeerrState> emit) async {
     emit(const SeerrLoading());
     try {
       final results = await searchSeerr.execute(event.query);
-      emit(SeerrLoaded(results));
+      _lastList = results;
+      _lastFromSearch = true;
+      emit(SeerrLoaded(results, fromSearch: true));
     } catch (e) {
       emit(SeerrError(e.toString()));
     }
@@ -55,31 +66,57 @@ class SeerrBloc extends Bloc<SeerrEvent, SeerrState> {
     emit(const SeerrLoading());
     try {
       final results = await getTrendingSeerr.execute();
-      emit(SeerrLoaded(results));
+      _lastList = results;
+      _lastFromSearch = false;
+      emit(SeerrLoaded(results, fromSearch: false));
     } catch (e) {
       emit(SeerrError(e.toString()));
     }
   }
 
   Future<void> _onDetailsRequested(DetailsRequested event, Emitter<SeerrState> emit) async {
-    emit(const SeerrLoading());
+    final previousList = state.maybeWhen(
+      loaded: (list, _) => list,
+      detailsLoaded: (_, prev, fromSearch) => prev,
+      orElse: () => _lastList,
+    );
+    final fromSearch = state.maybeWhen(
+      loaded: (_, fromSearch) => fromSearch,
+      detailsLoaded: (_, prev, fromSearch) => fromSearch,
+      orElse: () => _lastFromSearch,
+    );
+
+    _lastList = previousList;
+    _lastFromSearch = fromSearch;
+
+    // Keep previous list for when details route is popped.
     try {
       final details = await getSeerrDetails.execute(event.mediaId, event.mediaType);
-      emit(DetailsLoaded(details));
+      emit(DetailsLoaded(details, previousList, fromSearch: fromSearch));
     } catch (e) {
       emit(SeerrError(e.toString()));
+      if (previousList.isNotEmpty) {
+        emit(SeerrLoaded(previousList, fromSearch: fromSearch));
+      }
     }
+  }
+
+  Future<void> _onRestoreListRequested(RestoreListRequested event, Emitter<SeerrState> emit) async {
+    if (_lastList.isEmpty) {
+      add(const TrendingRequested());
+      return;
+    }
+    emit(SeerrLoaded(_lastList, fromSearch: _lastFromSearch));
   }
 
   Future<void> _onRequestSeerr(RequestSeerr event, Emitter<SeerrState> emit) async {
     final currentState = state;
     try {
       await requestSeerr.execute(event.mediaId, event.mediaType, seasons: event.seasons);
-      
+
       emit(const RequestSuccess());
 
       if (currentState is SeerrLoaded) {
-        // Update the item in the current list
         final updatedList = currentState.seerrList.map((item) {
           if (item.id == event.mediaId) {
             return item.copyWith(
@@ -89,14 +126,21 @@ class SeerrBloc extends Bloc<SeerrEvent, SeerrState> {
           }
           return item;
         }).toList();
-        emit(SeerrLoaded(updatedList));
+        _lastList = updatedList;
+        emit(SeerrLoaded(updatedList, fromSearch: currentState.fromSearch));
       } else if (currentState is DetailsLoaded) {
-        // Update the current detail view
         final updatedMedia = currentState.media.copyWith(
           isRequested: true,
           status: 2, // Pending
         );
-        emit(DetailsLoaded(updatedMedia));
+        final updatedPrev = currentState.previousList.map((item) {
+          if (item.id == event.mediaId) {
+            return item.copyWith(isRequested: true, status: 2);
+          }
+          return item;
+        }).toList();
+        _lastList = updatedPrev;
+        emit(DetailsLoaded(updatedMedia, updatedPrev, fromSearch: currentState.fromSearch));
       }
     } catch (e) {
       emit(SeerrError(e.toString()));

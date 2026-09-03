@@ -24,6 +24,7 @@ class ServiceUpdateAction extends StatelessWidget {
         final services = state.maybeWhen(
           loaded: (services, _) => services,
           updating: (_, services, _) => services,
+          checkingUpdate: (_, services, _) => services,
           orElse: () => <NasService>[],
         );
         
@@ -122,14 +123,18 @@ class ServiceUpdateAction extends StatelessWidget {
 }
 
 class ServiceRefreshAction extends StatelessWidget {
-  const ServiceRefreshAction({super.key});
+  final String serviceName;
+
+  const ServiceRefreshAction({super.key, required this.serviceName});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.refresh, size: 20),
-      onPressed: () => context.read<NasStatusBloc>().add(CheckUpdatesRequested()),
-      tooltip: 'Check for Updates',
+      onPressed: () => context.read<NasStatusBloc>().add(
+            CheckServiceUpdateRequested(serviceName),
+          ),
+      tooltip: 'Check update for $serviceName',
     );
   }
 }

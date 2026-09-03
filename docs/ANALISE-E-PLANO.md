@@ -284,17 +284,18 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:61208/api/4/all
 | 0.2 | Eliminar conflito Glances | **Feito** |
 | 0.3 | Rebuild/redeploy `~/nas-registry` com `/config` | **Feito** |
 | 0.4 | Arquivar `tools/registry` legado | **Feito** → `archive/registry-legacy/` + `ARCHIVED.md` |
-| 0.5 | Pin imagem Headscale + teste VPN no celular | **Feito** (pin `v0.29.3`) — teste VPN no celular pendente |
+| 0.5 | Pin imagem Headscale + teste VPN no celular | **Pin feito** (`v0.29.3`). Acesso remoto 4G **adiado** — ISP em **CGNAT** (sem IP público único); retomar depois (ex.: tunnel/VPS ou IP fixo) |
 
-### Fase 1 — Fechar o circuito app ↔ registry (próxima)
+### Fase 1 — Fechar o circuito app ↔ registry
 
 | # | Tarefa | Critério de pronto |
 |---|--------|--------------------|
-| 1.1 | Validar JSON de `/config` vs `RegistryRepositoryImpl` | Sync em Settings grava `seerr_api_key`, `lidarr_api_key`, etc. |
-| 1.2 | Ajustar parser se necessário | Snackbar de sucesso + Seerr/Lidarr autenticados |
+| 1.1 | Validar JSON de `/config` vs `RegistryRepositoryImpl` | **Feito** — Sync em Settings grava keys |
+| 1.2 | Ajustar parser se necessário | **Feito** — Seerr/Lidarr autenticados após sync |
 | 1.3 | Adicionar Syncthing em `_getBaseServices` + card + página mínima | **Feito** |
 | 1.4 | Marcar Nextcloud como `NOT_DEPLOYED` | **Feito** — badge no app + nota de deploy futuro |
 | 1.5 | Corrigir portas Headscale (`8088`) e health Vaultwarden | **Feito** — Headscale `:8088`, Vaultwarden via `Host: vaultwarden.home` |
+| 1.6 | Refresh Home: force updates só no long-press | **Feito** — refresh normal ~0.9s; `/updates?force=true` ~22s |
 
 ### Fase 2 — Módulos de alto valor (médio prazo)
 

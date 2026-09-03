@@ -15,6 +15,7 @@ _LidarrArtist _$LidarrArtistFromJson(Map<String, dynamic> json) =>
       monitored: json['monitored'] as bool? ?? false,
       isAdded: json['isAdded'] as bool? ?? false,
       remotePoster: json['remotePoster'] as String?,
+      disambiguation: json['disambiguation'] as String?,
     );
 
 Map<String, dynamic> _$LidarrArtistToJson(_LidarrArtist instance) =>
@@ -26,6 +27,7 @@ Map<String, dynamic> _$LidarrArtistToJson(_LidarrArtist instance) =>
       'monitored': instance.monitored,
       'isAdded': instance.isAdded,
       'remotePoster': instance.remotePoster,
+      'disambiguation': instance.disambiguation,
     };
 
 _LidarrAlbum _$LidarrAlbumFromJson(Map<String, dynamic> json) => _LidarrAlbum(
@@ -35,6 +37,10 @@ _LidarrAlbum _$LidarrAlbumFromJson(Map<String, dynamic> json) => _LidarrAlbum(
   releaseDate: json['releaseDate'] as String?,
   remoteCover: json['remoteCover'] as String?,
   monitored: json['monitored'] as bool? ?? false,
+  isInLibrary: json['isInLibrary'] as bool? ?? false,
+  isQueued: json['isQueued'] as bool? ?? false,
+  trackFileCount: (json['trackFileCount'] as num?)?.toInt(),
+  trackCount: (json['trackCount'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$LidarrAlbumToJson(_LidarrAlbum instance) =>
@@ -45,4 +51,8 @@ Map<String, dynamic> _$LidarrAlbumToJson(_LidarrAlbum instance) =>
       'releaseDate': instance.releaseDate,
       'remoteCover': instance.remoteCover,
       'monitored': instance.monitored,
+      'isInLibrary': instance.isInLibrary,
+      'isQueued': instance.isQueued,
+      'trackFileCount': instance.trackFileCount,
+      'trackCount': instance.trackCount,
     };

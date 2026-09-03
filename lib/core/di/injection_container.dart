@@ -62,8 +62,13 @@ Future<void> init() async {
   
   // Lidarr (Music)
   sl.registerLazySingleton(() => SearchArtistsUseCase(sl()));
+  sl.registerLazySingleton(() => GetLibraryArtistsUseCase(sl()));
   sl.registerLazySingleton(() => RequestArtistUseCase(sl()));
   sl.registerLazySingleton(() => GetAlbumsUseCase(sl()));
+  sl.registerLazySingleton(() => LookupAlbumsUseCase(sl()));
+  sl.registerLazySingleton(() => GetTracksUseCase(sl()));
+  sl.registerLazySingleton(() => SearchAlbumUseCase(sl()));
+  sl.registerLazySingleton(() => SearchArtistDiscographyUseCase(sl()));
 
   //! Presentation
   sl.registerFactory(() => NasStatusBloc(
@@ -80,7 +85,12 @@ Future<void> init() async {
       ));
   sl.registerFactory(() => LidarrBloc(
         searchArtists: sl(),
+        getLibraryArtists: sl(),
         requestArtist: sl(),
         getAlbums: sl(),
+        lookupAlbums: sl(),
+        getTracks: sl(),
+        searchAlbum: sl(),
+        searchArtistDiscography: sl(),
       ));
 }

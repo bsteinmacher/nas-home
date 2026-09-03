@@ -54,48 +54,65 @@ class NasRepositoryImpl implements NasRepository {
     try {
       final updates = await registryDataSource.getUpdates(normalizedUrl, token, force: force);
       debugPrint('DEBUG: [REGISTRY] Received ${updates.length} containers from backend');
-      
-      return services.map((service) {
-        final cleanServiceName = service.name.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
-        
-        Map<String, dynamic>? updateInfo;
-        String? matchedContainer;
 
-        for (var entry in updates.entries) {
-          final containerName = entry.key.toLowerCase().replaceAll('-', '').replaceAll('_', '');
-          
-          if (containerName == cleanServiceName || 
-              containerName.contains(cleanServiceName) || 
-              cleanServiceName.contains(containerName)) {
-            updateInfo = entry.value as Map<String, dynamic>;
-            matchedContainer = entry.key;
-            break;
-          }
-        }
-        
-        if (updateInfo != null && updateInfo.isNotEmpty) {
-          final available = updateInfo['update_available'] == true;
-          if (available) {
-            debugPrint('DEBUG: [UPDATE_AVAIL] Service "${service.name}" -> Container "$matchedContainer"');
-          }
-          
-          return service.copyWith(
-            updateAvailable: available,
-            containerName: matchedContainer,
-            localDigest: updateInfo['local_digest'],
-            remoteDigest: updateInfo['remote_digest'],
-            localVersion: updateInfo['local_version'],
-            remoteLastUpdated: updateInfo['remote_last_updated'],
-            imageTag: updateInfo['image_tag'],
-          );
-        } else {
-          return service;
-        }
-      }).toList();
+      return services.map((service) => _applyUpdateInfo(service, updates)).toList();
     } catch (e) {
       debugPrint('Error getting services with updates: $e');
       return services;
     }
+  }
+
+  @override
+  Future<NasService> refreshServiceUpdateInfo(String baseUrl, String token, NasService service) async {
+    final normalizedUrl = _normalizeUrl(baseUrl);
+    final targetContainer = service.containerName ??
+        service.name.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
+
+    debugPrint('TIMING: [REGISTRY] refresh single service=${service.name} container=$targetContainer');
+    final updates = await registryDataSource.getUpdates(
+      normalizedUrl,
+      token,
+      container: targetContainer,
+    );
+    return _applyUpdateInfo(service, updates);
+  }
+
+  NasService _applyUpdateInfo(NasService service, Map<String, dynamic> updates) {
+    final cleanServiceName =
+        service.name.toLowerCase().replaceAll(' ', '').replaceAll('-', '').replaceAll('_', '');
+
+    Map<String, dynamic>? updateInfo;
+    String? matchedContainer;
+
+    for (var entry in updates.entries) {
+      final containerName = entry.key.toLowerCase().replaceAll('-', '').replaceAll('_', '');
+
+      if (containerName == cleanServiceName ||
+          containerName.contains(cleanServiceName) ||
+          cleanServiceName.contains(containerName)) {
+        updateInfo = entry.value as Map<String, dynamic>;
+        matchedContainer = entry.key;
+        break;
+      }
+    }
+
+    if (updateInfo != null && updateInfo.isNotEmpty) {
+      final available = updateInfo['update_available'] == true;
+      if (available) {
+        debugPrint('DEBUG: [UPDATE_AVAIL] Service "${service.name}" -> Container "$matchedContainer"');
+      }
+
+      return service.copyWith(
+        updateAvailable: available,
+        containerName: matchedContainer,
+        localDigest: updateInfo['local_digest'],
+        remoteDigest: updateInfo['remote_digest'],
+        localVersion: updateInfo['local_version'],
+        remoteLastUpdated: updateInfo['remote_last_updated'],
+        imageTag: updateInfo['image_tag'],
+      );
+    }
+    return service;
   }
 
   @override
@@ -134,13 +151,18 @@ class NasRepositoryImpl implements NasRepository {
   Future<HardwareInfo> getHardwareInfo(String baseUrl) async {
     final normalizedUrl = _normalizeUrl(baseUrl);
     final apiUrl = '$normalizedUrl:61208/api/4/all';
-    
+    final sw = Stopwatch()..start();
+
     try {
-      debugPrint('Fetching hardware info from: $apiUrl');
+      debugPrint('TIMING: [HARDWARE] GET $apiUrl');
       final response = await dio.get(apiUrl, options: Options(
         sendTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 5),
       ));
+      sw.stop();
+      debugPrint(
+        'TIMING: [HARDWARE] status=${response.statusCode} in ${sw.elapsedMilliseconds}ms',
+      );
       
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
@@ -205,7 +227,10 @@ class NasRepositoryImpl implements NasRepository {
         throw Exception('Failed to load hardware info: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('Error parsing hardware info: $e');
+      sw.stop();
+      debugPrint(
+        'TIMING: [HARDWARE] FAILED after ${sw.elapsedMilliseconds}ms: $e',
+      );
       throw Exception('Error parsing hardware info: $e');
     }
   }

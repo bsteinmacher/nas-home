@@ -5,6 +5,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/seerr.dart';
 import '../../blocs/seerr_bloc.dart';
+import '../../widgets/braille_spinner.dart';
 
 class SeerrDetailsPage extends StatefulWidget {
   final Seerr media;
@@ -29,7 +30,7 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
     return BlocBuilder<SeerrBloc, SeerrState>(
       builder: (context, state) {
         final currentMedia = state.maybeWhen(
-          detailsLoaded: (m) => m,
+          detailsLoaded: (m, previousList, fromSearch) => m,
           orElse: () => widget.media,
         );
 
@@ -50,7 +51,7 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
             ),
           ),
           body: state.maybeWhen(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.seerr)),
+            loading: () => const Center(child: BrailleSpinner(fontSize: 24, color: AppColors.seerr)),
             error: (message) => Center(child: Text(message, style: AppTypography.moduleLabel)),
             orElse: () => _buildContent(context, currentMedia, posterUrl),
           ),
@@ -145,14 +146,16 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
   Widget _buildSeasonsList(List<SeerrSeason> seasons) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
         border: Border.all(color: AppColors.terminalMuted, width: 0.5),
       ),
-      child: Column(
-        children: seasons.map((season) {
-          final isSelected = _selectedSeasons.contains(season.seasonNumber);
-          return CheckboxListTile(
+      clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: AppColors.surface,
+        child: Column(
+          children: seasons.map((season) {
+            final isSelected = _selectedSeasons.contains(season.seasonNumber);
+            return CheckboxListTile(
             title: Text(
               'SEASON ${season.seasonNumber}',
               style: AppTypography.moduleLabel.copyWith(fontSize: 14),
@@ -173,8 +176,9 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
                 }
               });
             },
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
