@@ -19,20 +19,19 @@ abstract class LidarrDataSource {
   Future<List<LidarrArtist>> getLibraryArtists();
   Future<LidarrArtist> requestArtist(LidarrArtist artist);
   Future<List<LidarrAlbum>> getAlbums(String artistId);
+  Future<LidarrAlbum> getAlbum(String albumId);
   Future<List<LidarrAlbum>> lookupAlbums(String artistMbid, String artistName);
   Future<List<LidarrTrack>> getTracks(String albumId, {bool isQueued = false});
-  Future<void> searchAlbum(String albumId);
-  Future<void> searchArtistDiscography(String artistId);
+  Future<LidarrCommand> searchAlbum(String albumId);
+  Future<LidarrCommand> searchArtistDiscography(String artistId);
+  Future<LidarrCommand> getCommandStatus(String commandId);
 }
 
 class LidarrDataSourceImpl implements LidarrDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
 
-  LidarrDataSourceImpl({
-    required this.dio,
-    required this.sharedPreferences,
-  });
+  LidarrDataSourceImpl({required this.dio, required this.sharedPreferences});
 
   _LidarrAddConfig? _addConfigCache;
 
@@ -74,10 +73,12 @@ class LidarrDataSourceImpl implements LidarrDataSource {
 
       final inLibrary = mbid != null ? libraryByMbid[mbid] : null;
       if (inLibrary != null) {
-        artists.add(inLibrary.copyWith(
-          disambiguation: mapped.disambiguation ?? inLibrary.disambiguation,
-          remotePoster: inLibrary.remotePoster ?? mapped.remotePoster,
-        ));
+        artists.add(
+          inLibrary.copyWith(
+            disambiguation: mapped.disambiguation ?? inLibrary.disambiguation,
+            remotePoster: inLibrary.remotePoster ?? mapped.remotePoster,
+          ),
+        );
       } else {
         artists.add(mapped);
       }
@@ -178,16 +179,15 @@ class LidarrDataSourceImpl implements LidarrDataSource {
       options: _authOptions,
     );
 
-    final payload = Map<String, dynamic>.from(lookupResponse.data as Map<String, dynamic>);
+    final payload = Map<String, dynamic>.from(
+      lookupResponse.data as Map<String, dynamic>,
+    );
     payload.remove('id');
     payload['rootFolderPath'] = config.rootFolderPath;
     payload['qualityProfileId'] = config.qualityProfileId;
     payload['metadataProfileId'] = config.metadataProfileId;
     payload['monitored'] = true;
-    payload['addOptions'] = {
-      'searchForMissingAlbums': true,
-      'monitor': 'all',
-    };
+    payload['addOptions'] = {'searchForMissingAlbums': false, 'monitor': 'all'};
 
     try {
       final response = await dio.post(
@@ -195,7 +195,9 @@ class LidarrDataSourceImpl implements LidarrDataSource {
         data: payload,
         options: _authOptions,
       );
-      return _mapToLidarrArtist(response.data as Map<String, dynamic>).copyWith(isAdded: true);
+      return _mapToLidarrArtist(
+        response.data as Map<String, dynamic>,
+      ).copyWith(isAdded: true);
     } on DioException catch (e) {
       throw Exception(_parseDioError(e));
     }
@@ -212,19 +214,38 @@ class LidarrDataSourceImpl implements LidarrDataSource {
     );
 
     final results = response.data as List;
-    return results
-        .map((e) {
-          final album = _mapToLidarrAlbum(e as Map<String, dynamic>, isInLibrary: true);
-          final albumId = int.tryParse(album.id ?? '');
-          final isQueued = albumId != null && queuedAlbumIds.contains(albumId);
-          return album.copyWith(isQueued: isQueued);
-        })
-        .toList()
+    return results.map((e) {
+        final album = _mapToLidarrAlbum(
+          e as Map<String, dynamic>,
+          isInLibrary: true,
+        );
+        final albumId = int.tryParse(album.id ?? '');
+        final isQueued = albumId != null && queuedAlbumIds.contains(albumId);
+        return album.copyWith(isQueued: isQueued);
+      }).toList()
       ..sort((a, b) => (b.releaseDate ?? '').compareTo(a.releaseDate ?? ''));
   }
 
   @override
-  Future<List<LidarrTrack>> getTracks(String albumId, {bool isQueued = false}) async {
+  Future<LidarrAlbum> getAlbum(String albumId) async {
+    final queuedAlbumIds = await _getQueuedAlbumIds();
+    final response = await dio.get(
+      '$_baseUrl:8686/api/v1/album/$albumId',
+      options: _authOptions,
+    );
+    final album = _mapToLidarrAlbum(
+      response.data as Map<String, dynamic>,
+      isInLibrary: true,
+    );
+    final id = int.tryParse(album.id ?? '');
+    return album.copyWith(isQueued: id != null && queuedAlbumIds.contains(id));
+  }
+
+  @override
+  Future<List<LidarrTrack>> getTracks(
+    String albumId, {
+    bool isQueued = false,
+  }) async {
     final response = await dio.get(
       '$_baseUrl:8686/api/v1/track',
       queryParameters: {'albumId': albumId},
@@ -232,38 +253,49 @@ class LidarrDataSourceImpl implements LidarrDataSource {
     );
 
     final results = response.data as List;
-    return results
-        .map((raw) {
-          final track = raw as Map<String, dynamic>;
-          return LidarrTrack(
-            id: track['id']?.toString(),
-            title: track['title'] as String? ?? 'Unknown Track',
-            trackNumber: _readInt(track['trackNumber']) ?? 0,
-            hasFile: track['hasFile'] as bool? ?? false,
-            isQueued: isQueued,
-          );
-        })
-        .toList()
+    return results.map((raw) {
+        final track = raw as Map<String, dynamic>;
+        return LidarrTrack(
+          id: track['id']?.toString(),
+          title: track['title'] as String? ?? 'Unknown Track',
+          trackNumber: _readInt(track['trackNumber']) ?? 0,
+          hasFile: track['hasFile'] as bool? ?? false,
+          isQueued: isQueued,
+        );
+      }).toList()
       ..sort((a, b) => a.trackNumber.compareTo(b.trackNumber));
   }
 
   @override
-  Future<void> searchAlbum(String albumId) async {
+  Future<LidarrCommand> searchAlbum(String albumId) async {
     final id = int.tryParse(albumId);
     if (id == null) throw Exception('Álbum inválido.');
 
-    await _sendCommand('AlbumSearch', albumIds: [id]);
+    return _sendCommand('AlbumSearch', albumIds: [id]);
   }
 
   @override
-  Future<void> searchArtistDiscography(String artistId) async {
+  Future<LidarrCommand> searchArtistDiscography(String artistId) async {
     final id = int.tryParse(artistId);
     if (id == null) throw Exception('Artista inválido.');
 
-    await _sendCommand('ArtistSearch', artistId: id);
+    return _sendCommand('ArtistSearch', artistId: id);
   }
 
-  Future<void> _sendCommand(
+  @override
+  Future<LidarrCommand> getCommandStatus(String commandId) async {
+    try {
+      final response = await dio.get(
+        '$_baseUrl:8686/api/v1/command/$commandId',
+        options: _authOptions,
+      );
+      return _mapToLidarrCommand(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw Exception(_parseDioError(e));
+    }
+  }
+
+  Future<LidarrCommand> _sendCommand(
     String name, {
     List<int>? albumIds,
     int? artistId,
@@ -273,30 +305,34 @@ class LidarrDataSourceImpl implements LidarrDataSource {
     if (artistId != null) payload['artistId'] = artistId;
 
     try {
-      await dio.post(
+      final response = await dio.post(
         '$_baseUrl:8686/api/v1/command',
         data: payload,
         options: _authOptions,
       );
+      return _mapToLidarrCommand(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw Exception(_parseDioError(e));
     }
   }
 
-  Future<Set<int>> _getQueuedAlbumIds(String artistId) async {
+  Future<Set<int>> _getQueuedAlbumIds([String? artistId]) async {
     try {
+      final queryParameters = <String, dynamic>{
+        'includeAlbum': true,
+        'pageSize': 1000,
+      };
+      if (artistId != null) queryParameters['artistIds'] = artistId;
+
       final response = await dio.get(
         '$_baseUrl:8686/api/v1/queue',
-        queryParameters: {
-          'artistIds': artistId,
-          'includeAlbum': true,
-          'pageSize': 100,
-        },
+        queryParameters: queryParameters,
         options: _authOptions,
       );
 
       final data = response.data;
-      final records = data is Map ? data['records'] as List? ?? [] : data as List;
+      final records =
+          data is Map ? data['records'] as List? ?? [] : data as List;
       return records
           .map((item) => _readInt((item as Map)['albumId']))
           .whereType<int>()
@@ -307,30 +343,66 @@ class LidarrDataSourceImpl implements LidarrDataSource {
   }
 
   @override
-  Future<List<LidarrAlbum>> lookupAlbums(String artistMbid, String artistName) async {
-    final response = await dio.get(
-      '$_baseUrl:8686/api/v1/album/lookup',
-      queryParameters: {'term': artistName},
-      options: _authOptions,
-    );
+  Future<List<LidarrAlbum>> lookupAlbums(
+    String artistMbid,
+    String artistName,
+  ) async {
+    try {
+      final response = await dio.get(
+        'https://musicbrainz.org/ws/2/release-group',
+        queryParameters: {'artist': artistMbid, 'fmt': 'json', 'limit': 100},
+        options: Options(
+          headers: {
+            'User-Agent': 'nas-home/1.0 (private home media application)',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
-    final results = (response.data as List).cast<Map<String, dynamic>>();
-    return results
-        .where((album) => album['foreignArtistId'] == artistMbid)
-        .map((e) => _mapToLidarrAlbum(e, isInLibrary: false))
-        .toList()
-      ..sort((a, b) => (b.releaseDate ?? '').compareTo(a.releaseDate ?? ''));
+      final data = response.data as Map<String, dynamic>;
+      final results =
+          (data['release-groups'] as List? ?? []).cast<Map<String, dynamic>>();
+      final seenIds = <String>{};
+      return results
+          .where((album) {
+            final id = album['id']?.toString();
+            return id != null && seenIds.add(id);
+          })
+          .map((album) {
+            final id = album['id'].toString();
+            return LidarrAlbum(
+              id: id,
+              title: album['title']?.toString() ?? 'Unknown Album',
+              artistName: artistName,
+              releaseDate: album['first-release-date']?.toString(),
+              remoteCover:
+                  'https://coverartarchive.org/release-group/$id/front-500',
+            );
+          })
+          .toList()
+        ..sort((a, b) => (b.releaseDate ?? '').compareTo(a.releaseDate ?? ''));
+    } on DioException {
+      throw Exception(
+        'Não foi possível carregar a discografia de $artistName.',
+      );
+    }
   }
 
-  Future<void> _enrichArtistsWithLookupCovers(List<LidarrArtist> artists) async {
+  Future<void> _enrichArtistsWithLookupCovers(
+    List<LidarrArtist> artists,
+  ) async {
     const batchSize = 4;
     for (var i = 0; i < artists.length; i += batchSize) {
-      final end = (i + batchSize < artists.length) ? i + batchSize : artists.length;
+      final end =
+          (i + batchSize < artists.length) ? i + batchSize : artists.length;
       final batch = artists.sublist(i, end);
       await Future.wait(
         batch.map((artist) async {
           if (artist.remotePoster != null || artist.mbid == null) return;
-          final cover = await _latestAlbumCoverFromLookup(artist.mbid!, artist.artistName);
+          final cover = await _latestAlbumCoverFromLookup(
+            artist.mbid!,
+            artist.artistName,
+          );
           if (cover != null) {
             final index = artists.indexOf(artist);
             artists[index] = artist.copyWith(remotePoster: cover);
@@ -340,7 +412,10 @@ class LidarrDataSourceImpl implements LidarrDataSource {
     }
   }
 
-  Future<String?> _latestAlbumCoverFromLookup(String artistMbid, String artistName) async {
+  Future<String?> _latestAlbumCoverFromLookup(
+    String artistMbid,
+    String artistName,
+  ) async {
     try {
       final response = await dio.get(
         '$_baseUrl:8686/api/v1/album/lookup',
@@ -348,10 +423,11 @@ class LidarrDataSourceImpl implements LidarrDataSource {
         options: _authOptions,
       );
 
-      final albums = (response.data as List)
-          .cast<Map<String, dynamic>>()
-          .where((album) => album['foreignArtistId'] == artistMbid)
-          .toList();
+      final albums =
+          (response.data as List)
+              .cast<Map<String, dynamic>>()
+              .where((album) => album['foreignArtistId'] == artistMbid)
+              .toList();
       if (albums.isEmpty) return null;
 
       albums.sort((a, b) {
@@ -361,7 +437,10 @@ class LidarrDataSourceImpl implements LidarrDataSource {
       });
 
       for (final album in albums) {
-        final cover = _extractImageUrl(album['images'] as List?, preferredType: 'cover');
+        final cover = _extractImageUrl(
+          album['images'] as List?,
+          preferredType: 'cover',
+        );
         if (cover != null) return cover;
       }
     } catch (_) {}
@@ -372,14 +451,19 @@ class LidarrDataSourceImpl implements LidarrDataSource {
   Future<void> _enrichArtistsWithAlbumCovers(List<LidarrArtist> artists) async {
     const batchSize = 4;
     for (var i = 0; i < artists.length; i += batchSize) {
-      final end = (i + batchSize < artists.length) ? i + batchSize : artists.length;
+      final end =
+          (i + batchSize < artists.length) ? i + batchSize : artists.length;
       final batch = artists.sublist(i, end);
       await Future.wait(
         batch.map((artist) async {
           if (artist.remotePoster != null || artist.id == null) return;
-          final cover = await _latestAlbumCover(artist.id!) ??
+          final cover =
+              await _latestAlbumCover(artist.id!) ??
               (artist.mbid != null
-                  ? await _latestAlbumCoverFromLookup(artist.mbid!, artist.artistName)
+                  ? await _latestAlbumCoverFromLookup(
+                    artist.mbid!,
+                    artist.artistName,
+                  )
                   : null);
           if (cover != null) {
             final index = artists.indexOf(artist);
@@ -408,7 +492,10 @@ class LidarrDataSourceImpl implements LidarrDataSource {
       });
 
       for (final album in albums) {
-        final cover = _extractImageUrl(album['images'] as List?, preferredType: 'cover');
+        final cover = _extractImageUrl(
+          album['images'] as List?,
+          preferredType: 'cover',
+        );
         if (cover != null) return cover;
       }
     } catch (_) {}
@@ -424,24 +511,43 @@ class LidarrDataSourceImpl implements LidarrDataSource {
       status: json['status'],
       monitored: json['monitored'] ?? false,
       isAdded: json['id'] != null,
-      remotePoster: (json['remotePoster'] as String?) ??
+      remotePoster:
+          (json['remotePoster'] as String?) ??
           _extractImageUrl(json['images'] as List?, preferredType: 'poster'),
       disambiguation: json['disambiguation'] as String?,
     );
   }
 
-  LidarrAlbum _mapToLidarrAlbum(Map<String, dynamic> json, {required bool isInLibrary}) {
+  LidarrAlbum _mapToLidarrAlbum(
+    Map<String, dynamic> json, {
+    required bool isInLibrary,
+  }) {
     final stats = json['statistics'] as Map<String, dynamic>?;
     return LidarrAlbum(
       id: json['id']?.toString(),
       title: json['title'] ?? 'Unknown Album',
       artistName: json['artistName'] as String? ?? '',
       releaseDate: json['releaseDate'],
-      remoteCover: _extractImageUrl(json['images'] as List?, preferredType: 'cover'),
+      remoteCover: _extractImageUrl(
+        json['images'] as List?,
+        preferredType: 'cover',
+      ),
       monitored: json['monitored'] ?? false,
       isInLibrary: isInLibrary,
       trackFileCount: _readInt(stats?['trackFileCount']),
       trackCount: _readInt(stats?['trackCount']),
+    );
+  }
+
+  LidarrCommand _mapToLidarrCommand(Map<String, dynamic> json) {
+    final id = json['id']?.toString();
+    if (id == null || id.isEmpty) {
+      throw Exception('O Lidarr não retornou o ID do comando.');
+    }
+    return LidarrCommand(
+      id: id,
+      status: json['status']?.toString() ?? 'queued',
+      message: json['message']?.toString(),
     );
   }
 
@@ -467,7 +573,9 @@ class LidarrDataSourceImpl implements LidarrDataSource {
 
   String? _resolveImageUrl(Map<dynamic, dynamic> image) {
     final remoteUrl = image['remoteUrl'] as String?;
-    if (remoteUrl != null && remoteUrl.isNotEmpty && remoteUrl.startsWith('http')) {
+    if (remoteUrl != null &&
+        remoteUrl.isNotEmpty &&
+        remoteUrl.startsWith('http')) {
       return remoteUrl;
     }
 
@@ -491,12 +599,13 @@ class LidarrDataSourceImpl implements LidarrDataSource {
   String _parseDioError(DioException e) {
     final data = e.response?.data;
     if (data is List) {
-      final messages = data
-          .whereType<Map>()
-          .map((item) => item['errorMessage']?.toString())
-          .whereType<String>()
-          .where((message) => message.isNotEmpty)
-          .toList();
+      final messages =
+          data
+              .whereType<Map>()
+              .map((item) => item['errorMessage']?.toString())
+              .whereType<String>()
+              .where((message) => message.isNotEmpty)
+              .toList();
       if (messages.isNotEmpty) return messages.join('\n');
     }
     if (data is Map && data['message'] != null) {

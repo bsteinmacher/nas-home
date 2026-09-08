@@ -55,12 +55,13 @@ extension LidarrEventPatterns on LidarrEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( ArtistRequested value)?  artistRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SearchRequested value)?  searchRequested,TResult Function( ArtistRequested value)?  artistRequested,TResult Function( SearchStatusChanged value)?  searchStatusChanged,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case ArtistRequested() when artistRequested != null:
-return artistRequested(_that);case _:
+return artistRequested(_that);case SearchStatusChanged() when searchStatusChanged != null:
+return searchStatusChanged(_that);case _:
   return orElse();
 
 }
@@ -78,12 +79,13 @@ return artistRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( ArtistRequested value)  artistRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SearchRequested value)  searchRequested,required TResult Function( ArtistRequested value)  artistRequested,required TResult Function( SearchStatusChanged value)  searchStatusChanged,}){
 final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that);case ArtistRequested():
-return artistRequested(_that);case _:
+return artistRequested(_that);case SearchStatusChanged():
+return searchStatusChanged(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +102,13 @@ return artistRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( ArtistRequested value)?  artistRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SearchRequested value)?  searchRequested,TResult? Function( ArtistRequested value)?  artistRequested,TResult? Function( SearchStatusChanged value)?  searchStatusChanged,}){
 final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that);case ArtistRequested() when artistRequested != null:
-return artistRequested(_that);case _:
+return artistRequested(_that);case SearchStatusChanged() when searchStatusChanged != null:
+return searchStatusChanged(_that);case _:
   return null;
 
 }
@@ -122,11 +125,12 @@ return artistRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function( LidarrArtist artist)?  artistRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String query)?  searchRequested,TResult Function( LidarrArtist artist)?  artistRequested,TResult Function( List<String> albumIds,  String status,  String message)?  searchStatusChanged,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
-return artistRequested(_that.artist);case _:
+return artistRequested(_that.artist);case SearchStatusChanged() when searchStatusChanged != null:
+return searchStatusChanged(_that.albumIds,_that.status,_that.message);case _:
   return orElse();
 
 }
@@ -144,11 +148,12 @@ return artistRequested(_that.artist);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function( LidarrArtist artist)  artistRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String query)  searchRequested,required TResult Function( LidarrArtist artist)  artistRequested,required TResult Function( List<String> albumIds,  String status,  String message)  searchStatusChanged,}) {final _that = this;
 switch (_that) {
 case SearchRequested():
 return searchRequested(_that.query);case ArtistRequested():
-return artistRequested(_that.artist);case _:
+return artistRequested(_that.artist);case SearchStatusChanged():
+return searchStatusChanged(_that.albumIds,_that.status,_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +170,12 @@ return artistRequested(_that.artist);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function( LidarrArtist artist)?  artistRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String query)?  searchRequested,TResult? Function( LidarrArtist artist)?  artistRequested,TResult? Function( List<String> albumIds,  String status,  String message)?  searchStatusChanged,}) {final _that = this;
 switch (_that) {
 case SearchRequested() when searchRequested != null:
 return searchRequested(_that.query);case ArtistRequested() when artistRequested != null:
-return artistRequested(_that.artist);case _:
+return artistRequested(_that.artist);case SearchStatusChanged() when searchStatusChanged != null:
+return searchStatusChanged(_that.albumIds,_that.status,_that.message);case _:
   return null;
 
 }
@@ -319,6 +325,82 @@ $LidarrArtistCopyWith<$Res> get artist {
 }
 
 /// @nodoc
+
+
+class SearchStatusChanged implements LidarrEvent {
+  const SearchStatusChanged(final  List<String> albumIds, this.status, this.message): _albumIds = albumIds;
+
+
+ final  List<String> _albumIds;
+ List<String> get albumIds {
+  if (_albumIds is EqualUnmodifiableListView) return _albumIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_albumIds);
+}
+
+ final  String status;
+ final  String message;
+
+/// Create a copy of LidarrEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SearchStatusChangedCopyWith<SearchStatusChanged> get copyWith => _$SearchStatusChangedCopyWithImpl<SearchStatusChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchStatusChanged&&const DeepCollectionEquality().equals(other._albumIds, _albumIds)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_albumIds),status,message);
+
+@override
+String toString() {
+  return 'LidarrEvent.searchStatusChanged(albumIds: $albumIds, status: $status, message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SearchStatusChangedCopyWith<$Res> implements $LidarrEventCopyWith<$Res> {
+  factory $SearchStatusChangedCopyWith(SearchStatusChanged value, $Res Function(SearchStatusChanged) _then) = _$SearchStatusChangedCopyWithImpl;
+@useResult
+$Res call({
+ List<String> albumIds, String status, String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$SearchStatusChangedCopyWithImpl<$Res>
+    implements $SearchStatusChangedCopyWith<$Res> {
+  _$SearchStatusChangedCopyWithImpl(this._self, this._then);
+
+  final SearchStatusChanged _self;
+  final $Res Function(SearchStatusChanged) _then;
+
+/// Create a copy of LidarrEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? albumIds = null,Object? status = null,Object? message = null,}) {
+  return _then(SearchStatusChanged(
+null == albumIds ? _self._albumIds : albumIds // ignore: cast_nullable_to_non_nullable
+as List<String>,null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$LidarrState {
 
 
@@ -362,7 +444,7 @@ extension LidarrStatePatterns on LidarrState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LidarrInitial value)?  initial,TResult Function( LidarrLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( LidarrError value)?  error,TResult Function( LidarrSuccess value)?  success,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LidarrInitial value)?  initial,TResult Function( LidarrLoading value)?  loading,TResult Function( ArtistsLoaded value)?  artistsLoaded,TResult Function( LidarrError value)?  error,TResult Function( LidarrSuccess value)?  success,TResult Function( LidarrSearchUpdated value)?  searchUpdated,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case LidarrInitial() when initial != null:
@@ -370,7 +452,8 @@ return initial(_that);case LidarrLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case LidarrError() when error != null:
 return error(_that);case LidarrSuccess() when success != null:
-return success(_that);case _:
+return success(_that);case LidarrSearchUpdated() when searchUpdated != null:
+return searchUpdated(_that);case _:
   return orElse();
 
 }
@@ -388,7 +471,7 @@ return success(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LidarrInitial value)  initial,required TResult Function( LidarrLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( LidarrError value)  error,required TResult Function( LidarrSuccess value)  success,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LidarrInitial value)  initial,required TResult Function( LidarrLoading value)  loading,required TResult Function( ArtistsLoaded value)  artistsLoaded,required TResult Function( LidarrError value)  error,required TResult Function( LidarrSuccess value)  success,required TResult Function( LidarrSearchUpdated value)  searchUpdated,}){
 final _that = this;
 switch (_that) {
 case LidarrInitial():
@@ -396,7 +479,8 @@ return initial(_that);case LidarrLoading():
 return loading(_that);case ArtistsLoaded():
 return artistsLoaded(_that);case LidarrError():
 return error(_that);case LidarrSuccess():
-return success(_that);case _:
+return success(_that);case LidarrSearchUpdated():
+return searchUpdated(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -413,7 +497,7 @@ return success(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LidarrInitial value)?  initial,TResult? Function( LidarrLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( LidarrError value)?  error,TResult? Function( LidarrSuccess value)?  success,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LidarrInitial value)?  initial,TResult? Function( LidarrLoading value)?  loading,TResult? Function( ArtistsLoaded value)?  artistsLoaded,TResult? Function( LidarrError value)?  error,TResult? Function( LidarrSuccess value)?  success,TResult? Function( LidarrSearchUpdated value)?  searchUpdated,}){
 final _that = this;
 switch (_that) {
 case LidarrInitial() when initial != null:
@@ -421,7 +505,8 @@ return initial(_that);case LidarrLoading() when loading != null:
 return loading(_that);case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that);case LidarrError() when error != null:
 return error(_that);case LidarrSuccess() when success != null:
-return success(_that);case _:
+return success(_that);case LidarrSearchUpdated() when searchUpdated != null:
+return searchUpdated(_that);case _:
   return null;
 
 }
@@ -438,14 +523,15 @@ return success(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<LidarrArtist> artists)?  artistsLoaded,TResult Function( String message)?  error,TResult Function( String message)?  success,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<LidarrArtist> artists)?  artistsLoaded,TResult Function( String message)?  error,TResult Function( String message)?  success,TResult Function( List<String> albumIds,  String status,  String message)?  searchUpdated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LidarrInitial() when initial != null:
 return initial();case LidarrLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case LidarrError() when error != null:
 return error(_that.message);case LidarrSuccess() when success != null:
-return success(_that.message);case _:
+return success(_that.message);case LidarrSearchUpdated() when searchUpdated != null:
+return searchUpdated(_that.albumIds,_that.status,_that.message);case _:
   return orElse();
 
 }
@@ -463,14 +549,15 @@ return success(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<LidarrArtist> artists)  artistsLoaded,required TResult Function( String message)  error,required TResult Function( String message)  success,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<LidarrArtist> artists)  artistsLoaded,required TResult Function( String message)  error,required TResult Function( String message)  success,required TResult Function( List<String> albumIds,  String status,  String message)  searchUpdated,}) {final _that = this;
 switch (_that) {
 case LidarrInitial():
 return initial();case LidarrLoading():
 return loading();case ArtistsLoaded():
 return artistsLoaded(_that.artists);case LidarrError():
 return error(_that.message);case LidarrSuccess():
-return success(_that.message);case _:
+return success(_that.message);case LidarrSearchUpdated():
+return searchUpdated(_that.albumIds,_that.status,_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -487,14 +574,15 @@ return success(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<LidarrArtist> artists)?  artistsLoaded,TResult? Function( String message)?  error,TResult? Function( String message)?  success,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<LidarrArtist> artists)?  artistsLoaded,TResult? Function( String message)?  error,TResult? Function( String message)?  success,TResult? Function( List<String> albumIds,  String status,  String message)?  searchUpdated,}) {final _that = this;
 switch (_that) {
 case LidarrInitial() when initial != null:
 return initial();case LidarrLoading() when loading != null:
 return loading();case ArtistsLoaded() when artistsLoaded != null:
 return artistsLoaded(_that.artists);case LidarrError() when error != null:
 return error(_that.message);case LidarrSuccess() when success != null:
-return success(_that.message);case _:
+return success(_that.message);case LidarrSearchUpdated() when searchUpdated != null:
+return searchUpdated(_that.albumIds,_that.status,_that.message);case _:
   return null;
 
 }
@@ -763,6 +851,82 @@ class _$LidarrSuccessCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(LidarrSuccess(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class LidarrSearchUpdated implements LidarrState {
+  const LidarrSearchUpdated(final  List<String> albumIds, this.status, this.message): _albumIds = albumIds;
+
+
+ final  List<String> _albumIds;
+ List<String> get albumIds {
+  if (_albumIds is EqualUnmodifiableListView) return _albumIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_albumIds);
+}
+
+ final  String status;
+ final  String message;
+
+/// Create a copy of LidarrState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LidarrSearchUpdatedCopyWith<LidarrSearchUpdated> get copyWith => _$LidarrSearchUpdatedCopyWithImpl<LidarrSearchUpdated>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrSearchUpdated&&const DeepCollectionEquality().equals(other._albumIds, _albumIds)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_albumIds),status,message);
+
+@override
+String toString() {
+  return 'LidarrState.searchUpdated(albumIds: $albumIds, status: $status, message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LidarrSearchUpdatedCopyWith<$Res> implements $LidarrStateCopyWith<$Res> {
+  factory $LidarrSearchUpdatedCopyWith(LidarrSearchUpdated value, $Res Function(LidarrSearchUpdated) _then) = _$LidarrSearchUpdatedCopyWithImpl;
+@useResult
+$Res call({
+ List<String> albumIds, String status, String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$LidarrSearchUpdatedCopyWithImpl<$Res>
+    implements $LidarrSearchUpdatedCopyWith<$Res> {
+  _$LidarrSearchUpdatedCopyWithImpl(this._self, this._then);
+
+  final LidarrSearchUpdated _self;
+  final $Res Function(LidarrSearchUpdated) _then;
+
+/// Create a copy of LidarrState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? albumIds = null,Object? status = null,Object? message = null,}) {
+  return _then(LidarrSearchUpdated(
+null == albumIds ? _self._albumIds : albumIds // ignore: cast_nullable_to_non_nullable
+as List<String>,null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

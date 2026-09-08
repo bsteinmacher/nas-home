@@ -52,10 +52,11 @@ class _LidarrViewState extends State<LidarrView> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (ctx) => BlocProvider.value(
-            value: context.read<LidarrBloc>(),
-            child: ArtistAlbumsPage(artist: artist),
-          ),
+          builder:
+              (ctx) => BlocProvider.value(
+                value: context.read<LidarrBloc>(),
+                child: ArtistAlbumsPage(artist: artist),
+              ),
         ),
       );
     }
@@ -75,10 +76,16 @@ class _LidarrViewState extends State<LidarrView> {
               controller: _searchController,
               hintText: 'Search artist',
               suffixIcon: IconButton(
-                icon: const Icon(Icons.search, color: AppColors.terminalGreen, size: 20),
+                icon: const Icon(
+                  Icons.search,
+                  color: AppColors.terminalGreen,
+                  size: 20,
+                ),
                 onPressed: () {
                   if (_searchController.text.isNotEmpty) {
-                    context.read<LidarrBloc>().add(SearchRequested(_searchController.text));
+                    context.read<LidarrBloc>().add(
+                      SearchRequested(_searchController.text),
+                    );
                   }
                 },
               ),
@@ -93,15 +100,17 @@ class _LidarrViewState extends State<LidarrView> {
             child: BlocConsumer<LidarrBloc, LidarrState>(
               listener: (context, state) {
                 state.maybeWhen(
-                  success: (message) => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(message)),
-                  ),
-                  error: (message) => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Colors.redAccent,
-                    ),
-                  ),
+                  success:
+                      (message) => ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(message))),
+                  error:
+                      (message) => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      ),
                   orElse: () {},
                 );
               },
@@ -115,7 +124,12 @@ class _LidarrViewState extends State<LidarrView> {
                 final isLoading = state is LidarrLoading;
 
                 if (isLoading && artists.isEmpty) {
-                  return const Center(child: BrailleSpinner(fontSize: 24, color: AppColors.lidarr));
+                  return const Center(
+                    child: BrailleSpinner(
+                      fontSize: 24,
+                      color: AppColors.lidarr,
+                    ),
+                  );
                 }
 
                 if (artists.isEmpty) {
@@ -123,13 +137,19 @@ class _LidarrViewState extends State<LidarrView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.library_music, size: 64, color: AppColors.textMuted),
+                        const Icon(
+                          Icons.library_music,
+                          size: 64,
+                          color: AppColors.textMuted,
+                        ),
                         const SizedBox(height: AppSpacing.md),
                         Text(
                           fromSearch
                               ? 'No artists found for this search'
                               : 'Your library is empty. Search for artists to add.',
-                          style: AppTypography.moduleSublabel.copyWith(fontSize: 14),
+                          style: AppTypography.moduleSublabel.copyWith(
+                            fontSize: 14,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -150,7 +170,9 @@ class _LidarrViewState extends State<LidarrView> {
                             AppSpacing.sm,
                           ),
                           child: Text(
-                            fromSearch ? '// SEARCH RESULTS' : '// YOUR LIBRARY',
+                            fromSearch
+                                ? '// SEARCH RESULTS'
+                                : '// YOUR LIBRARY',
                             style: AppTypography.sectionHeader,
                           ),
                         ),
@@ -160,7 +182,9 @@ class _LidarrViewState extends State<LidarrView> {
                     if (isLoading)
                       Container(
                         color: Colors.black.withValues(alpha: 0.5),
-                        child: const Center(child: BrailleSpinner(fontSize: 24)),
+                        child: const Center(
+                          child: BrailleSpinner(fontSize: 24),
+                        ),
                       ),
                   ],
                 );
@@ -187,9 +211,6 @@ class _LidarrViewState extends State<LidarrView> {
         return _ArtistCard(
           artist: artist,
           onTap: () => _openArtist(context, artist),
-          onAdd: artist.isAdded
-              ? null
-              : () => context.read<LidarrBloc>().add(ArtistRequested(artist)),
         );
       },
     );
@@ -205,13 +226,8 @@ class _LidarrViewState extends State<LidarrView> {
 class _ArtistCard extends StatelessWidget {
   final LidarrArtist artist;
   final VoidCallback onTap;
-  final VoidCallback? onAdd;
 
-  const _ArtistCard({
-    required this.artist,
-    required this.onTap,
-    this.onAdd,
-  });
+  const _ArtistCard({required this.artist, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -231,17 +247,28 @@ class _ArtistCard extends StatelessWidget {
               Image.network(
                 artist.remotePoster!,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) =>
-                    const Center(child: Icon(Icons.person, size: 48, color: AppColors.textMuted)),
+                errorBuilder:
+                    (_, _, _) => const Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 48,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
               )
             else
-              const Center(child: Icon(Icons.person, size: 48, color: AppColors.textMuted)),
+              const Center(
+                child: Icon(Icons.person, size: 48, color: AppColors.textMuted),
+              ),
             if (artist.isAdded)
               Positioned(
                 top: AppSpacing.xs,
                 right: AppSpacing.xs,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(4),
@@ -249,7 +276,10 @@ class _ArtistCard extends StatelessWidget {
                   ),
                   child: Text(
                     'LIBRARY',
-                    style: AppTypography.statusBadge.copyWith(fontSize: 8, color: Colors.white70),
+                    style: AppTypography.statusBadge.copyWith(
+                      fontSize: 8,
+                      color: Colors.white70,
+                    ),
                   ),
                 ),
               ),
@@ -270,32 +300,16 @@ class _ArtistCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (artist.disambiguation != null && artist.disambiguation!.isNotEmpty) ...[
+                    if (artist.disambiguation != null &&
+                        artist.disambiguation!.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
                         artist.disambiguation!,
-                        style: AppTypography.moduleSublabel.copyWith(fontSize: 9),
+                        style: AppTypography.moduleSublabel.copyWith(
+                          fontSize: 9,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                    if (onAdd != null) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: onAdd,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.lidarr,
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.zero,
-                            minimumSize: const Size(0, 28),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-                            ),
-                          ),
-                          child: Text('ADD', style: AppTypography.statusBadge),
-                        ),
                       ),
                     ],
                   ],

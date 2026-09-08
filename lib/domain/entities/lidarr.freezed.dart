@@ -299,7 +299,7 @@ as String?,
 /// @nodoc
 mixin _$LidarrAlbum {
 
- String? get id; String get title; String get artistName; String? get releaseDate; String? get remoteCover; bool get monitored; bool get isInLibrary; bool get isQueued; int? get trackFileCount; int? get trackCount;
+ String? get id; String get title; String get artistName; String? get releaseDate; String? get remoteCover; bool get monitored; bool get isInLibrary; bool get isQueued; bool get isSearching; int? get trackFileCount; int? get trackCount;
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -312,16 +312,16 @@ $LidarrAlbumCopyWith<LidarrAlbum> get copyWith => _$LidarrAlbumCopyWithImpl<Lida
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,trackFileCount,trackCount);
+int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,isSearching,trackFileCount,trackCount);
 
 @override
 String toString() {
-  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, trackFileCount: $trackFileCount, trackCount: $trackCount)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, isSearching: $isSearching, trackFileCount: $trackFileCount, trackCount: $trackCount)';
 }
 
 
@@ -332,7 +332,7 @@ abstract mixin class $LidarrAlbumCopyWith<$Res>  {
   factory $LidarrAlbumCopyWith(LidarrAlbum value, $Res Function(LidarrAlbum) _then) = _$LidarrAlbumCopyWithImpl;
 @useResult
 $Res call({
- String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, int? trackFileCount, int? trackCount
+ String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, bool isSearching, int? trackFileCount, int? trackCount
 });
 
 
@@ -349,7 +349,7 @@ class _$LidarrAlbumCopyWithImpl<$Res>
 
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? isSearching = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -359,6 +359,7 @@ as String?,remoteCover: freezed == remoteCover ? _self.remoteCover : remoteCover
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
 as bool,isInLibrary: null == isInLibrary ? _self.isInLibrary : isInLibrary // ignore: cast_nullable_to_non_nullable
 as bool,isQueued: null == isQueued ? _self.isQueued : isQueued // ignore: cast_nullable_to_non_nullable
+as bool,isSearching: null == isSearching ? _self.isSearching : isSearching // ignore: cast_nullable_to_non_nullable
 as bool,trackFileCount: freezed == trackFileCount ? _self.trackFileCount : trackFileCount // ignore: cast_nullable_to_non_nullable
 as int?,trackCount: freezed == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -446,10 +447,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  bool isSearching,  int? trackFileCount,  int? trackCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LidarrAlbum() when $default != null:
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.isSearching,_that.trackFileCount,_that.trackCount);case _:
   return orElse();
 
 }
@@ -467,10 +468,10 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  bool isSearching,  int? trackFileCount,  int? trackCount)  $default,) {final _that = this;
 switch (_that) {
 case _LidarrAlbum():
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.isSearching,_that.trackFileCount,_that.trackCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -487,10 +488,10 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  int? trackFileCount,  int? trackCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String title,  String artistName,  String? releaseDate,  String? remoteCover,  bool monitored,  bool isInLibrary,  bool isQueued,  bool isSearching,  int? trackFileCount,  int? trackCount)?  $default,) {final _that = this;
 switch (_that) {
 case _LidarrAlbum() when $default != null:
-return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.trackFileCount,_that.trackCount);case _:
+return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.remoteCover,_that.monitored,_that.isInLibrary,_that.isQueued,_that.isSearching,_that.trackFileCount,_that.trackCount);case _:
   return null;
 
 }
@@ -502,7 +503,7 @@ return $default(_that.id,_that.title,_that.artistName,_that.releaseDate,_that.re
 @JsonSerializable()
 
 class _LidarrAlbum implements LidarrAlbum {
-  const _LidarrAlbum({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false, this.isInLibrary = false, this.isQueued = false, this.trackFileCount, this.trackCount});
+  const _LidarrAlbum({required this.id, required this.title, required this.artistName, required this.releaseDate, required this.remoteCover, this.monitored = false, this.isInLibrary = false, this.isQueued = false, this.isSearching = false, this.trackFileCount, this.trackCount});
   factory _LidarrAlbum.fromJson(Map<String, dynamic> json) => _$LidarrAlbumFromJson(json);
 
 @override final  String? id;
@@ -513,6 +514,7 @@ class _LidarrAlbum implements LidarrAlbum {
 @override@JsonKey() final  bool monitored;
 @override@JsonKey() final  bool isInLibrary;
 @override@JsonKey() final  bool isQueued;
+@override@JsonKey() final  bool isSearching;
 @override final  int? trackFileCount;
 @override final  int? trackCount;
 
@@ -529,16 +531,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LidarrAlbum&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.remoteCover, remoteCover) || other.remoteCover == remoteCover)&&(identical(other.monitored, monitored) || other.monitored == monitored)&&(identical(other.isInLibrary, isInLibrary) || other.isInLibrary == isInLibrary)&&(identical(other.isQueued, isQueued) || other.isQueued == isQueued)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.trackFileCount, trackFileCount) || other.trackFileCount == trackFileCount)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,trackFileCount,trackCount);
+int get hashCode => Object.hash(runtimeType,id,title,artistName,releaseDate,remoteCover,monitored,isInLibrary,isQueued,isSearching,trackFileCount,trackCount);
 
 @override
 String toString() {
-  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, trackFileCount: $trackFileCount, trackCount: $trackCount)';
+  return 'LidarrAlbum(id: $id, title: $title, artistName: $artistName, releaseDate: $releaseDate, remoteCover: $remoteCover, monitored: $monitored, isInLibrary: $isInLibrary, isQueued: $isQueued, isSearching: $isSearching, trackFileCount: $trackFileCount, trackCount: $trackCount)';
 }
 
 
@@ -549,7 +551,7 @@ abstract mixin class _$LidarrAlbumCopyWith<$Res> implements $LidarrAlbumCopyWith
   factory _$LidarrAlbumCopyWith(_LidarrAlbum value, $Res Function(_LidarrAlbum) _then) = __$LidarrAlbumCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, int? trackFileCount, int? trackCount
+ String? id, String title, String artistName, String? releaseDate, String? remoteCover, bool monitored, bool isInLibrary, bool isQueued, bool isSearching, int? trackFileCount, int? trackCount
 });
 
 
@@ -566,7 +568,7 @@ class __$LidarrAlbumCopyWithImpl<$Res>
 
 /// Create a copy of LidarrAlbum
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? artistName = null,Object? releaseDate = freezed,Object? remoteCover = freezed,Object? monitored = null,Object? isInLibrary = null,Object? isQueued = null,Object? isSearching = null,Object? trackFileCount = freezed,Object? trackCount = freezed,}) {
   return _then(_LidarrAlbum(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -576,6 +578,7 @@ as String?,remoteCover: freezed == remoteCover ? _self.remoteCover : remoteCover
 as String?,monitored: null == monitored ? _self.monitored : monitored // ignore: cast_nullable_to_non_nullable
 as bool,isInLibrary: null == isInLibrary ? _self.isInLibrary : isInLibrary // ignore: cast_nullable_to_non_nullable
 as bool,isQueued: null == isQueued ? _self.isQueued : isQueued // ignore: cast_nullable_to_non_nullable
+as bool,isSearching: null == isSearching ? _self.isSearching : isSearching // ignore: cast_nullable_to_non_nullable
 as bool,trackFileCount: freezed == trackFileCount ? _self.trackFileCount : trackFileCount // ignore: cast_nullable_to_non_nullable
 as int?,trackCount: freezed == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
 as int?,

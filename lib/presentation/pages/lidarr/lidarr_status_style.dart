@@ -12,6 +12,8 @@ Color lidarrStatusColor(String label) {
       return AppColors.lidarr;
     case 'DOWNLOADING':
       return Colors.orangeAccent;
+    case 'SEARCHING':
+      return Colors.lightBlueAccent;
     case 'PREVIEW':
       return AppColors.textMuted;
     default:
@@ -25,6 +27,8 @@ Color lidarrActionButtonColor(String label) {
       return Colors.greenAccent.withValues(alpha: 0.8);
     case 'DOWNLOADING':
       return Colors.orangeAccent.withValues(alpha: 0.8);
+    case 'SEARCHING':
+      return Colors.lightBlueAccent.withValues(alpha: 0.8);
     case 'SEARCH':
       return AppColors.lidarr;
     case 'PREVIEW':

@@ -32,23 +32,23 @@ Future<void> init() async {
   //! Core
 
   //! Data
-  sl.registerLazySingleton<RegistryDataSource>(() => RegistryDataSourceImpl(dio: sl()));
+  sl.registerLazySingleton<RegistryDataSource>(
+    () => RegistryDataSourceImpl(dio: sl()),
+  );
   sl.registerLazySingleton<NasRepository>(() => NasRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton<RegistryRepository>(
-      () => RegistryRepositoryImpl(dataSource: sl(), sharedPreferences: sl()));
+    () => RegistryRepositoryImpl(dataSource: sl(), sharedPreferences: sl()),
+  );
 
-  sl.registerLazySingleton<SeerrDataSource>(() => SeerrDataSourceImpl(
-        dio: sl(),
-        sharedPreferences: sl(),
-      ));
-  sl.registerLazySingleton<SeerrRepository>(
-      () => SeerrRepositoryImpl(sl()));
+  sl.registerLazySingleton<SeerrDataSource>(
+    () => SeerrDataSourceImpl(dio: sl(), sharedPreferences: sl()),
+  );
+  sl.registerLazySingleton<SeerrRepository>(() => SeerrRepositoryImpl(sl()));
 
   // Lidarr (Music Request Service)
-  sl.registerLazySingleton<LidarrDataSource>(() => LidarrDataSourceImpl(
-        dio: sl(),
-        sharedPreferences: sl(),
-      ));
+  sl.registerLazySingleton<LidarrDataSource>(
+    () => LidarrDataSourceImpl(dio: sl(), sharedPreferences: sl()),
+  );
   sl.registerLazySingleton<LidarrRepository>(() => LidarrRepositoryImpl(sl()));
 
   //! Domain
@@ -59,38 +59,49 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetSeerrDetailsUseCase(sl()));
   sl.registerLazySingleton(() => RequestSeerrUseCase(sl()));
   sl.registerLazySingleton(() => SyncRegistryConfigUseCase(sl()));
-  
+
   // Lidarr (Music)
   sl.registerLazySingleton(() => SearchArtistsUseCase(sl()));
   sl.registerLazySingleton(() => GetLibraryArtistsUseCase(sl()));
   sl.registerLazySingleton(() => RequestArtistUseCase(sl()));
   sl.registerLazySingleton(() => GetAlbumsUseCase(sl()));
+  sl.registerLazySingleton(() => GetAlbumUseCase(sl()));
   sl.registerLazySingleton(() => LookupAlbumsUseCase(sl()));
   sl.registerLazySingleton(() => GetTracksUseCase(sl()));
   sl.registerLazySingleton(() => SearchAlbumUseCase(sl()));
   sl.registerLazySingleton(() => SearchArtistDiscographyUseCase(sl()));
+  sl.registerLazySingleton(() => GetLidarrCommandStatusUseCase(sl()));
 
   //! Presentation
-  sl.registerFactory(() => NasStatusBloc(
-        getServicesStatus: sl(),
-        getHardwareInfo: sl(),
-        sharedPreferences: sl(),
-        nasRepository: sl(),
-      ));
-  sl.registerFactory(() => SeerrBloc(
-        searchSeerr: sl(),
-        getTrendingSeerr: sl(),
-        getSeerrDetails: sl(),
-        requestSeerr: sl(),
-      ));
-  sl.registerFactory(() => LidarrBloc(
-        searchArtists: sl(),
-        getLibraryArtists: sl(),
-        requestArtist: sl(),
-        getAlbums: sl(),
-        lookupAlbums: sl(),
-        getTracks: sl(),
-        searchAlbum: sl(),
-        searchArtistDiscography: sl(),
-      ));
+  sl.registerFactory(
+    () => NasStatusBloc(
+      getServicesStatus: sl(),
+      getHardwareInfo: sl(),
+      sharedPreferences: sl(),
+      nasRepository: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => SeerrBloc(
+      searchSeerr: sl(),
+      getTrendingSeerr: sl(),
+      getSeerrDetails: sl(),
+      requestSeerr: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => LidarrBloc(
+      searchArtists: sl(),
+      getLibraryArtists: sl(),
+      requestArtist: sl(),
+      getAlbums: sl(),
+      getAlbum: sl(),
+      lookupAlbums: sl(),
+      getTracks: sl(),
+      searchAlbum: sl(),
+      searchArtistDiscography: sl(),
+      getCommandStatus: sl(),
+      sharedPreferences: sl(),
+    ),
+  );
 }

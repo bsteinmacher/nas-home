@@ -16,7 +16,8 @@ abstract class LidarrArtist with _$LidarrArtist {
     String? disambiguation,
   }) = _LidarrArtist;
 
-  factory LidarrArtist.fromJson(Map<String, dynamic> json) => _$LidarrArtistFromJson(json);
+  factory LidarrArtist.fromJson(Map<String, dynamic> json) =>
+      _$LidarrArtistFromJson(json);
 }
 
 @freezed
@@ -30,11 +31,30 @@ abstract class LidarrAlbum with _$LidarrAlbum {
     @Default(false) bool monitored,
     @Default(false) bool isInLibrary,
     @Default(false) bool isQueued,
+    @Default(false) bool isSearching,
     int? trackFileCount,
     int? trackCount,
   }) = _LidarrAlbum;
 
-  factory LidarrAlbum.fromJson(Map<String, dynamic> json) => _$LidarrAlbumFromJson(json);
+  factory LidarrAlbum.fromJson(Map<String, dynamic> json) =>
+      _$LidarrAlbumFromJson(json);
+}
+
+class LidarrCommand {
+  final String id;
+  final String status;
+  final String? message;
+
+  const LidarrCommand({required this.id, required this.status, this.message});
+
+  bool get isCompleted => status.toLowerCase() == 'completed';
+
+  bool get isFailed {
+    const failedStatuses = {'failed', 'aborted', 'cancelled', 'orphaned'};
+    return failedStatuses.contains(status.toLowerCase());
+  }
+
+  bool get isTerminal => isCompleted || isFailed;
 }
 
 class LidarrTrack {
@@ -63,6 +83,7 @@ extension LidarrAlbumAvailability on LidarrAlbum {
   String get availabilityLabel {
     if (!isInLibrary) return 'PREVIEW';
     if (isQueued) return 'DOWNLOADING';
+    if (isSearching) return 'SEARCHING';
     final total = trackCount ?? 0;
     final downloaded = trackFileCount ?? 0;
     if (total == 0) return 'UNKNOWN';
@@ -71,11 +92,17 @@ extension LidarrAlbumAvailability on LidarrAlbum {
     return 'DOWNLOADED';
   }
 
-  bool get canSearch => isInLibrary && id != null && availabilityLabel != 'DOWNLOADED' && !isQueued;
+  bool get canSearch =>
+      isInLibrary &&
+      id != null &&
+      availabilityLabel != 'DOWNLOADED' &&
+      !isQueued &&
+      !isSearching;
 
   String get actionLabel {
     if (!isInLibrary) return 'PREVIEW';
-    if (isQueued || availabilityLabel == 'DOWNLOADING') return 'DOWNLOADING';
+    if (isQueued) return 'DOWNLOADING';
+    if (isSearching) return 'SEARCHING';
     if (availabilityLabel == 'DOWNLOADED') return 'DOWNLOADED';
     return 'SEARCH';
   }
