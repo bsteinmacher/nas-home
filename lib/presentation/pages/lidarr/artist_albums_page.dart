@@ -56,7 +56,7 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Busca iniciada para ${_artist.artistName}.'),
+          content: Text('Busca enviada ao Lidarr para ${_artist.artistName}.'),
           backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
         ),
       );
@@ -84,10 +84,11 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (ctx) => BlocProvider.value(
-          value: context.read<LidarrBloc>(),
-          child: AlbumTracksPage(album: album),
-        ),
+        builder:
+            (ctx) => BlocProvider.value(
+              value: context.read<LidarrBloc>(),
+              child: AlbumTracksPage(album: album),
+            ),
       ),
     ).then((_) => _refreshAlbums());
   }
@@ -114,95 +115,128 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
               });
             }
           },
+          searchUpdated: (albumIds, status, message) {
+            _refreshAlbums();
+            if (status != 'searching') {
+              final isError = status == 'failed' || status == 'not_found';
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor:
+                      isError
+                          ? Colors.orangeAccent.withValues(alpha: 0.9)
+                          : AppColors.terminalGreen.withValues(alpha: 0.8),
+                ),
+              );
+            }
+          },
           orElse: () {},
         );
       },
       child: ServiceScaffold(
-      serviceName: 'Lidarr',
-      themeColor: AppColors.lidarr,
-      body: FutureBuilder<List<LidarrAlbum>>(
-        future: _albumsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: BrailleSpinner(fontSize: 24, color: AppColors.lidarr));
-          }
+        serviceName: 'Lidarr',
+        themeColor: AppColors.lidarr,
+        body: FutureBuilder<List<LidarrAlbum>>(
+          future: _albumsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: BrailleSpinner(fontSize: 24, color: AppColors.lidarr),
+              );
+            }
 
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString(), style: AppTypography.moduleLabel));
-          }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  snapshot.error.toString(),
+                  style: AppTypography.moduleLabel,
+                ),
+              );
+            }
 
-          final albums = snapshot.data ?? [];
+            final albums = snapshot.data ?? [];
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '// ${_artist.artistName.toUpperCase()}',
-                      style: AppTypography.sectionHeader,
-                    ),
-                    if (_artist.disambiguation != null &&
-                        _artist.disambiguation!.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.xs),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        _artist.disambiguation!,
-                        style: AppTypography.moduleSublabel.copyWith(fontSize: 11),
+                        '// ${_artist.artistName.toUpperCase()}',
+                        style: AppTypography.sectionHeader,
                       ),
+                      if (_artist.disambiguation != null &&
+                          _artist.disambiguation!.isNotEmpty) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          _artist.disambiguation!,
+                          style: AppTypography.moduleSublabel.copyWith(
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: AppSpacing.md),
+                      if (isLibrary)
+                        _ActionBar(
+                          label:
+                              _isSearchingAll
+                                  ? 'SEARCHING...'
+                                  : 'DOWNLOAD_DISCOGRAPHY',
+                          onPressed:
+                              _isSearchingAll ? null : _downloadDiscography,
+                          isLoading: _isSearchingAll,
+                        )
+                      else
+                        _ActionBar(
+                          label: 'REQUEST_DISCOGRAPHY',
+                          onPressed: _addArtist,
+                          isPrimary: true,
+                        ),
                     ],
-                    const SizedBox(height: AppSpacing.md),
-                    if (isLibrary)
-                      _ActionBar(
-                        label: _isSearchingAll ? 'SEARCHING...' : 'DOWNLOAD_DISCOGRAPHY',
-                        onPressed: _isSearchingAll ? null : _downloadDiscography,
-                        isLoading: _isSearchingAll,
-                      )
-                    else
-                      _ActionBar(
-                        label: 'ADD_ARTIST',
-                        onPressed: _addArtist,
-                        isPrimary: true,
+                  ),
+                ),
+                if (albums.isEmpty)
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Nenhum álbum encontrado.',
+                        style: AppTypography.moduleSublabel.copyWith(
+                          fontSize: 14,
+                        ),
                       ),
-                  ],
-                ),
-              ),
-              if (albums.isEmpty)
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'Nenhum álbum encontrado.',
-                      style: AppTypography.moduleSublabel.copyWith(fontSize: 14),
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                            mainAxisSpacing: AppSpacing.sm,
+                            crossAxisSpacing: AppSpacing.sm,
+                          ),
+                      itemCount: albums.length,
+                      itemBuilder:
+                          (context, index) => _AlbumCard(
+                            album: albums[index],
+                            onTap: () => _openAlbum(albums[index]),
+                            onSearch:
+                                albums[index].isActionEnabled
+                                    ? () => _searchAlbum(albums[index])
+                                    : null,
+                          ),
                     ),
                   ),
-                )
-              else
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(AppSpacing.sm),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.7,
-                      mainAxisSpacing: AppSpacing.sm,
-                      crossAxisSpacing: AppSpacing.sm,
-                    ),
-                    itemCount: albums.length,
-                    itemBuilder: (context, index) => _AlbumCard(
-                      album: albums[index],
-                      onTap: () => _openAlbum(albums[index]),
-                      onSearch: albums[index].isActionEnabled
-                          ? () => _searchAlbum(albums[index])
-                          : null,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
-    ),
     );
   }
 
@@ -215,7 +249,7 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Busca iniciada: ${album.title}'),
+          content: Text('Busca enviada ao Lidarr: ${album.title}'),
           backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
         ),
       );
@@ -256,16 +290,23 @@ class _ActionBar extends StatelessWidget {
           foregroundColor: isPrimary ? Colors.white : AppColors.terminalGreen,
           backgroundColor: isPrimary ? AppColors.lidarr : Colors.transparent,
           side: BorderSide(
-            color: isPrimary ? AppColors.lidarr : AppColors.terminalGreen.withValues(alpha: 0.6),
+            color:
+                isPrimary
+                    ? AppColors.lidarr
+                    : AppColors.terminalGreen.withValues(alpha: 0.6),
           ),
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
           ),
         ),
-        child: isLoading
-            ? const BrailleSpinner(fontSize: 14, color: AppColors.terminalGreen)
-            : Text(label, style: AppTypography.statusBadge),
+        child:
+            isLoading
+                ? const BrailleSpinner(
+                  fontSize: 14,
+                  color: AppColors.terminalGreen,
+                )
+                : Text(label, style: AppTypography.statusBadge),
       ),
     );
   }
@@ -276,11 +317,7 @@ class _AlbumCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onSearch;
 
-  const _AlbumCard({
-    required this.album,
-    required this.onTap,
-    this.onSearch,
-  });
+  const _AlbumCard({required this.album, required this.onTap, this.onSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -304,11 +341,19 @@ class _AlbumCard extends StatelessWidget {
               Image.network(
                 album.remoteCover!,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) =>
-                    const Center(child: Icon(Icons.album, size: 48, color: AppColors.textMuted)),
+                errorBuilder:
+                    (_, _, _) => const Center(
+                      child: Icon(
+                        Icons.album,
+                        size: 48,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
               )
             else
-              const Center(child: Icon(Icons.album, size: 48, color: AppColors.textMuted)),
+              const Center(
+                child: Icon(Icons.album, size: 48, color: AppColors.textMuted),
+              ),
             Positioned(
               bottom: 0,
               left: 0,
@@ -333,15 +378,22 @@ class _AlbumCard extends StatelessWidget {
                         onPressed: enabled ? onSearch : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: actionColor,
-                          disabledBackgroundColor: actionColor.withValues(alpha: 0.35),
+                          disabledBackgroundColor: actionColor.withValues(
+                            alpha: 0.35,
+                          ),
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 28),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.borderRadius,
+                            ),
                           ),
                         ),
-                        child: Text(actionLabel, style: AppTypography.statusBadge),
+                        child: Text(
+                          actionLabel,
+                          style: AppTypography.statusBadge,
+                        ),
                       ),
                     ),
                   ],

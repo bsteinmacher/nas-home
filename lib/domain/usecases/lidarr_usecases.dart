@@ -6,7 +6,8 @@ class SearchArtistsUseCase {
 
   SearchArtistsUseCase(this.repository);
 
-  Future<List<LidarrArtist>> execute(String query) => repository.searchArtists(query);
+  Future<List<LidarrArtist>> execute(String query) =>
+      repository.searchArtists(query);
 }
 
 class GetLibraryArtistsUseCase {
@@ -22,7 +23,8 @@ class RequestArtistUseCase {
 
   RequestArtistUseCase(this.repository);
 
-  Future<LidarrArtist> execute(LidarrArtist artist) => repository.requestArtist(artist);
+  Future<LidarrArtist> execute(LidarrArtist artist) =>
+      repository.requestArtist(artist);
 }
 
 class GetAlbumsUseCase {
@@ -30,7 +32,16 @@ class GetAlbumsUseCase {
 
   GetAlbumsUseCase(this.repository);
 
-  Future<List<LidarrAlbum>> execute(String artistId) => repository.getAlbums(artistId);
+  Future<List<LidarrAlbum>> execute(String artistId) =>
+      repository.getAlbums(artistId);
+}
+
+class GetAlbumUseCase {
+  final LidarrRepository repository;
+
+  GetAlbumUseCase(this.repository);
+
+  Future<LidarrAlbum> execute(String albumId) => repository.getAlbum(albumId);
 }
 
 class LookupAlbumsUseCase {
@@ -56,7 +67,8 @@ class SearchAlbumUseCase {
 
   SearchAlbumUseCase(this.repository);
 
-  Future<void> execute(String albumId) => repository.searchAlbum(albumId);
+  Future<LidarrCommand> execute(String albumId) =>
+      repository.searchAlbum(albumId);
 }
 
 class SearchArtistDiscographyUseCase {
@@ -64,5 +76,15 @@ class SearchArtistDiscographyUseCase {
 
   SearchArtistDiscographyUseCase(this.repository);
 
-  Future<void> execute(String artistId) => repository.searchArtistDiscography(artistId);
+  Future<LidarrCommand> execute(String artistId) =>
+      repository.searchArtistDiscography(artistId);
+}
+
+class GetLidarrCommandStatusUseCase {
+  final LidarrRepository repository;
+
+  GetLidarrCommandStatusUseCase(this.repository);
+
+  Future<LidarrCommand> execute(String commandId) =>
+      repository.getCommandStatus(commandId);
 }

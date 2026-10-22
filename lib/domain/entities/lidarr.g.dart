@@ -39,6 +39,7 @@ _LidarrAlbum _$LidarrAlbumFromJson(Map<String, dynamic> json) => _LidarrAlbum(
   monitored: json['monitored'] as bool? ?? false,
   isInLibrary: json['isInLibrary'] as bool? ?? false,
   isQueued: json['isQueued'] as bool? ?? false,
+  isSearching: json['isSearching'] as bool? ?? false,
   trackFileCount: (json['trackFileCount'] as num?)?.toInt(),
   trackCount: (json['trackCount'] as num?)?.toInt(),
 );
@@ -53,6 +54,7 @@ Map<String, dynamic> _$LidarrAlbumToJson(_LidarrAlbum instance) =>
       'monitored': instance.monitored,
       'isInLibrary': instance.isInLibrary,
       'isQueued': instance.isQueued,
+      'isSearching': instance.isSearching,
       'trackFileCount': instance.trackFileCount,
       'trackCount': instance.trackCount,
     };

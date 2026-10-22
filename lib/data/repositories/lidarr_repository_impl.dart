@@ -8,29 +8,45 @@ class LidarrRepositoryImpl implements LidarrRepository {
   LidarrRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<LidarrArtist>> searchArtists(String query) => dataSource.searchArtists(query);
+  Future<List<LidarrArtist>> searchArtists(String query) =>
+      dataSource.searchArtists(query);
 
   @override
-  Future<List<LidarrArtist>> getLibraryArtists() => dataSource.getLibraryArtists();
+  Future<List<LidarrArtist>> getLibraryArtists() =>
+      dataSource.getLibraryArtists();
 
   @override
-  Future<LidarrArtist> requestArtist(LidarrArtist artist) => dataSource.requestArtist(artist);
+  Future<LidarrArtist> requestArtist(LidarrArtist artist) =>
+      dataSource.requestArtist(artist);
 
   @override
-  Future<List<LidarrAlbum>> getAlbums(String artistId) => dataSource.getAlbums(artistId);
+  Future<List<LidarrAlbum>> getAlbums(String artistId) =>
+      dataSource.getAlbums(artistId);
 
   @override
-  Future<List<LidarrAlbum>> lookupAlbums(String artistMbid, String artistName) =>
-      dataSource.lookupAlbums(artistMbid, artistName);
+  Future<LidarrAlbum> getAlbum(String albumId) => dataSource.getAlbum(albumId);
 
   @override
-  Future<List<LidarrTrack>> getTracks(String albumId, {bool isQueued = false}) =>
-      dataSource.getTracks(albumId, isQueued: isQueued);
+  Future<List<LidarrAlbum>> lookupAlbums(
+    String artistMbid,
+    String artistName,
+  ) => dataSource.lookupAlbums(artistMbid, artistName);
 
   @override
-  Future<void> searchAlbum(String albumId) => dataSource.searchAlbum(albumId);
+  Future<List<LidarrTrack>> getTracks(
+    String albumId, {
+    bool isQueued = false,
+  }) => dataSource.getTracks(albumId, isQueued: isQueued);
 
   @override
-  Future<void> searchArtistDiscography(String artistId) =>
+  Future<LidarrCommand> searchAlbum(String albumId) =>
+      dataSource.searchAlbum(albumId);
+
+  @override
+  Future<LidarrCommand> searchArtistDiscography(String artistId) =>
       dataSource.searchArtistDiscography(artistId);
+
+  @override
+  Future<LidarrCommand> getCommandStatus(String commandId) =>
+      dataSource.getCommandStatus(commandId);
 }
