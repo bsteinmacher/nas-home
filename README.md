@@ -67,8 +67,6 @@ flutter pub get
 flutter run
 ```
 
-Dependência local: `../design_system` (path no `pubspec.yaml`).
-
 ---
 
 *Desenvolvido por [didizera](https://github.com/didizera)*
