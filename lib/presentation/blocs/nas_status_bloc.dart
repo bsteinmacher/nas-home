@@ -176,9 +176,13 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     }
   }
 
-  Future<void> _fetchData(Emitter<NasStatusState> emit, {required bool forceUpdates}) async {
-    emit(const Loading());
-
+Future<void> _fetchData(Emitter<NasStatusState> emit, {required bool forceUpdates}) async {
+    // Se já temos dados carregados, mantém a UI estável e atualiza em
+    // segundo plano (evita tela de loading quando o backend está lento).
+    final hasData = state is Loaded || state is Updating || state is CheckingUpdate;
+    if (!hasData) {
+      emit(const Loading());
+    }
     final nasUrl = sharedPreferences.getString('nas_url');
     final registryToken = sharedPreferences.getString('registry_token');
 

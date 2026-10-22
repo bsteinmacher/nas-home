@@ -25,35 +25,35 @@ class GetServicesStatusUseCase {
     );
 
     final healthSw = Stopwatch()..start();
-    final updatedServices = <NasService>[];
-
-    for (var service in services) {
+    // Health checks em paralelo: em série, cada serviço offline adicionaria
+    // o timeout completo (2s) ao carregamento inicial.
+    final probed = services.map((service) {
       if (!service.isDeployed || service.port.isEmpty) {
         debugPrint('TIMING: [HEALTH] ${service.name} SKIPPED (not deployed)');
-        updatedServices.add(service.copyWith(isOnline: false));
-        continue;
+        return Future.value(service.copyWith(isOnline: false));
       }
       final hostHeader = _healthHostFor(service.name);
       final probeSw = Stopwatch()..start();
-      final isOnline = await repository.checkServiceStatus(
-        nasUrl,
-        service.port,
-        hostHeader: hostHeader,
-      );
-      probeSw.stop();
-      debugPrint(
-        'TIMING: [HEALTH] ${service.name} :${service.port} '
-        '${isOnline ? "ONLINE" : "OFFLINE"} in ${probeSw.elapsedMilliseconds}ms',
-      );
-      updatedServices.add(service.copyWith(isOnline: isOnline));
-    }
+      return repository
+          .checkServiceStatus(nasUrl, service.port, hostHeader: hostHeader)
+          .then((isOnline) {
+        probeSw.stop();
+        debugPrint(
+          'TIMING: [HEALTH] ${service.name} :${service.port} '
+          '${isOnline ? "ONLINE" : "OFFLINE"} in ${probeSw.elapsedMilliseconds}ms',
+        );
+        return service.copyWith(isOnline: isOnline);
+      });
+    }).toList();
+
+    final updatedServices = await Future.wait(probed);
     healthSw.stop();
 
     totalSw.stop();
     debugPrint(
       'TIMING: [SERVICES] TOTAL ${totalSw.elapsedMilliseconds}ms '
       '(catalog=${catalogSw.elapsedMilliseconds}ms, '
-      'health_seq=${healthSw.elapsedMilliseconds}ms)',
+      'health_parallel=${healthSw.elapsedMilliseconds}ms)',
     );
 
     return updatedServices;
