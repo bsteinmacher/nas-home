@@ -132,8 +132,8 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
         'TIMING: [HOME] check single FAILED after ${sw.elapsedMilliseconds}ms: $e',
       );
       // Keep current dashboard; surface a soft error without wiping state.
-      emit(Error('Falha ao checar update de ${event.serviceName}: $e'));
       emit(Loaded(services, hardwareInfo));
+      emit(Error('Falha ao checar update de ${event.serviceName}: $e'));
     }
   }
 
@@ -147,7 +147,10 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     final nasUrl = sharedPreferences.getString('nas_url');
     final registryToken = sharedPreferences.getString('registry_token');
 
-    if (nasUrl == null || registryToken == null) return;
+    if (nasUrl == null || nasUrl.isEmpty || registryToken == null || registryToken.isEmpty) {
+      emit(const Error('Configure URL e token do NAS nas configurações.'));
+      return;
+    }
 
     // Preserva os dados atuais durante o update para evitar badges fantasmas
     emit(NasStatusState.updating(event.serviceName, currentState.services, currentState.hardwareInfo));
@@ -171,8 +174,9 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
           .toList();
       emit(Loaded(newServices, currentState.hardwareInfo));
     } catch (e) {
-      emit(NasStatusState.error('Update failed: $e'));
+      // Mantém o dashboard e emite o erro por último para ficar visível.
       emit(Loaded(currentState.services, currentState.hardwareInfo));
+      emit(NasStatusState.error('Update failed: $e'));
     }
   }
 
@@ -188,6 +192,10 @@ Future<void> _fetchData(Emitter<NasStatusState> emit, {required bool forceUpdate
 
     if (nasUrl == null || nasUrl.isEmpty) {
       emit(const Error('Configure a URL do NAS nas configurações.'));
+      return;
+    }
+    if (registryToken == null || registryToken.isEmpty) {
+      emit(const Error('Configure o token do Registry nas configurações.'));
       return;
     }
 

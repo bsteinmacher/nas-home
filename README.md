@@ -67,6 +67,39 @@ flutter pub get
 flutter run
 ```
 
+## Testes
+
+Stack: `flutter_test` + `mocktail` (mocks sem codegen) + `bloc_test` (asserts de
+estados dos Blocs) — ferramentas oficiais do ecossistema flutter_bloc.
+
+```bash
+flutter test                # suíte completa
+flutter test test/presentation/nas_status_bloc_test.dart
+```
+
+### Estrutura (espelha lib/)
+
+```
+test/
+  helpers/mocks.dart        # MockNasRepository, MockRegistryDataSource,
+                            # MockSharedPreferences + registerTestFallbackValues()
+  helpers/fixtures.dart     # NasService/HardwareInfo de exemplo reutilizáveis
+  domain/                   # use cases (mocktail nos gates de IO)
+  data/                     # repositories/datasources
+  presentation/             # blocs (blocTest) + widgets (testWidgets)
+```
+
+### Convenções
+
+- Use `MockX extends Mock implements X` de `test/helpers/mocks.dart` (sem fakes
+  manuais ad-hoc e sem codegen do mockito).
+- Chame `registerTestFallbackValues()` no `setUpAll` de todo arquivo de teste.
+- Blocs: use `blocTest` e valide a ordem exata dos estados; `seed:` para partir
+  de um estado pronto.
+- Widgets de UI: bloco real com repositório mockado (`pumpAndSettle` para
+  aguardar o estado `Loaded`).
+- Nenhum teste deve acessar rede ou filesystem real.
+
 ---
 
 *Desenvolvido por [didizera](https://github.com/didizera)*
