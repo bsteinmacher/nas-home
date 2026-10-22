@@ -47,19 +47,17 @@ class ServiceUpdateAction extends StatelessWidget {
 
   void _showUpdateDialog(BuildContext context, NasService service) {
     final updateAvailable = service.updateAvailable;
-    
-    // Versão local amigável ou fallback para Hash curto
-    final currentDisplay = service.localVersion ?? 
-        (service.localDigest?.substring(0, 12) ?? 'UNKNOWN');
-    
-    // Informação remota: Tag + Data (mais útil que o Hash remoto)
-    String remoteDisplay = 'LATEST_STABLE';
-    if (service.remoteLastUpdated != null) {
-      try {
-        final date = DateTime.parse(service.remoteLastUpdated!);
-        remoteDisplay = '${date.day}/${date.month}/${date.year} (RELEASE)';
-      } catch (_) {}
+    // Informação remota: Tag + Data (mais útil que o Hash remoto).
+    // Para imagens ghcr.io não há data de release; mostramos a tag e o
+    // digest remoto curto, que mudam quando há versão nova.
+    String remoteDisplay = 'TAG: ${service.imageTag ?? 'latest'}';
+    final remoteDigest = service.remoteDigest;
+    if (remoteDigest != null && remoteDigest.length >= 12) {
+      remoteDisplay += ' @${remoteDigest.substring(0, 11)}';
     }
+    // Versão local amigável ou fallback para Hash curto
+    final currentDisplay = service.localVersion ??
+        (service.localDigest?.substring(0, 12) ?? 'UNKNOWN');
 
     showDialog(
       context: context,
