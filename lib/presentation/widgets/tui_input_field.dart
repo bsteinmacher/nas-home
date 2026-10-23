@@ -10,6 +10,7 @@ class TuiInputField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final ValueChanged<String>? onSubmitted;
+  final ValueChanged<String>? onChanged;
   final Widget? suffixIcon;
   final TextInputAction? textInputAction;
   final IconData? prefixIcon;
@@ -21,6 +22,7 @@ class TuiInputField extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.onSubmitted,
+    this.onChanged,
     this.suffixIcon,
     this.textInputAction,
     this.prefixIcon,
@@ -43,6 +45,7 @@ class TuiInputField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           onSubmitted: onSubmitted,
+          onChanged: onChanged,
           textInputAction: textInputAction,
           style: AppTypography.baseStyle.copyWith(
             fontSize: 14,

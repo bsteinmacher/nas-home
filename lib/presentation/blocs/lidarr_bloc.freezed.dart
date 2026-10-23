@@ -329,7 +329,7 @@ $LidarrArtistCopyWith<$Res> get artist {
 
 class SearchStatusChanged implements LidarrEvent {
   const SearchStatusChanged(final  List<String> albumIds, this.status, this.message): _albumIds = albumIds;
-
+  
 
  final  List<String> _albumIds;
  List<String> get albumIds {
@@ -863,7 +863,7 @@ as String,
 
 class LidarrSearchUpdated implements LidarrState {
   const LidarrSearchUpdated(final  List<String> albumIds, this.status, this.message): _albumIds = albumIds;
-
+  
 
  final  List<String> _albumIds;
  List<String> get albumIds {

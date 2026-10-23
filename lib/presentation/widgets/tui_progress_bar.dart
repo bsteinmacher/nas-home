@@ -2,12 +2,25 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/theme/app_spacing.dart';
+import 'tui_status_dot.dart';
+
+Color jobStatusDotColor(String status) {
+  switch (status) {
+    case 'done':
+      return AppColors.terminalGreen;
+    case 'error':
+      return Colors.redAccent;
+    default:
+      return AppColors.radarr;
+  }
+}
 
 /// ASCII-style progress bar with terminal aesthetics
 class TuiProgressBar extends StatelessWidget {
   final String label;
   final double percent;
   final String trailing;
+  final Color? statusDot;
   final int totalBars;
 
   const TuiProgressBar({
@@ -15,6 +28,7 @@ class TuiProgressBar extends StatelessWidget {
     required this.label,
     required this.percent,
     required this.trailing,
+    this.statusDot,
     this.totalBars = 20,
   });
 
@@ -92,6 +106,10 @@ class TuiProgressBar extends StatelessWidget {
               trailing,
               style: AppTypography.moduleSublabel.copyWith(color: AppColors.textSecondary),
             ),
+            if (statusDot case final Color dot) ...[
+              const SizedBox(width: AppSpacing.xs),
+              TuiStatusDot(color: dot),
+            ],
           ],
         ),
       ],

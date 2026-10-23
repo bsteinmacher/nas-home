@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../widgets/tui_status_dot.dart';
 
 class ServiceStatusList extends StatelessWidget {
   final List<dynamic> services;
@@ -42,11 +43,7 @@ class ServiceStatusList extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Icons.circle,
-          size: 6,
-          color: dotColor,
-        ),
+        TuiStatusDot(color: dotColor),
         Text(
           ' ${service.name.replaceAll(' ', '_').toUpperCase()}',
           style: AppTypography.moduleSublabel.copyWith(
