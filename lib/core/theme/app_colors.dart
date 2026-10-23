@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// NAS_TERMINAL color palette
+/// NAS_TERMINAL color palette.
+///
+/// Text tokens are opaque so contrast does not depend on the surface behind
+/// them. [textMuted] is the quietest text that still clears 4.5:1 on [surface].
+/// [textDisabled] is only for unavailable controls, which are exempt from that
+/// floor.
 abstract class AppColors {
   // Base background and surface
   static const background = Color(0xFF0F0F0F);
@@ -10,11 +15,16 @@ abstract class AppColors {
   // Terminal brand colors
   static const terminalGreen = Color(0xFF69F0AE); // GreenAccent
   static const terminalMuted = Color(0xFF3D3D3D);
-  
-  // Text hierarchy
-  static const textPrimary = Colors.white;
-  static const textSecondary = Colors.white70;
-  static const textMuted = Colors.white24;
+
+  // Text hierarchy (composited against [surface], then flattened)
+  static const textPrimary = Color(0xFFF2F2F2);
+  static const textSecondary = Color(0xFFBCBCBC); // white70 on surface, 8.7:1
+  static const textMuted = Color(0xFFA3A3A3); // white60 on surface, 6.7:1
+  static const textDisabled = Color(0xFF737373); // white38 on surface
+
+  // Structure, not text
+  static const borderSubtle = Color(0x1AFFFFFF); // white 10%
+  static const barTrack = Color(0x24FFFFFF); // white 14%
 
   // Semantic service colors
   static const seerr = Colors.purpleAccent;
@@ -35,7 +45,9 @@ abstract class AppColors {
   static const git = Color(0xFFF05032);
   static const automationAlt = Color(0xFFE34C26);
   static const flaresolverr = Color(0xFFFBC02D);
-  static const syncthing = Color(0xFF0883D8);
+  static const syncthing = Color(0xFFFFAB40); // orangeAccent, next to download
+  static const offline = Color(0xFFFF5252);
+  static const update = Color(0xFF448AFF);
 
   // Terminal Gradients
   static const terminalGradient = LinearGradient(

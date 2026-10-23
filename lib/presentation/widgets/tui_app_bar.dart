@@ -17,13 +17,20 @@ class TuiAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final label = title.toUpperCase();
     return AppBar(
-      title: Text(
-        title.toUpperCase(),
-        style: AppTypography.terminalTitle.copyWith(color: titleColor),
+      title: Tooltip(
+        message: label,
+        child: Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.title.copyWith(color: titleColor, fontSize: 18),
+        ),
       ),
       leading: IconButton(
         icon: const Icon(Icons.chevron_left),
+        tooltip: 'Voltar',
         onPressed: onLeadingPressed ?? () => Navigator.pop(context),
       ),
       actions: actions,

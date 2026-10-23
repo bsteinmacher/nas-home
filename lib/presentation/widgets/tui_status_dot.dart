@@ -7,6 +7,6 @@ class TuiStatusDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(Icons.circle, size: 6, color: color);
+    return Icon(Icons.circle, size: 10, color: color);
   }
 }

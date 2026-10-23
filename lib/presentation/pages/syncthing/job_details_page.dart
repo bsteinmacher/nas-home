@@ -52,6 +52,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> {
   Widget build(BuildContext context) {
     return ServiceScaffold(
       serviceName: 'JOB',
+      title: _job.listLabel,
       themeColor: AppColors.syncthing,
       onLeadingPressed: () => Navigator.pop(context),
       registryActions: false,
@@ -100,7 +101,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> {
                 padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                 child: Text(
                   name,
-                  style: AppTypography.moduleLabel.copyWith(fontSize: 12),
+                  style: AppTypography.label,
                 ),
               ),
             ),
@@ -131,8 +132,7 @@ class _UrlLine extends StatelessWidget {
             },
             child: Text(
               url,
-              style: AppTypography.moduleLabel.copyWith(
-                fontSize: 12,
+              style: AppTypography.label.copyWith(
                 color: AppColors.syncthing,
                 decoration: TextDecoration.none,
                 decorationColor: Colors.transparent,
@@ -159,7 +159,7 @@ class _InfoLine extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: AppTypography.sectionHeader),
-          Text(value, style: AppTypography.moduleLabel.copyWith(fontSize: 12)),
+          Text(value, style: AppTypography.label),
         ],
       ),
     );

@@ -16,6 +16,7 @@ class ServiceScaffold extends StatelessWidget {
   final VoidCallback? onLeadingPressed;
   final VoidCallback? onRefresh;
   final bool registryActions;
+  final String? title;
 
   const ServiceScaffold({
     super.key,
@@ -26,89 +27,70 @@ class ServiceScaffold extends StatelessWidget {
     this.onLeadingPressed,
     this.onRefresh,
     this.registryActions = true,
+    this.title,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NasStatusBloc, NasStatusState>(
-      listener: (context, state) {
-        state.whenOrNull(
-          updating: (name, services, hardwareInfo) {
-            if (name.toLowerCase() == serviceName.toLowerCase()) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('UPDATE_TASK_QUEUED: $serviceName process started.'),
-                  backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
-                ),
-              );
-            }
-          },
-          error: (message) {
-            if (!message.toLowerCase().contains(serviceName.toLowerCase())) {
-              return;
-            }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
-            );
-          },
+    return BlocBuilder<NasStatusBloc, NasStatusState>(
+      builder: (context, state) {
+        final isCheckingThis = state.maybeWhen(
+          checkingUpdate: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
+          orElse: () => false,
         );
-      },
-      child: BlocBuilder<NasStatusBloc, NasStatusState>(
-        builder: (context, state) {
-          final isCheckingThis = state.maybeWhen(
-            checkingUpdate: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
-            orElse: () => false,
-          );
-          final isUpdatingThis = state.maybeWhen(
-            updating: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
-            orElse: () => false,
-          );
-          final showOverlay = isCheckingThis || isUpdatingThis;
+        final isUpdatingThis = state.maybeWhen(
+          updating: (name, _, _) => name.toLowerCase() == serviceName.toLowerCase(),
+          orElse: () => false,
+        );
+        final showOverlay = isCheckingThis || isUpdatingThis;
 
-          return Scaffold(
-            appBar: TuiAppBar(
-              title: '${serviceName}_REQUEST',
-              titleColor: themeColor,
-              onLeadingPressed: onLeadingPressed,
-              actions: [
-                if (registryActions)
-                  ServiceUpdateAction(serviceName: serviceName, color: themeColor),
-                if (onRefresh != null)
-                  IconButton(
-                    icon: const Icon(Icons.refresh, size: 20),
-                    tooltip: 'Atualizar',
-                    onPressed: onRefresh,
-                  )
-                else if (registryActions)
-                  ServiceRefreshAction(serviceName: serviceName),
-                if (extraActions != null) ...extraActions!,
-              ],
-            ),
-            body: Stack(
-              children: [
-                body,
-                if (showOverlay)
-                  Container(
-                    color: Colors.black.withValues(alpha: 0.7),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const BrailleSpinner(fontSize: 32),
-                          const SizedBox(height: AppSpacing.md),
-                          Text(
-                            isCheckingThis ? 'SYNCING_REGISTRY...' : 'UPDATING_MODULE...',
-                            style: AppTypography.moduleLabel.copyWith(color: themeColor),
-                          ),
-                        ],
+        return Scaffold(
+          appBar: TuiAppBar(
+            title: title ?? serviceName,
+            titleColor: themeColor,
+            onLeadingPressed: onLeadingPressed,
+            actions: [
+              if (registryActions)
+                ServiceUpdateAction(serviceName: serviceName, color: themeColor),
+              if (onRefresh != null)
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: 'Atualizar',
+                  onPressed: onRefresh,
+                )
+              else if (registryActions)
+                ServiceRefreshAction(serviceName: serviceName),
+              if (extraActions != null) ...extraActions!,
+            ],
+          ),
+          body: Stack(
+            children: [
+              body,
+              if (showOverlay)
+                Positioned.fill(
+                  child: AbsorbPointer(
+                    child: ColoredBox(
+                      color: AppColors.background.withValues(alpha: 0.92),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            BrailleSpinner(fontSize: 32, color: themeColor),
+                            const SizedBox(height: AppSpacing.md),
+                            Text(
+                              isCheckingThis ? 'SYNCING_REGISTRY' : 'UPDATING_MODULE',
+                              style: AppTypography.label.copyWith(color: themeColor),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-              ],
-            ),
-          );
-        },
-      ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

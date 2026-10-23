@@ -15,21 +15,33 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '[!] CRITICAL_ERROR: $message',
-            style: AppTypography.moduleLabel.copyWith(color: Colors.redAccent, fontSize: 12),
+            '[ERR] Não foi possível carregar o painel.',
+            style: AppTypography.cardTitle.copyWith(color: AppColors.offline),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.md),
-          TextButton(
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            message,
+            style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          FilledButton(
             onPressed: onRetry,
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.terminalGreen,
+              foregroundColor: Colors.black,
+              minimumSize: const Size(44, 44),
+            ),
             child: Text(
-              '> REBOOT_SYSTEM',
-              style: AppTypography.moduleLabel.copyWith(color: AppColors.terminalGreen),
+              'Tentar de novo',
+              style: AppTypography.label.copyWith(color: Colors.black),
             ),
           ),
         ],

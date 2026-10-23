@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +47,11 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
   final SharedPreferences sharedPreferences;
   final NasRepository nasRepository;
 
+  final StreamController<String> _notices = StreamController<String>.broadcast();
+
+  /// Transient failures that must not replace the dashboard.
+  Stream<String> get notices => _notices.stream;
+
   NasStatusBloc({
     required this.getServicesStatus,
     required this.getHardwareInfo,
@@ -55,6 +62,16 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     on<CheckUpdatesRequested>(_onCheckUpdatesRequested);
     on<CheckServiceUpdateRequested>(_onCheckServiceUpdateRequested);
     on<UpdateServiceRequested>(_onUpdateServiceRequested);
+  }
+
+  void _notify(String message) {
+    if (!_notices.isClosed) _notices.add(message);
+  }
+
+  @override
+  Future<void> close() {
+    _notices.close();
+    return super.close();
   }
 
   Future<void> _onRefreshRequested(
@@ -131,9 +148,10 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
       print(
         'TIMING: [HOME] check single FAILED after ${sw.elapsedMilliseconds}ms: $e',
       );
-      // Keep current dashboard; surface a soft error without wiping state.
       emit(Loaded(services, hardwareInfo));
-      emit(Error('Falha ao checar update de ${event.serviceName}: $e'));
+      _notify(
+        'Falha ao verificar ${event.serviceName}. Confira a conexão e tente de novo.',
+      );
     }
   }
 
@@ -148,7 +166,7 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     final registryToken = sharedPreferences.getString('registry_token');
 
     if (nasUrl == null || nasUrl.isEmpty || registryToken == null || registryToken.isEmpty) {
-      emit(const Error('Configure URL e token do NAS nas configurações.'));
+      _notify('Configure o endereço e o token do NAS nas configurações.');
       return;
     }
 
@@ -174,9 +192,10 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
           .toList();
       emit(Loaded(newServices, currentState.hardwareInfo));
     } catch (e) {
-      // Mantém o dashboard e emite o erro por último para ficar visível.
       emit(Loaded(currentState.services, currentState.hardwareInfo));
-      emit(NasStatusState.error('Update failed: $e'));
+      _notify(
+        'Falha ao atualizar ${event.serviceName}. Tente de novo em instantes.',
+      );
     }
   }
 
@@ -244,6 +263,22 @@ Future<void> _fetchData(Emitter<NasStatusState> emit, {required bool forceUpdate
       print(
         'TIMING: [HOME] refresh FAILED after ${totalSw.elapsedMilliseconds}ms: $e',
       );
+      final current = state;
+      const notice = 'Falha ao atualizar o painel. Puxe para baixo para tentar de novo.';
+      if (current is Loaded) {
+        _notify(notice);
+        return;
+      }
+      if (current is Updating) {
+        emit(Loaded(current.services, current.hardwareInfo));
+        _notify(notice);
+        return;
+      }
+      if (current is CheckingUpdate) {
+        emit(Loaded(current.services, current.hardwareInfo));
+        _notify(notice);
+        return;
+      }
       emit(Error(e.toString()));
     }
   }

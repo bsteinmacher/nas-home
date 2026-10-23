@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_typography.dart';
 
 class BrailleSpinner extends StatefulWidget {
   final double fontSize;
@@ -26,9 +26,15 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
   Timer? _timer;
 
   @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    if (reduceMotion) {
+      _timer?.cancel();
+      _timer = null;
+      return;
+    }
+    _timer ??= Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (mounted) {
         setState(() {
           _currentFrame = (_currentFrame + 1) % _frames.length;
@@ -51,10 +57,10 @@ class _BrailleSpinnerState extends State<BrailleSpinner> {
         child: Text(
           _frames[_currentFrame],
           textAlign: TextAlign.center,
-          style: AppTypography.baseStyle.copyWith(
+          style: GoogleFonts.jetBrainsMono(
             color: widget.color,
             fontSize: widget.fontSize,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

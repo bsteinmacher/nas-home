@@ -7,6 +7,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../domain/entities/lidarr.dart';
 import '../../blocs/lidarr_bloc.dart';
 import '../../widgets/braille_spinner.dart';
+import '../../widgets/tui_toast.dart';
 import '../../widgets/tui_input_field.dart';
 import '../../widgets/service_scaffold.dart';
 import 'artist_albums_page.dart';
@@ -100,17 +101,16 @@ class _LidarrViewState extends State<LidarrView> {
             child: BlocConsumer<LidarrBloc, LidarrState>(
               listener: (context, state) {
                 state.maybeWhen(
-                  success:
-                      (message) => ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(message))),
-                  error:
-                      (message) => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(message),
-                          backgroundColor: Colors.redAccent,
-                        ),
-                      ),
+                  success: (message) => TuiToast.show(
+                    context,
+                    message,
+                    kind: TuiToastKind.success,
+                  ),
+                  error: (message) => TuiToast.show(
+                    context,
+                    message,
+                    kind: TuiToastKind.error,
+                  ),
                   orElse: () {},
                 );
               },
@@ -147,8 +147,8 @@ class _LidarrViewState extends State<LidarrView> {
                           fromSearch
                               ? 'No artists found for this search'
                               : 'Your library is empty. Search for artists to add.',
-                          style: AppTypography.moduleSublabel.copyWith(
-                            fontSize: 14,
+                          style: AppTypography.body.copyWith(
+                            color: AppColors.textSecondary,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -276,9 +276,8 @@ class _ArtistCard extends StatelessWidget {
                   ),
                   child: Text(
                     'LIBRARY',
-                    style: AppTypography.statusBadge.copyWith(
-                      fontSize: 8,
-                      color: Colors.white70,
+                    style: AppTypography.micro.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -296,7 +295,7 @@ class _ArtistCard extends StatelessWidget {
                   children: [
                     Text(
                       artist.artistName,
-                      style: AppTypography.moduleLabel.copyWith(fontSize: 12),
+                      style: AppTypography.label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -305,9 +304,7 @@ class _ArtistCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         artist.disambiguation!,
-                        style: AppTypography.moduleSublabel.copyWith(
-                          fontSize: 9,
-                        ),
+                        style: AppTypography.caption,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -7,6 +7,7 @@ import '../../../domain/entities/lidarr.dart';
 import '../../blocs/lidarr_bloc.dart';
 import '../../widgets/braille_spinner.dart';
 import '../../widgets/service_scaffold.dart';
+import '../../widgets/tui_toast.dart';
 import 'lidarr_status_style.dart';
 
 class AlbumTracksPage extends StatefulWidget {
@@ -64,22 +65,20 @@ class _AlbumTracksPageState extends State<AlbumTracksPage> {
     try {
       await context.read<LidarrBloc>().triggerAlbumSearch(albumId);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Busca enviada ao Lidarr: ${_album.title}'),
-          backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
-        ),
+      TuiToast.show(
+        context,
+        'Busca enviada ao Lidarr: ${_album.title}',
+        kind: TuiToastKind.success,
       );
       setState(_loadTracks);
       await _tracksFuture;
     } catch (e) {
       if (!mounted) return;
       setState(() => _album = _album.copyWith(isSearching: false));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst('Exception: ', '')),
-          backgroundColor: Colors.redAccent,
-        ),
+      TuiToast.show(
+        context,
+        e.toString().replaceFirst('Exception: ', ''),
+        kind: TuiToastKind.error,
       );
     } finally {
       if (mounted) setState(() => _isSearching = false);
@@ -118,14 +117,10 @@ class _AlbumTracksPageState extends State<AlbumTracksPage> {
             _refreshAlbum();
             if (status != 'searching') {
               final isError = status == 'failed' || status == 'not_found';
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  backgroundColor:
-                      isError
-                          ? Colors.orangeAccent.withValues(alpha: 0.9)
-                          : AppColors.terminalGreen.withValues(alpha: 0.8),
-                ),
+              TuiToast.show(
+                context,
+                message,
+                kind: isError ? TuiToastKind.error : TuiToastKind.success,
               );
             }
           },
@@ -296,29 +291,26 @@ class _AlbumTracksPageState extends State<AlbumTracksPage> {
                                 child: Row(
                                   children: [
                                     SizedBox(
-                                      width: 28,
+                                      width: 40,
                                       child: Text(
                                         track.trackNumber.toString().padLeft(
                                           2,
                                           '0',
                                         ),
-                                        style: AppTypography.moduleSublabel
-                                            .copyWith(fontSize: 10),
+                                        style: AppTypography.metric,
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
                                         track.title,
-                                        style: AppTypography.moduleLabel
-                                            .copyWith(fontSize: 12),
+                                        style: AppTypography.label,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     Text(
                                       track.statusLabel,
-                                      style: AppTypography.statusBadge.copyWith(
-                                        fontSize: 8,
+                                      style: AppTypography.micro.copyWith(
                                         color: color,
                                       ),
                                     ),

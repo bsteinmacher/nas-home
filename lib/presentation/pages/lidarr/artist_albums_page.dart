@@ -7,6 +7,7 @@ import '../../../domain/entities/lidarr.dart';
 import '../../blocs/lidarr_bloc.dart';
 import '../../widgets/braille_spinner.dart';
 import '../../widgets/service_scaffold.dart';
+import '../../widgets/tui_toast.dart';
 import 'album_tracks_page.dart';
 import 'lidarr_status_style.dart';
 
@@ -54,20 +55,18 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
     try {
       await context.read<LidarrBloc>().triggerDiscographySearch(artistId);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Busca enviada ao Lidarr para ${_artist.artistName}.'),
-          backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
-        ),
+      TuiToast.show(
+        context,
+        'Busca enviada ao Lidarr para ${_artist.artistName}.',
+        kind: TuiToastKind.success,
       );
       await _refreshAlbums();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst('Exception: ', '')),
-          backgroundColor: Colors.redAccent,
-        ),
+      TuiToast.show(
+        context,
+        e.toString().replaceFirst('Exception: ', ''),
+        kind: TuiToastKind.error,
       );
     } finally {
       if (mounted) setState(() => _isSearchingAll = false);
@@ -119,14 +118,10 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
             _refreshAlbums();
             if (status != 'searching') {
               final isError = status == 'failed' || status == 'not_found';
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  backgroundColor:
-                      isError
-                          ? Colors.orangeAccent.withValues(alpha: 0.9)
-                          : AppColors.terminalGreen.withValues(alpha: 0.8),
-                ),
+              TuiToast.show(
+                context,
+                message,
+                kind: isError ? TuiToastKind.error : TuiToastKind.success,
               );
             }
           },
@@ -173,9 +168,7 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           _artist.disambiguation!,
-                          style: AppTypography.moduleSublabel.copyWith(
-                            fontSize: 11,
-                          ),
+                          style: AppTypography.caption,
                         ),
                       ],
                       const SizedBox(height: AppSpacing.md),
@@ -203,8 +196,8 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
                     child: Center(
                       child: Text(
                         'Nenhum álbum encontrado.',
-                        style: AppTypography.moduleSublabel.copyWith(
-                          fontSize: 14,
+                        style: AppTypography.body.copyWith(
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ),
@@ -247,21 +240,19 @@ class _ArtistAlbumsPageState extends State<ArtistAlbumsPage> {
     try {
       await context.read<LidarrBloc>().triggerAlbumSearch(albumId);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Busca enviada ao Lidarr: ${album.title}'),
-          backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
-        ),
+      TuiToast.show(
+        context,
+        'Busca enviada ao Lidarr: ${album.title}',
+        kind: TuiToastKind.success,
       );
       setState(_loadAlbums);
       await _albumsFuture;
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst('Exception: ', '')),
-          backgroundColor: Colors.redAccent,
-        ),
+      TuiToast.show(
+        context,
+        e.toString().replaceFirst('Exception: ', ''),
+        kind: TuiToastKind.error,
       );
     }
   }
@@ -367,7 +358,7 @@ class _AlbumCard extends StatelessWidget {
                   children: [
                     Text(
                       album.title,
-                      style: AppTypography.moduleLabel.copyWith(fontSize: 12),
+                      style: AppTypography.label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -383,7 +374,7 @@ class _AlbumCard extends StatelessWidget {
                           ),
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 28),
+                          minimumSize: const Size(0, 40),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppSpacing.borderRadius,

@@ -93,17 +93,24 @@ void main() {
       },
     );
 
+    final missingTokenNotices = <String>[];
     blocTest<NasStatusBloc, NasStatusState>(
-      'update sem token configurado emite erro em vez de falhar silenciosamente',
+      'update sem token configurado avisa e mantem o dashboard',
       setUp: () {
+        missingTokenNotices.clear();
         when(() => prefs.getString('registry_token')).thenReturn(null);
       },
       seed: () => Loaded([serviceWithUpdate()], testHardwareInfo),
-      build: buildBloc,
+      build: () {
+        final bloc = buildBloc();
+        bloc.notices.listen(missingTokenNotices.add);
+        return bloc;
+      },
       act: (bloc) => bloc.add(const UpdateServiceRequested('Jellyfin')),
-      expect: () => [isA<Error>()],
+      expect: () => [],
       verify: (bloc) {
-        expect((bloc.state as Error).message, contains("token"));
+        expect(bloc.state, isA<Loaded>());
+        expect(missingTokenNotices.single, contains('token'));
         verifyNever(
           () => repository.updateService(any(), any(), any()),
         );
@@ -162,11 +169,17 @@ void main() {
       },
     );
 
+    final failureNotices = <String>[];
     blocTest<NasStatusBloc, NasStatusState>(
-      'update com falha preserva o dashboard e emite erro visivel por ultimo',
+      'update com falha preserva o dashboard e avisa sem trocar a tela',
       seed: () => Loaded([serviceWithUpdate()], testHardwareInfo),
-      build: buildBloc,
+      build: () {
+        final bloc = buildBloc();
+        bloc.notices.listen(failureNotices.add);
+        return bloc;
+      },
       setUp: () {
+        failureNotices.clear();
         when(
           () => repository.updateService(any(), any(), any()),
         ).thenThrow(Exception('registry down'));
@@ -175,10 +188,10 @@ void main() {
       expect: () => [
         isA<Updating>(),
         isA<Loaded>(),
-        isA<Error>(),
       ],
       verify: (bloc) {
-        expect((bloc.state as Error).message, contains('Update failed'));
+        expect(bloc.state, isA<Loaded>());
+        expect(failureNotices.single, contains('Falha ao atualizar'));
       },
     );
 
