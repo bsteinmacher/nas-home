@@ -3,22 +3,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import '../../data/datasources/seerr_datasource.dart';
 import '../../data/datasources/lidarr_datasource.dart';
+import '../../data/datasources/music_dl_datasource.dart';
 import '../../data/datasources/registry_datasource.dart';
 import '../../data/repositories/seerr_repository_impl.dart';
 import '../../data/repositories/lidarr_repository_impl.dart';
+import '../../data/repositories/music_dl_repository_impl.dart';
 import '../../data/repositories/nas_repository_impl.dart';
 import '../../data/repositories/registry_repository_impl.dart';
 import '../../domain/repositories/seerr_repository.dart';
 import '../../domain/repositories/lidarr_repository.dart';
+import '../../domain/repositories/music_dl_repository.dart';
 import '../../domain/repositories/nas_repository.dart';
 import '../../domain/repositories/registry_repository.dart';
 import '../../domain/usecases/get_services_status.dart';
 import '../../domain/usecases/get_hardware_info.dart';
 import '../../domain/usecases/seerr_usecases.dart';
 import '../../domain/usecases/lidarr_usecases.dart';
+import '../../domain/usecases/music_dl_usecases.dart';
 import '../../domain/usecases/sync_registry_config.dart';
 import '../../presentation/blocs/seerr_bloc.dart';
 import '../../presentation/blocs/lidarr_bloc.dart';
+import '../../presentation/blocs/music_dl_bloc.dart';
 import '../../presentation/blocs/nas_status_bloc.dart';
 
 final sl = GetIt.instance;
@@ -51,6 +56,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<LidarrRepository>(() => LidarrRepositoryImpl(sl()));
 
+  sl.registerLazySingleton<MusicDlDataSource>(
+    () => MusicDlDataSourceImpl(dio: sl(), sharedPreferences: sl()),
+  );
+  sl.registerLazySingleton<MusicDlRepository>(
+    () => MusicDlRepositoryImpl(sl()),
+  );
+
   //! Domain
   sl.registerLazySingleton(() => GetServicesStatusUseCase(sl()));
   sl.registerLazySingleton(() => GetHardwareInfoUseCase(sl()));
@@ -71,6 +83,14 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchAlbumUseCase(sl()));
   sl.registerLazySingleton(() => SearchArtistDiscographyUseCase(sl()));
   sl.registerLazySingleton(() => GetLidarrCommandStatusUseCase(sl()));
+
+  sl.registerLazySingleton(() => GetMusicFoldersUseCase(sl()));
+  sl.registerLazySingleton(() => CreateMusicFolderUseCase(sl()));
+  sl.registerLazySingleton(() => GetMusicJobsUseCase(sl()));
+  sl.registerLazySingleton(() => GetMusicJobUseCase(sl()));
+  sl.registerLazySingleton(() => InspectMusicUrlUseCase(sl()));
+  sl.registerLazySingleton(() => CreateMusicJobUseCase(sl()));
+  sl.registerLazySingleton(() => ResyncMusicFolderUseCase(sl()));
 
   //! Presentation
   sl.registerFactory(
@@ -102,6 +122,16 @@ Future<void> init() async {
       searchArtistDiscography: sl(),
       getCommandStatus: sl(),
       sharedPreferences: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => MusicDlBloc(
+      getFolders: sl(),
+      createFolder: sl(),
+      getJobs: sl(),
+      inspectUrl: sl(),
+      createJob: sl(),
+      resyncFolder: sl(),
     ),
   );
 }

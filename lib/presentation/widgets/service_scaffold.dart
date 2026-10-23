@@ -14,6 +14,8 @@ class ServiceScaffold extends StatelessWidget {
   final Widget body;
   final List<Widget>? extraActions;
   final VoidCallback? onLeadingPressed;
+  final VoidCallback? onRefresh;
+  final bool registryActions;
 
   const ServiceScaffold({
     super.key,
@@ -22,6 +24,8 @@ class ServiceScaffold extends StatelessWidget {
     required this.body,
     this.extraActions,
     this.onLeadingPressed,
+    this.onRefresh,
+    this.registryActions = true,
   });
 
   @override
@@ -40,6 +44,9 @@ class ServiceScaffold extends StatelessWidget {
             }
           },
           error: (message) {
+            if (!message.toLowerCase().contains(serviceName.toLowerCase())) {
+              return;
+            }
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
             );
@@ -64,8 +71,16 @@ class ServiceScaffold extends StatelessWidget {
               titleColor: themeColor,
               onLeadingPressed: onLeadingPressed,
               actions: [
-                ServiceUpdateAction(serviceName: serviceName, color: themeColor),
-                ServiceRefreshAction(serviceName: serviceName),
+                if (registryActions)
+                  ServiceUpdateAction(serviceName: serviceName, color: themeColor),
+                if (onRefresh != null)
+                  IconButton(
+                    icon: const Icon(Icons.refresh, size: 20),
+                    tooltip: 'Atualizar',
+                    onPressed: onRefresh,
+                  )
+                else if (registryActions)
+                  ServiceRefreshAction(serviceName: serviceName),
                 if (extraActions != null) ...extraActions!,
               ],
             ),
