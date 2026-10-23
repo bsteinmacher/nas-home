@@ -58,16 +58,12 @@ class AppTheme {
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.fixed,
-        backgroundColor: AppColors.surfaceLighter,
+        behavior: SnackBarBehavior.floating,
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
         contentTextStyle: AppTypography.body.copyWith(fontWeight: FontWeight.w500),
         actionTextColor: AppColors.textPrimary,
-        elevation: 16,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppSpacing.borderRadius),
-          ),
-        ),
+        elevation: 0,
       ),
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.surface,

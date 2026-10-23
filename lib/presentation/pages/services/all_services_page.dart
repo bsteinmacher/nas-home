@@ -91,11 +91,12 @@ class _ServiceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meta = serviceMetaFor(service.name);
-    final (status, color) = switch ((service.isDeployed, service.isOnline, service.updateAvailable)) {
-      (false, _, _) => ('NOT_DEPLOYED', AppColors.textMuted),
-      (true, false, _) => ('OFFLINE', AppColors.offline),
-      (true, true, true) => ('UPDATE', AppColors.update),
-      _ => ('ONLINE', AppColors.terminalGreen),
+    final iconColor = service.isDeployed ? meta.color : AppColors.textMuted;
+    final statusColor = switch ((service.isDeployed, service.isOnline, service.updateAvailable)) {
+      (false, _, _) => AppColors.textMuted,
+      (true, false, _) => AppColors.offline,
+      (true, true, true) => AppColors.update,
+      _ => AppColors.terminalGreen,
     };
 
     return Material(
@@ -113,18 +114,26 @@ class _ServiceRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                TuiStatusDot(color: color),
-                const SizedBox(width: AppSpacing.sm),
+                Icon(meta.icon, color: iconColor, size: 24),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(meta.label, style: AppTypography.label),
+                      Text(
+                        '// ${meta.label}',
+                        style: AppTypography.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         meta.description,
-                        style: AppTypography.caption,
+                        style: AppTypography.micro.copyWith(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -132,10 +141,7 @@ class _ServiceRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  status,
-                  style: AppTypography.micro.copyWith(color: color),
-                ),
+                TuiStatusDot(color: statusColor),
               ],
             ),
           ),

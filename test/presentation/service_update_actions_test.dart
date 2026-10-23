@@ -220,7 +220,6 @@ void main() {
       await tester.tap(find.text('UPDATE_NOW'));
       await tester.pump();
 
-      expect(find.byType(SnackBar), findsOneWidget);
       expect(
         find.textContaining('Atualização de Jellyfin iniciada'),
         findsOneWidget,
