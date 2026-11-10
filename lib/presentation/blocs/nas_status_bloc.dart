@@ -21,6 +21,18 @@ abstract class NasStatusEvent with _$NasStatusEvent {
   const factory NasStatusEvent.checkServiceUpdateRequested(String serviceName) =
       CheckServiceUpdateRequested;
   const factory NasStatusEvent.updateServiceRequested(String serviceName) = UpdateServiceRequested;
+  const factory NasStatusEvent.updateAllRequested() = UpdateAllRequested;
+}
+
+enum NasNoticeKind { info, success, error }
+
+class NasNotice {
+  final String message;
+  final NasNoticeKind kind;
+
+  const NasNotice(this.message, {this.kind = NasNoticeKind.error});
+
+  bool get isError => kind == NasNoticeKind.error;
 }
 
 @freezed
@@ -47,10 +59,10 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
   final SharedPreferences sharedPreferences;
   final NasRepository nasRepository;
 
-  final StreamController<String> _notices = StreamController<String>.broadcast();
+  final StreamController<NasNotice> _notices = StreamController<NasNotice>.broadcast();
 
   /// Transient failures that must not replace the dashboard.
-  Stream<String> get notices => _notices.stream;
+  Stream<NasNotice> get notices => _notices.stream;
 
   NasStatusBloc({
     required this.getServicesStatus,
@@ -62,10 +74,13 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
     on<CheckUpdatesRequested>(_onCheckUpdatesRequested);
     on<CheckServiceUpdateRequested>(_onCheckServiceUpdateRequested);
     on<UpdateServiceRequested>(_onUpdateServiceRequested);
+    on<UpdateAllRequested>(_onUpdateAllRequested);
   }
 
-  void _notify(String message) {
-    if (!_notices.isClosed) _notices.add(message);
+  void _notify(String message, {NasNoticeKind kind = NasNoticeKind.error}) {
+    if (!_notices.isClosed) {
+      _notices.add(NasNotice(message, kind: kind));
+    }
   }
 
   @override
@@ -170,32 +185,100 @@ class NasStatusBloc extends Bloc<NasStatusEvent, NasStatusState> {
       return;
     }
 
-    // Preserva os dados atuais durante o update para evitar badges fantasmas
-    emit(NasStatusState.updating(event.serviceName, currentState.services, currentState.hardwareInfo));
+    final next = await _runUpdate(
+      serviceName: event.serviceName,
+      services: currentState.services,
+      hardwareInfo: currentState.hardwareInfo,
+      nasUrl: nasUrl,
+      registryToken: registryToken,
+      emit: emit,
+    );
+    emit(Loaded(next ?? currentState.services, currentState.hardwareInfo));
+  }
 
+  Future<void> _onUpdateAllRequested(
+    UpdateAllRequested event,
+    Emitter<NasStatusState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! Loaded) return;
+
+    final nasUrl = sharedPreferences.getString('nas_url');
+    final registryToken = sharedPreferences.getString('registry_token');
+    if (nasUrl == null || nasUrl.isEmpty || registryToken == null || registryToken.isEmpty) {
+      _notify('Configure o endereço e o token do NAS nas configurações.');
+      return;
+    }
+
+    final pending = currentState.services
+        .where((service) => service.isDeployed && service.updateAvailable)
+        .map((service) => service.name)
+        .toList();
+    if (pending.isEmpty) return;
+
+    var services = currentState.services;
+    var updated = 0;
+    for (final name in pending) {
+      _notify(
+        'Atualizando ${name.toUpperCase()}.',
+        kind: NasNoticeKind.info,
+      );
+      final next = await _runUpdate(
+        serviceName: name,
+        services: services,
+        hardwareInfo: currentState.hardwareInfo,
+        nasUrl: nasUrl,
+        registryToken: registryToken,
+        emit: emit,
+      );
+      if (next != null) {
+        services = next;
+        updated++;
+      }
+    }
+
+    emit(Loaded(services, currentState.hardwareInfo));
+    final total = pending.length;
+    if (updated == total) {
+      _notify(
+        total == 1 ? '1 serviço atualizado.' : '$total serviços atualizados.',
+        kind: NasNoticeKind.success,
+      );
+    } else {
+      _notify('$updated de $total atualizados.');
+    }
+  }
+
+  /// Runs one image update. Returns the refreshed list, or null on failure.
+  Future<List<NasService>?> _runUpdate({
+    required String serviceName,
+    required List<NasService> services,
+    required HardwareInfo hardwareInfo,
+    required String nasUrl,
+    required String registryToken,
+    required Emitter<NasStatusState> emit,
+  }) async {
+    emit(NasStatusState.updating(serviceName, services, hardwareInfo));
     try {
-      await nasRepository.updateService(nasUrl, registryToken, event.serviceName);
-      // Aguarda o container respirar e checa só este serviço
+      await nasRepository.updateService(nasUrl, registryToken, serviceName);
       await Future.delayed(const Duration(seconds: 5));
 
-      final current = currentState.services.firstWhere(
-        (s) => s.name.toLowerCase() == event.serviceName.toLowerCase(),
-        orElse: () => NasService(name: event.serviceName, port: '', description: ''),
+      final current = services.firstWhere(
+        (service) => service.name.toLowerCase() == serviceName.toLowerCase(),
+        orElse: () => NasService(name: serviceName, port: '', description: ''),
       );
       final refreshed = await nasRepository.refreshServiceUpdateInfo(
         nasUrl,
         registryToken,
         current,
       );
-      final newServices = currentState.services
-          .map((s) => s.name.toLowerCase() == event.serviceName.toLowerCase() ? refreshed : s)
+      return services
+          .map((service) =>
+              service.name.toLowerCase() == serviceName.toLowerCase() ? refreshed : service)
           .toList();
-      emit(Loaded(newServices, currentState.hardwareInfo));
     } catch (e) {
-      emit(Loaded(currentState.services, currentState.hardwareInfo));
-      _notify(
-        'Falha ao atualizar ${event.serviceName}. Tente de novo em instantes.',
-      );
+      _notify('Falha ao atualizar $serviceName. Tente de novo em instantes.');
+      return null;
     }
   }
 

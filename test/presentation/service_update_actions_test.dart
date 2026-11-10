@@ -268,7 +268,7 @@ void main() {
   });
 
   group('AttentionPanel', () {
-    testWidgets('lista update e offline, e omite quem esta saudavel',
+    testWidgets('lista so offline e omite update e quem esta saudavel',
         (tester) async {
       final services = [
         serviceWithUpdate().copyWith(isOnline: true),
@@ -277,22 +277,24 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        BlocProvider(
-          create: (_) => buildBloc(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: AttentionPanel(services: services),
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                UpdateNotice(services: services),
+                AttentionPanel(services: services),
+              ],
             ),
           ),
         ),
       );
 
-      expect(find.text('UPDATE'), findsOneWidget);
+      expect(find.text('1 atualização disponível'), findsOneWidget);
+      expect(find.text('UPDATE'), findsNothing);
       expect(find.text('[OFFLINE]'), findsOneWidget);
-      expect(find.text('JELLYFIN'), findsOneWidget);
+      expect(find.text('JELLYFIN'), findsNothing);
       expect(find.text('NGINX_PROXY_MANAGER'), findsOneWidget);
       expect(find.textContaining('NEXTCLOUD'), findsNothing);
-      expect(find.textContaining('NO_UPDATES'), findsNothing);
     });
 
     testWidgets('sem pendencias nao ocupa a tela', (tester) async {
@@ -349,7 +351,7 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
-      expect(find.text('SEERR'), findsWidgets);
+      expect(find.text('SEERR'), findsOneWidget);
       expect(find.text('LIDARR'), findsOneWidget);
       expect(find.text('MUSIC_DL'), findsWidgets);
     });

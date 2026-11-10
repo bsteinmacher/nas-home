@@ -45,14 +45,22 @@ class _NasStatusNotices extends StatefulWidget {
 }
 
 class _NasStatusNoticesState extends State<_NasStatusNotices> {
-  StreamSubscription<String>? _subscription;
+  StreamSubscription<NasNotice>? _subscription;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _subscription ??= context.read<NasStatusBloc>().notices.listen((message) {
+    _subscription ??= context.read<NasStatusBloc>().notices.listen((notice) {
       if (!mounted) return;
-      TuiToast.show(context, message, kind: TuiToastKind.error);
+      TuiToast.show(
+        context,
+        notice.message,
+        kind: switch (notice.kind) {
+          NasNoticeKind.info => TuiToastKind.info,
+          NasNoticeKind.success => TuiToastKind.success,
+          NasNoticeKind.error => TuiToastKind.error,
+        },
+      );
     });
   }
 

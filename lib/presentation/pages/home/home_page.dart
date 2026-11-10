@@ -147,6 +147,7 @@ class HomeView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          UpdateNotice(services: services),
           Text('// HARDWARE', style: AppTypography.sectionHeader),
           const SizedBox(height: AppSpacing.sm),
           HardwareResourcesCard(info: hardwareInfo),

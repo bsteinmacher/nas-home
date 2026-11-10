@@ -8,6 +8,7 @@ import '../../blocs/nas_status_bloc.dart';
 import '../../service_catalog.dart';
 import '../../widgets/braille_spinner.dart';
 import '../../widgets/service_actions.dart';
+import '../../widgets/update_action_button.dart';
 
 Future<void> showServiceInfoSheet(BuildContext context, NasService service) {
   return showModalBottomSheet<void>(
@@ -133,8 +134,7 @@ class ServiceInfoSheet extends StatelessWidget {
                   runSpacing: AppSpacing.sm,
                   children: [
                     if (service.isDeployed && service.updateAvailable)
-                      _SheetButton(
-                        label: 'UPDATE',
+                      UpdateActionButton(
                         onPressed: updating
                             ? null
                             : () => showServiceUpdateDialog(context, service, meta.color),
@@ -183,11 +183,17 @@ class _SheetButton extends StatelessWidget {
         backgroundColor: accent,
         foregroundColor: Colors.black,
         minimumSize: const Size(44, 44),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        ),
         textStyle: AppTypography.micro,
       ),
       child: Text(
         label,
-        style: AppTypography.micro.copyWith(color: Colors.black),
+        style: AppTypography.micro.copyWith(
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

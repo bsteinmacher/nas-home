@@ -55,14 +55,15 @@ extension NasStatusEventPatterns on NasStatusEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RefreshRequested value)?  refreshRequested,TResult Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult Function( CheckServiceUpdateRequested value)?  checkServiceUpdateRequested,TResult Function( UpdateServiceRequested value)?  updateServiceRequested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RefreshRequested value)?  refreshRequested,TResult Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult Function( CheckServiceUpdateRequested value)?  checkServiceUpdateRequested,TResult Function( UpdateServiceRequested value)?  updateServiceRequested,TResult Function( UpdateAllRequested value)?  updateAllRequested,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
 return refreshRequested(_that);case CheckUpdatesRequested() when checkUpdatesRequested != null:
 return checkUpdatesRequested(_that);case CheckServiceUpdateRequested() when checkServiceUpdateRequested != null:
 return checkServiceUpdateRequested(_that);case UpdateServiceRequested() when updateServiceRequested != null:
-return updateServiceRequested(_that);case _:
+return updateServiceRequested(_that);case UpdateAllRequested() when updateAllRequested != null:
+return updateAllRequested(_that);case _:
   return orElse();
 
 }
@@ -80,14 +81,15 @@ return updateServiceRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RefreshRequested value)  refreshRequested,required TResult Function( CheckUpdatesRequested value)  checkUpdatesRequested,required TResult Function( CheckServiceUpdateRequested value)  checkServiceUpdateRequested,required TResult Function( UpdateServiceRequested value)  updateServiceRequested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RefreshRequested value)  refreshRequested,required TResult Function( CheckUpdatesRequested value)  checkUpdatesRequested,required TResult Function( CheckServiceUpdateRequested value)  checkServiceUpdateRequested,required TResult Function( UpdateServiceRequested value)  updateServiceRequested,required TResult Function( UpdateAllRequested value)  updateAllRequested,}){
 final _that = this;
 switch (_that) {
 case RefreshRequested():
 return refreshRequested(_that);case CheckUpdatesRequested():
 return checkUpdatesRequested(_that);case CheckServiceUpdateRequested():
 return checkServiceUpdateRequested(_that);case UpdateServiceRequested():
-return updateServiceRequested(_that);case _:
+return updateServiceRequested(_that);case UpdateAllRequested():
+return updateAllRequested(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -104,14 +106,15 @@ return updateServiceRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RefreshRequested value)?  refreshRequested,TResult? Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult? Function( CheckServiceUpdateRequested value)?  checkServiceUpdateRequested,TResult? Function( UpdateServiceRequested value)?  updateServiceRequested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RefreshRequested value)?  refreshRequested,TResult? Function( CheckUpdatesRequested value)?  checkUpdatesRequested,TResult? Function( CheckServiceUpdateRequested value)?  checkServiceUpdateRequested,TResult? Function( UpdateServiceRequested value)?  updateServiceRequested,TResult? Function( UpdateAllRequested value)?  updateAllRequested,}){
 final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
 return refreshRequested(_that);case CheckUpdatesRequested() when checkUpdatesRequested != null:
 return checkUpdatesRequested(_that);case CheckServiceUpdateRequested() when checkServiceUpdateRequested != null:
 return checkServiceUpdateRequested(_that);case UpdateServiceRequested() when updateServiceRequested != null:
-return updateServiceRequested(_that);case _:
+return updateServiceRequested(_that);case UpdateAllRequested() when updateAllRequested != null:
+return updateAllRequested(_that);case _:
   return null;
 
 }
@@ -128,13 +131,14 @@ return updateServiceRequested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  refreshRequested,TResult Function()?  checkUpdatesRequested,TResult Function( String serviceName)?  checkServiceUpdateRequested,TResult Function( String serviceName)?  updateServiceRequested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  refreshRequested,TResult Function()?  checkUpdatesRequested,TResult Function( String serviceName)?  checkServiceUpdateRequested,TResult Function( String serviceName)?  updateServiceRequested,TResult Function()?  updateAllRequested,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
 return refreshRequested();case CheckUpdatesRequested() when checkUpdatesRequested != null:
 return checkUpdatesRequested();case CheckServiceUpdateRequested() when checkServiceUpdateRequested != null:
 return checkServiceUpdateRequested(_that.serviceName);case UpdateServiceRequested() when updateServiceRequested != null:
-return updateServiceRequested(_that.serviceName);case _:
+return updateServiceRequested(_that.serviceName);case UpdateAllRequested() when updateAllRequested != null:
+return updateAllRequested();case _:
   return orElse();
 
 }
@@ -152,13 +156,14 @@ return updateServiceRequested(_that.serviceName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  refreshRequested,required TResult Function()  checkUpdatesRequested,required TResult Function( String serviceName)  checkServiceUpdateRequested,required TResult Function( String serviceName)  updateServiceRequested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  refreshRequested,required TResult Function()  checkUpdatesRequested,required TResult Function( String serviceName)  checkServiceUpdateRequested,required TResult Function( String serviceName)  updateServiceRequested,required TResult Function()  updateAllRequested,}) {final _that = this;
 switch (_that) {
 case RefreshRequested():
 return refreshRequested();case CheckUpdatesRequested():
 return checkUpdatesRequested();case CheckServiceUpdateRequested():
 return checkServiceUpdateRequested(_that.serviceName);case UpdateServiceRequested():
-return updateServiceRequested(_that.serviceName);case _:
+return updateServiceRequested(_that.serviceName);case UpdateAllRequested():
+return updateAllRequested();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +180,14 @@ return updateServiceRequested(_that.serviceName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  refreshRequested,TResult? Function()?  checkUpdatesRequested,TResult? Function( String serviceName)?  checkServiceUpdateRequested,TResult? Function( String serviceName)?  updateServiceRequested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  refreshRequested,TResult? Function()?  checkUpdatesRequested,TResult? Function( String serviceName)?  checkServiceUpdateRequested,TResult? Function( String serviceName)?  updateServiceRequested,TResult? Function()?  updateAllRequested,}) {final _that = this;
 switch (_that) {
 case RefreshRequested() when refreshRequested != null:
 return refreshRequested();case CheckUpdatesRequested() when checkUpdatesRequested != null:
 return checkUpdatesRequested();case CheckServiceUpdateRequested() when checkServiceUpdateRequested != null:
 return checkServiceUpdateRequested(_that.serviceName);case UpdateServiceRequested() when updateServiceRequested != null:
-return updateServiceRequested(_that.serviceName);case _:
+return updateServiceRequested(_that.serviceName);case UpdateAllRequested() when updateAllRequested != null:
+return updateAllRequested();case _:
   return null;
 
 }
@@ -384,6 +390,38 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class UpdateAllRequested implements NasStatusEvent {
+  const UpdateAllRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateAllRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'NasStatusEvent.updateAllRequested()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 mixin _$NasStatusState {

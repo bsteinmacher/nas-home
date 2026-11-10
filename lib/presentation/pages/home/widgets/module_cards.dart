@@ -98,9 +98,13 @@ class _ModuleCard extends StatelessWidget {
                     ),
                     if (service.updateAvailable) ...[
                       const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'UPDATE',
-                        style: AppTypography.micro.copyWith(color: AppColors.update),
+                      const Tooltip(
+                        message: 'Atualização disponível',
+                        child: Icon(
+                          Icons.system_update_alt,
+                          color: AppColors.update,
+                          size: 18,
+                        ),
                       ),
                     ],
                   ],

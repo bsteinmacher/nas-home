@@ -4,7 +4,72 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../domain/entities/nas_service.dart';
 import '../../../service_catalog.dart';
-import '../../../widgets/service_actions.dart';
+import '../../services/all_services_page.dart';
+
+class UpdateNotice extends StatelessWidget {
+  final List<NasService> services;
+
+  const UpdateNotice({super.key, required this.services});
+
+  @override
+  Widget build(BuildContext context) {
+    final count = services
+        .where((service) => service.isDeployed && service.updateAvailable)
+        .length;
+    if (count == 0) return const SizedBox.shrink();
+
+    final label = count == 1
+        ? '1 atualização disponível'
+        : '$count atualizações disponíveis';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      child: Material(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AllServicesPage()),
+            );
+          },
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 56),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+              border: Border.all(color: AppColors.update.withValues(alpha: 0.45)),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.system_update_alt,
+                  color: AppColors.update,
+                  size: 22,
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: AppTypography.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: AppColors.update),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class AttentionPanel extends StatelessWidget {
   final List<NasService> services;
@@ -13,46 +78,36 @@ class AttentionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final attention = services.where((service) {
-      if (!service.isDeployed) return false;
-      return !service.isOnline || service.updateAvailable;
+    final offline = services.where((service) {
+      return service.isDeployed && !service.isOnline;
     }).toList()
-      ..sort((a, b) {
-        final aOffline = !a.isOnline;
-        final bOffline = !b.isOnline;
-        if (aOffline != bOffline) return aOffline ? -1 : 1;
-        return a.name.compareTo(b.name);
-      });
+      ..sort((a, b) => a.name.compareTo(b.name));
 
-    if (attention.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (offline.isEmpty) return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...attention.map((service) => _AttentionRow(service: service)),
+          ...offline.map((service) => _OfflineRow(service: service)),
         ],
       ),
     );
   }
 }
 
-class _AttentionRow extends StatelessWidget {
+class _OfflineRow extends StatelessWidget {
   final NasService service;
 
-  const _AttentionRow({required this.service});
+  const _OfflineRow({required this.service});
 
   @override
   Widget build(BuildContext context) {
     final meta = serviceMetaFor(service.name);
-    final offline = !service.isOnline;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm + AppSpacing.xs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -60,55 +115,19 @@ class _AttentionRow extends StatelessWidget {
               children: [
                 Text(meta.label, style: AppTypography.label),
                 const SizedBox(height: AppSpacing.xs),
-                if (service.updateAvailable)
-                  Text(
-                    '${localVersionLabel(service)} → ${remoteVersionLabel(service)}',
-                    style: AppTypography.caption,
-                  )
-                else
-                  Text(
-                    'Sem resposta neste host.',
-                    style: AppTypography.caption,
-                  ),
+                Text(
+                  'Sem resposta neste host.',
+                  style: AppTypography.caption,
+                ),
               ],
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          if (service.updateAvailable)
-            _UpdateButton(service: service, color: meta.color)
-          else if (offline)
-            Text(
-              '[OFFLINE]',
-              style: AppTypography.micro.copyWith(color: AppColors.offline),
-            ),
+          Text(
+            '[OFFLINE]',
+            style: AppTypography.micro.copyWith(color: AppColors.offline),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _UpdateButton extends StatelessWidget {
-  final NasService service;
-  final Color color;
-
-  const _UpdateButton({required this.service, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => showServiceUpdateDialog(context, service, color),
-      style: TextButton.styleFrom(
-        foregroundColor: AppColors.update,
-        minimumSize: const Size(44, 44),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        side: const BorderSide(color: AppColors.update),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-        ),
-      ),
-      child: Text(
-        'UPDATE',
-        style: AppTypography.micro.copyWith(color: AppColors.update),
       ),
     );
   }
