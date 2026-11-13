@@ -15,23 +15,28 @@ class HardwareResourcesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hot = info.temperature > 60;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-        border: Border.all(color: AppColors.textMuted.withValues(alpha: 0.1)),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.dns, color: AppColors.terminalGreen, size: 14),
+              const Icon(Icons.dns, color: AppColors.terminalGreen, size: 20),
               const SizedBox(width: AppSpacing.sm),
-              Text(
-                'HOST: ${info.hostname}',
-                style: AppTypography.moduleLabel.copyWith(fontSize: 12),
+              Expanded(
+                child: Text(
+                  'HOST: ${info.hostname}',
+                  style: AppTypography.cardTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -44,20 +49,23 @@ class HardwareResourcesCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
           TuiProgressBar(
             label: 'RAM_USAGE',
-            percent: info.ramUsed / info.ramTotal,
-            trailing: '${info.ramUsed.toStringAsFixed(1)}GB/${info.ramTotal.toStringAsFixed(1)}GB',
+            percent: info.ramTotal > 0 ? info.ramUsed / info.ramTotal : 0,
+            trailing:
+                '${info.ramUsed.toStringAsFixed(1)}GB/${info.ramTotal.toStringAsFixed(1)}GB',
           ),
           const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
           TuiProgressBar(
             label: 'SSD_SYSTEM',
             percent: info.ssdTotal > 0 ? info.ssdUsed / info.ssdTotal : 0,
-            trailing: '${info.ssdUsed.toStringAsFixed(1)}GB/${info.ssdTotal.toStringAsFixed(0)}GB',
+            trailing:
+                '${info.ssdUsed.toStringAsFixed(1)}GB/${info.ssdTotal.toStringAsFixed(0)}GB',
           ),
           const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
           TuiProgressBar(
             label: 'HDD_DATA',
             percent: info.hddTotal > 0 ? info.hddUsed / info.hddTotal : 0,
-            trailing: '${info.hddUsed.toStringAsFixed(0)}GB/${(info.hddTotal / 1024).toStringAsFixed(1)}TB',
+            trailing:
+                '${info.hddUsed.toStringAsFixed(0)}GB/${(info.hddTotal / 1024).toStringAsFixed(1)}TB',
           ),
           const SizedBox(height: AppSpacing.md),
           Row(
@@ -66,35 +74,32 @@ class HardwareResourcesCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.xs),
               Text(
                 '${info.downloadSpeed.toStringAsFixed(1)} MB/s',
-                style: AppTypography.baseStyle.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 10.5,
-                ),
+                style: AppTypography.metric,
               ),
               const SizedBox(width: AppSpacing.lg),
               const Icon(Icons.arrow_upward, color: AppColors.upload, size: 18),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 '${info.uploadSpeed.toStringAsFixed(1)} MB/s',
-                style: AppTypography.baseStyle.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 10.5,
-                ),
+                style: AppTypography.metric,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'UPTIME: ${info.uptime}',
-                style: AppTypography.moduleSublabel.copyWith(color: AppColors.textMuted),
+              Expanded(
+                child: Text(
+                  'UPTIME ${info.uptime}',
+                  style: AppTypography.caption,
+                ),
               ),
               Text(
-                'TEMP: ${info.temperature.toStringAsFixed(0)}°C',
-                style: AppTypography.moduleSublabel.copyWith(
-                  color: info.temperature > 60 ? Colors.redAccent : AppColors.download.withValues(alpha: 0.6),
+                hot
+                    ? 'TEMP ${info.temperature.toStringAsFixed(0)}°C HOT'
+                    : 'TEMP ${info.temperature.toStringAsFixed(0)}°C OK',
+                style: AppTypography.caption.copyWith(
+                  color: hot ? AppColors.offline : AppColors.textSecondary,
                 ),
               ),
             ],

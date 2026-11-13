@@ -6,6 +6,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/usecases/sync_registry_config.dart';
 import '../../widgets/tui_input_field.dart';
+import '../../widgets/tui_toast.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -33,8 +34,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _syncFromRegistry() async {
     if (_nasUrlController.text.isEmpty || _registryTokenController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide NAS URL and Registry Token')),
+      TuiToast.show(
+        context,
+        'Informe o endereço do NAS e o token do registry.',
+        kind: TuiToastKind.error,
       );
       return;
     }
@@ -53,14 +56,18 @@ class _SettingsPageState extends State<SettingsPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('API Keys synced successfully!')),
+        TuiToast.show(
+          context,
+          'Chaves sincronizadas.',
+          kind: TuiToastKind.success,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sync failed: $e')),
+        TuiToast.show(
+          context,
+          'Falha ao sincronizar. Confira o token do registry e tente de novo.',
+          kind: TuiToastKind.error,
         );
       }
     } finally {
@@ -76,8 +83,10 @@ class _SettingsPageState extends State<SettingsPage> {
     await _prefs.setString('lidarr_api_key', _lidarrKeyController.text);
     
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Settings saved successfully!')),
+      TuiToast.show(
+        context,
+        'Configurações salvas.',
+        kind: TuiToastKind.success,
       );
       Navigator.pop(context);
     }
@@ -164,11 +173,11 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('SYSTEM_NOTICE:', style: AppTypography.statusBadge.copyWith(color: AppColors.textMuted)),
+                  Text('SYSTEM_NOTICE', style: AppTypography.micro.copyWith(color: AppColors.textMuted)),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Manual configuration keys have been deprecated. Use the Registry discovery service to manage all API integrations automatically.',
-                    style: AppTypography.moduleSublabel,
+                    'As chaves manuais foram desativadas. Use o registry para sincronizar as integrações.',
+                    style: AppTypography.body.copyWith(color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -190,7 +199,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 child: Text(
                   'COMMIT_CHANGES',
-                  style: AppTypography.statusBadge,
+                  style: AppTypography.micro.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

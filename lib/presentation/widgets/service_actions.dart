@@ -6,6 +6,100 @@ import '../../core/theme/app_typography.dart';
 import '../blocs/nas_status_bloc.dart';
 import '../../domain/entities/nas_service.dart';
 import 'tui_dialog.dart';
+import 'tui_toast.dart';
+
+String localVersionLabel(NasService service) {
+  return service.localVersion ??
+      (service.localDigest != null && service.localDigest!.length >= 12
+          ? service.localDigest!.substring(0, 12)
+          : 'UNKNOWN');
+}
+
+String remoteVersionLabel(NasService service) {
+  var remote = 'TAG: ${service.imageTag ?? 'latest'}';
+  final remoteDigest = service.remoteDigest;
+  if (remoteDigest != null && remoteDigest.length >= 12) {
+    remote += ' @${remoteDigest.substring(0, 11)}';
+  }
+  return remote;
+}
+
+void showServiceUpdateDialog(
+  BuildContext context,
+  NasService service,
+  Color color,
+) {
+  final updateAvailable = service.updateAvailable;
+  final currentDisplay = localVersionLabel(service);
+  final remoteDisplay = remoteVersionLabel(service);
+
+  showDialog(
+    context: context,
+    builder: (dialogContext) => TuiDialog(
+      themeColor: color,
+      title: service.name,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            updateAvailable ? 'NEW_VERSION_FOUND' : 'SERVICE_UP_TO_DATE',
+            style: AppTypography.title.copyWith(
+              color: updateAvailable ? AppColors.update : AppColors.terminalGreen,
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            updateAvailable
+                ? 'Uma versão nova está disponível.'
+                : 'Este serviço já está na versão mais recente.',
+            style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+          ),
+          if (updateAvailable) ...[
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              '// ACTUAL_VERSION: $currentDisplay',
+              style: AppTypography.caption,
+            ),
+            Text(
+              '// NEW_RELEASE:    $remoteDisplay',
+              style: AppTypography.caption,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'Baixar a imagem nova e reiniciar este serviço?',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TuiDialogButton(
+          label: 'CANCEL',
+          onPressed: () => Navigator.pop(dialogContext),
+        ),
+        if (updateAvailable) ...[
+          const SizedBox(width: AppSpacing.md),
+          TuiDialogButton(
+            label: 'UPDATE_NOW',
+            isPrimary: true,
+            color: AppColors.terminalGreen,
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<NasStatusBloc>().add(UpdateServiceRequested(service.name));
+              TuiToast.show(
+                context,
+                'Atualização de ${service.name} iniciada. O serviço reinicia em seguida.',
+                kind: TuiToastKind.info,
+              );
+            },
+          ),
+        ],
+      ],
+    ),
+  );
+}
 
 class ServiceUpdateAction extends StatelessWidget {
   final String serviceName;
@@ -27,95 +121,22 @@ class ServiceUpdateAction extends StatelessWidget {
           checkingUpdate: (_, services, _) => services,
           orElse: () => <NasService>[],
         );
-        
-        final service = services.firstWhere(
-          (s) => s.name.toLowerCase() == serviceName.toLowerCase(),
-          orElse: () => NasService(name: serviceName, port: '', description: ''),
-        );
+
+        final service = services.cast<NasService?>().firstWhere(
+              (s) => s!.name.toLowerCase() == serviceName.toLowerCase(),
+              orElse: () => null,
+            );
+
+        if (service == null || !service.updateAvailable) {
+          return const SizedBox.shrink();
+        }
 
         return IconButton(
-          icon: Icon(
-            service.updateAvailable ? Icons.system_update_alt : Icons.info_outline,
-            color: service.updateAvailable ? Colors.blueAccent : AppColors.textMuted,
-            size: 20,
-          ),
-          onPressed: () => _showUpdateDialog(context, service),
+          icon: const Icon(Icons.system_update_alt, color: AppColors.update),
+          tooltip: 'Atualizar ${service.name}',
+          onPressed: () => showServiceUpdateDialog(context, service, color),
         );
       },
-    );
-  }
-
-  void _showUpdateDialog(BuildContext context, NasService service) {
-    final updateAvailable = service.updateAvailable;
-    // Informação remota: Tag + Data (mais útil que o Hash remoto).
-    // Para imagens ghcr.io não há data de release; mostramos a tag e o
-    // digest remoto curto, que mudam quando há versão nova.
-    String remoteDisplay = 'TAG: ${service.imageTag ?? 'latest'}';
-    final remoteDigest = service.remoteDigest;
-    if (remoteDigest != null && remoteDigest.length >= 12) {
-      remoteDisplay += ' @${remoteDigest.substring(0, 11)}';
-    }
-    // Versão local amigável ou fallback para Hash curto
-    final currentDisplay = service.localVersion ??
-        (service.localDigest?.substring(0, 12) ?? 'UNKNOWN');
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => TuiDialog(
-        themeColor: color,
-        title: '', // Título vazio no cabeçalho como solicitado
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              updateAvailable ? 'NEW_VERSION_FOUND' : 'SERVICE_UP_TO_DATE',
-              style: AppTypography.terminalTitle.copyWith(
-                color: updateAvailable ? Colors.blueAccent : AppColors.terminalGreen,
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              updateAvailable 
-                ? 'A new update is available.'
-                : 'You are running the latest stable release.',
-              style: AppTypography.moduleSublabel.copyWith(fontSize: 11, color: AppColors.textSecondary),
-            ),
-            if (updateAvailable) ...[
-              const SizedBox(height: AppSpacing.md),
-              Text('// ACTUAL_VERSION: $currentDisplay', style: AppTypography.moduleSublabel),
-              Text('// NEW_RELEASE:    $remoteDisplay', style: AppTypography.moduleSublabel),
-              const SizedBox(height: AppSpacing.md),
-              Text('Pull new image and restart?', style: AppTypography.moduleSublabel.copyWith(color: AppColors.textSecondary)),
-            ],
-          ],
-        ),
-        actions: [
-          TuiDialogButton(
-            label: 'CLOSE',
-            onPressed: () => Navigator.pop(dialogContext),
-          ),
-          if (updateAvailable) ...[
-            const SizedBox(width: AppSpacing.md),
-            TuiDialogButton(
-              label: 'PROCEED_UPDATE',
-              isPrimary: true,
-              color: AppColors.terminalGreen,
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                context.read<NasStatusBloc>().add(UpdateServiceRequested(serviceName));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('UPDATE_TASK_QUEUED: $serviceName process started in background.'),
-                    backgroundColor: AppColors.terminalGreen.withValues(alpha: 0.8),
-                  ),
-                );
-              },
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
@@ -128,11 +149,11 @@ class ServiceRefreshAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.refresh, size: 20),
+      icon: const Icon(Icons.refresh),
       onPressed: () => context.read<NasStatusBloc>().add(
             CheckServiceUpdateRequested(serviceName),
           ),
-      tooltip: 'Check update for $serviceName',
+      tooltip: 'Verificar atualização de $serviceName',
     );
   }
 }

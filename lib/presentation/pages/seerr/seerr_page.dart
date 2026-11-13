@@ -9,6 +9,7 @@ import '../../blocs/seerr_bloc.dart';
 import '../../widgets/tui_input_field.dart';
 import '../../widgets/service_scaffold.dart';
 import '../../widgets/braille_spinner.dart';
+import '../../widgets/tui_toast.dart';
 import 'seerr_details_page.dart';
 
 class SeerrPage extends StatelessWidget {
@@ -99,16 +100,17 @@ class _SeerrViewState extends State<SeerrView> {
               listener: (context, state) {
                 state.whenOrNull(
                   requestSuccess: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Request sent successfully!')),
+                    TuiToast.show(
+                      context,
+                      'Pedido enviado.',
+                      kind: TuiToastKind.success,
                     );
                   },
                   error: (message) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error: $message'),
-                        backgroundColor: Colors.redAccent,
-                      ),
+                    TuiToast.show(
+                      context,
+                      'Não foi possível concluir o pedido. $message',
+                      kind: TuiToastKind.error,
                     );
                   },
                 );
@@ -124,7 +126,7 @@ class _SeerrViewState extends State<SeerrView> {
                   orElse: () => Center(
                     child: Text(
                       'Search for titles or check trending',
-                      style: AppTypography.moduleSublabel.copyWith(fontSize: 14),
+                      style: AppTypography.body.copyWith(color: AppColors.textSecondary),
                     ),
                   ),
                 );
@@ -196,7 +198,7 @@ class _SeerrViewState extends State<SeerrView> {
               ),
               child: Text(
                 mediaType.toUpperCase(),
-                style: AppTypography.statusBadge.copyWith(fontSize: 8, color: Colors.white70),
+                style: AppTypography.micro.copyWith(color: AppColors.textSecondary),
               ),
             ),
           ),
@@ -214,7 +216,7 @@ class _SeerrViewState extends State<SeerrView> {
                 children: [
                   Text(
                     media.title,
-                    style: AppTypography.moduleLabel.copyWith(fontSize: 12),
+                    style: AppTypography.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -230,7 +232,7 @@ class _SeerrViewState extends State<SeerrView> {
                         disabledBackgroundColor: _getButtonColor(status).withValues(alpha: 0.3),
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.zero,
-                        minimumSize: const Size(0, 28),
+                        minimumSize: const Size(0, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
                         ),

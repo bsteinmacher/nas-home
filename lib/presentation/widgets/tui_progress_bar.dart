@@ -9,19 +9,20 @@ Color jobStatusDotColor(String status) {
     case 'done':
       return AppColors.terminalGreen;
     case 'error':
-      return Colors.redAccent;
+      return AppColors.offline;
     default:
       return AppColors.radarr;
   }
 }
 
-/// ASCII-style progress bar with terminal aesthetics
+/// ASCII-style progress bar with terminal aesthetics.
 class TuiProgressBar extends StatelessWidget {
   final String label;
   final double percent;
   final String trailing;
   final Color? statusDot;
   final int totalBars;
+  final String? error;
 
   const TuiProgressBar({
     super.key,
@@ -30,88 +31,78 @@ class TuiProgressBar extends StatelessWidget {
     required this.trailing,
     this.statusDot,
     this.totalBars = 20,
+    this.error,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Clamp percentage between 0.0 and 1.0
     final double clampedPercent = percent.clamp(0.0, 1.0);
     final int filledBars = (clampedPercent * totalBars).round();
     final String filledPart = '#' * filledBars;
     final String totalBarPlaceholder = '#' * totalBars;
+    final barStyle = AppTypography.metric.copyWith(
+      color: AppColors.textPrimary,
+      fontSize: 14,
+      height: 1.0,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: AppTypography.sectionHeader,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.caption,
         ),
         const SizedBox(height: AppSpacing.xs),
         Row(
           children: [
-            Text(
-              '[',
-              style: AppTypography.baseStyle.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 12,
-                height: 1.0,
-              ),
-            ),
-            Stack(
-              children: [
-                // Empty bar background
-                Text(
-                  totalBarPlaceholder,
-                  style: AppTypography.baseStyle.copyWith(
-                    color: AppColors.textMuted.withValues(alpha: 0.1),
-                    fontSize: 14,
-                    height: 1.0,
+            Text('[', style: barStyle),
+            Flexible(
+              child: Stack(
+                children: [
+                  Text(
+                    totalBarPlaceholder,
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    style: barStyle.copyWith(color: AppColors.barTrack),
                   ),
-                ),
-                // Gradient filled part
-                if (filledBars > 0)
-                  ShaderMask(
-                    blendMode: BlendMode.srcIn,
-                    shaderCallback: (bounds) {
-                      // Calculate width mapping for the gradient
-                      final charWidth = bounds.width / filledBars;
-                      final fullWidth = charWidth * totalBars;
-                      
-                      return AppColors.terminalGradient.createShader(
-                        Rect.fromLTWH(0, 0, fullWidth, bounds.height),
-                      );
-                    },
-                    child: Text(
-                      filledPart,
-                      style: AppTypography.baseStyle.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: 14,
-                        height: 1.0,
+                  if (filledBars > 0)
+                    ShaderMask(
+                      blendMode: BlendMode.srcIn,
+                      shaderCallback: (bounds) {
+                        final charWidth = bounds.width / filledBars;
+                        final fullWidth = charWidth * totalBars;
+                        return AppColors.terminalGradient.createShader(
+                          Rect.fromLTWH(0, 0, fullWidth, bounds.height),
+                        );
+                      },
+                      child: Text(
+                        filledPart,
+                        maxLines: 1,
+                        style: barStyle,
                       ),
                     ),
-                  ),
-              ],
-            ),
-            Text(
-              ']',
-              style: AppTypography.baseStyle.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 12,
-                height: 1.0,
+                ],
               ),
             ),
-            const Spacer(),
-            Text(
-              trailing,
-              style: AppTypography.moduleSublabel.copyWith(color: AppColors.textSecondary),
-            ),
+            Text(']', style: barStyle),
+            const SizedBox(width: AppSpacing.sm),
+            Text(trailing, style: AppTypography.metric),
             if (statusDot case final Color dot) ...[
               const SizedBox(width: AppSpacing.xs),
               TuiStatusDot(color: dot),
             ],
           ],
         ),
+        if (error != null && error!.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            '[ERR] $error',
+            style: AppTypography.caption.copyWith(color: AppColors.offline),
+          ),
+        ],
       ],
     );
   }

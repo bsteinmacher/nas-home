@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nas_home/domain/usecases/get_hardware_info.dart';
 import 'package:nas_home/domain/usecases/get_services_status.dart';
 import 'package:nas_home/presentation/blocs/nas_status_bloc.dart';
-import 'package:nas_home/presentation/pages/home/widgets/service_status_list.dart';
+import 'package:nas_home/domain/entities/nas_service.dart';
+import 'package:nas_home/presentation/pages/home/widgets/attention_panel.dart';
+import 'package:nas_home/presentation/pages/home/widgets/module_cards.dart';
 import 'package:nas_home/presentation/widgets/service_actions.dart';
+import 'package:nas_home/presentation/widgets/tui_toast.dart';
 
 import '../helpers/fixtures.dart';
 import '../helpers/mocks.dart';
@@ -16,7 +20,10 @@ void main() {
   late MockNasRepository repository;
   late MockSharedPreferences prefs;
 
-  setUpAll(registerTestFallbackValues);
+  setUpAll(() {
+    GoogleFonts.config.allowRuntimeFetching = false;
+    registerTestFallbackValues();
+  });
 
   setUp(() {
     repository = MockNasRepository();
@@ -105,11 +112,11 @@ void main() {
       expect(find.byIcon(Icons.info_outline), findsNothing);
     });
 
-    testWidgets('mostra icone de info quando o servico esta em dia',
+    testWidgets('nao mostra icone quando o servico esta em dia',
         (tester) async {
       await pumpAction(tester, withUpdate: false);
 
-      expect(find.byIcon(Icons.info_outline), findsOneWidget);
+      expect(find.byIcon(Icons.info_outline), findsNothing);
       expect(find.byIcon(Icons.system_update_alt), findsNothing);
     });
   });
@@ -129,18 +136,42 @@ void main() {
         find.textContaining("NEW_RELEASE:    TAG: latest @sha256:new"),
         findsOneWidget,
       );
-      expect(find.text('PROCEED_UPDATE'), findsOneWidget);
+      expect(find.text('UPDATE_NOW'), findsOneWidget);
     });
 
     testWidgets('dialogo de servico em dia nao oferece botao de update',
         (tester) async {
-      await pumpAction(tester, withUpdate: false);
-
-      await tester.tap(find.byIcon(Icons.info_outline));
+      final bloc = buildBloc(withUpdate: false);
+      bloc.add(const RefreshRequested());
+      await tester.pumpWidget(
+        BlocProvider.value(
+          value: bloc,
+          child: MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => TextButton(
+                  onPressed: () {
+                    final loaded = context.read<NasStatusBloc>().state as Loaded;
+                    showServiceUpdateDialog(
+                      context,
+                      loaded.services.first,
+                      Colors.green,
+                    );
+                  },
+                  child: const Text('OPEN'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OPEN'));
       await tester.pumpAndSettle();
 
       expect(find.text('SERVICE_UP_TO_DATE'), findsOneWidget);
-      expect(find.text('PROCEED_UPDATE'), findsNothing);
+      expect(find.text('UPDATE_NOW'), findsNothing);
+      expect(find.text('CANCEL'), findsOneWidget);
     });
 
     testWidgets('versao local sem label cai no fallback do digest curto',
@@ -180,18 +211,17 @@ void main() {
     });
 
     testWidgets(
-        'PROCEED_UPDATE dispara o update e mostra snackbar de tarefa em background',
+        'UPDATE_NOW dispara o update e mostra aviso de tarefa em background',
         (tester) async {
       final bloc = await pumpAction(tester, withUpdate: true);
 
       await tester.tap(find.byIcon(Icons.system_update_alt));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('PROCEED_UPDATE'));
+      await tester.tap(find.text('UPDATE_NOW'));
       await tester.pump();
 
-      expect(find.byType(SnackBar), findsOneWidget);
       expect(
-        find.textContaining('UPDATE_TASK_QUEUED: Jellyfin'),
+        find.textContaining('Atualização de Jellyfin iniciada'),
         findsOneWidget,
       );
 
@@ -237,26 +267,121 @@ void main() {
     });
   });
 
-  group('ServiceStatusList (badges)', () {
-    testWidgets('mostra indicador de update apenas nos servicos atualizaveis',
+  group('AttentionPanel', () {
+    testWidgets('lista so offline e omite update e quem esta saudavel',
         (tester) async {
       final services = [
         serviceWithUpdate().copyWith(isOnline: true),
-        testServices[1].copyWith(isOnline: true),
+        testServices[1].copyWith(isOnline: false, isDeployed: true),
+        testServices[2].copyWith(isOnline: true, updateAvailable: false),
       ];
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ServiceStatusList(services: services),
+            body: Column(
+              children: [
+                UpdateNotice(services: services),
+                AttentionPanel(services: services),
+              ],
+            ),
           ),
         ),
       );
 
-      // Nginx (sem update): apenas o item sem icone de info extra.
-      expect(find.byIcon(Icons.info_outline), findsOneWidget);
-      expect(find.text(' JELLYFIN'), findsOneWidget);
-      expect(find.text(' NGINX_PROXY_MANAGER'), findsOneWidget);
+      expect(find.text('1 atualização disponível'), findsOneWidget);
+      expect(find.text('UPDATE'), findsNothing);
+      expect(find.text('[OFFLINE]'), findsOneWidget);
+      expect(find.text('JELLYFIN'), findsNothing);
+      expect(find.text('NGINX_PROXY_MANAGER'), findsOneWidget);
+      expect(find.textContaining('NEXTCLOUD'), findsNothing);
+    });
+
+    testWidgets('sem pendencias nao ocupa a tela', (tester) async {
+      final services = [
+        serviceWithUpdate().copyWith(isOnline: true, updateAvailable: false),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AttentionPanel(services: services),
+          ),
+        ),
+      );
+
+      expect(find.textContaining('NO_UPDATES'), findsNothing);
+      expect(find.text('CHECK_ALL'), findsNothing);
+      expect(find.text('UPDATE'), findsNothing);
+    });
+
+    testWidgets('cabe em 360px com texto 1.3 sem overflow', (tester) async {
+      tester.view.physicalSize = const Size(360, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final services = [
+        serviceWithUpdate(name: 'Seerr').copyWith(isOnline: true, port: '5055'),
+        const NasService(name: 'Lidarr', port: '8686', description: 'Music', isOnline: true),
+        const NasService(name: 'Syncthing', port: '8384', description: 'Music DL', isOnline: false),
+        serviceWithUpdate().copyWith(isOnline: true),
+      ];
+
+      await tester.pumpWidget(
+        BlocProvider(
+          create: (_) => buildBloc(),
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.3),
+              ),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: ListView(
+                children: [
+                  AttentionPanel(services: services),
+                  ModuleCards(services: services),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('SEERR'), findsOneWidget);
+      expect(find.text('LIDARR'), findsOneWidget);
+      expect(find.text('MUSIC_DL'), findsWidgets);
+    });
+  });
+
+  group('TuiToast', () {
+    testWidgets('erro fica na tela com prefixo e dismiss', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => TuiToast.show(
+                  context,
+                  'Falha ao sincronizar.',
+                  kind: TuiToastKind.error,
+                ),
+                child: const Text('TOAST'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('TOAST'));
+      await tester.pump();
+
+      expect(find.textContaining('[ERR]'), findsOneWidget);
+      expect(find.textContaining('Falha ao sincronizar.'), findsOneWidget);
+      expect(find.text('DISMISS'), findsOneWidget);
     });
   });
 }

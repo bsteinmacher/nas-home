@@ -25,44 +25,52 @@ class TuiDialog extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.background,
-          border: Border.all(color: AppColors.textPrimary.withValues(alpha: 0.2), width: 1),
-          borderRadius: BorderRadius.zero,
+          border: Border.all(color: AppColors.borderSubtle),
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x66000000),
+              blurRadius: 24,
+              offset: Offset(0, 8),
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               children: [
                 Text(
-                  '>_STATUS: ',
-                  style: AppTypography.moduleLabel.copyWith(color: AppColors.textPrimary),
+                  '>_STATUS',
+                  style: AppTypography.label,
                 ),
-                Expanded(
-                  child: Text(
-                    title.toUpperCase(),
-                    style: AppTypography.moduleLabel.copyWith(color: themeColor),
+                if (title.isNotEmpty) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      title.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.label.copyWith(color: themeColor),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            // Divider estilo terminal
             Container(
               height: 1,
               width: double.infinity,
-              color: themeColor.withValues(alpha: 0.2),
+              color: themeColor.withValues(alpha: 0.35),
             ),
             const SizedBox(height: AppSpacing.md),
-            // Content
             DefaultTextStyle(
-              style: AppTypography.moduleSublabel,
+              style: AppTypography.body,
               child: content,
             ),
             const SizedBox(height: AppSpacing.lg),
-            // Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: actions,
@@ -94,34 +102,43 @@ class TuiDialogButton extends StatelessWidget {
       final bgColor = color ?? AppColors.terminalGreen;
       return InkWell(
         onTap: onPressed,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.zero,
-          ),
-          child: Text(
-            label.toUpperCase(),
-            style: AppTypography.statusBadge.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm + AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+            ),
+            child: Text(
+              label.toUpperCase(),
+              style: AppTypography.micro.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ),
       );
     }
 
-    // Botão secundário: apenas texto no cinza claro do app
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: AppColors.textSecondary,
+        minimumSize: const Size(44, 44),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        ),
       ),
       child: Text(
         label.toUpperCase(),
-        style: AppTypography.statusBadge,
+        style: AppTypography.micro.copyWith(color: AppColors.textSecondary),
       ),
     );
   }

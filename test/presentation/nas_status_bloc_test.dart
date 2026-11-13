@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nas_home/domain/entities/nas_service.dart';
 import 'package:nas_home/domain/usecases/get_hardware_info.dart';
 import 'package:nas_home/domain/usecases/get_services_status.dart';
 import 'package:nas_home/presentation/blocs/nas_status_bloc.dart';
@@ -93,17 +94,24 @@ void main() {
       },
     );
 
+    final missingTokenNotices = <NasNotice>[];
     blocTest<NasStatusBloc, NasStatusState>(
-      'update sem token configurado emite erro em vez de falhar silenciosamente',
+      'update sem token configurado avisa e mantem o dashboard',
       setUp: () {
+        missingTokenNotices.clear();
         when(() => prefs.getString('registry_token')).thenReturn(null);
       },
       seed: () => Loaded([serviceWithUpdate()], testHardwareInfo),
-      build: buildBloc,
+      build: () {
+        final bloc = buildBloc();
+        bloc.notices.listen(missingTokenNotices.add);
+        return bloc;
+      },
       act: (bloc) => bloc.add(const UpdateServiceRequested('Jellyfin')),
-      expect: () => [isA<Error>()],
+      expect: () => [],
       verify: (bloc) {
-        expect((bloc.state as Error).message, contains("token"));
+        expect(bloc.state, isA<Loaded>());
+        expect(missingTokenNotices.single.message, contains('token'));
         verifyNever(
           () => repository.updateService(any(), any(), any()),
         );
@@ -162,11 +170,17 @@ void main() {
       },
     );
 
+    final failureNotices = <NasNotice>[];
     blocTest<NasStatusBloc, NasStatusState>(
-      'update com falha preserva o dashboard e emite erro visivel por ultimo',
+      'update com falha preserva o dashboard e avisa sem trocar a tela',
       seed: () => Loaded([serviceWithUpdate()], testHardwareInfo),
-      build: buildBloc,
+      build: () {
+        final bloc = buildBloc();
+        bloc.notices.listen(failureNotices.add);
+        return bloc;
+      },
       setUp: () {
+        failureNotices.clear();
         when(
           () => repository.updateService(any(), any(), any()),
         ).thenThrow(Exception('registry down'));
@@ -175,10 +189,62 @@ void main() {
       expect: () => [
         isA<Updating>(),
         isA<Loaded>(),
-        isA<Error>(),
       ],
       verify: (bloc) {
-        expect((bloc.state as Error).message, contains('Update failed'));
+        expect(bloc.state, isA<Loaded>());
+        expect(failureNotices.single.message, contains('Falha ao atualizar'));
+      },
+    );
+
+    final batchNotices = <NasNotice>[];
+    blocTest<NasStatusBloc, NasStatusState>(
+      'update all atualiza os pendentes em sequencia e termina Loaded',
+      seed: () => Loaded(
+        [
+          serviceWithUpdate(name: 'Jellyfin'),
+          serviceWithUpdate(name: 'Radarr', containerName: 'radarr'),
+        ],
+        testHardwareInfo,
+      ),
+      build: () {
+        final bloc = buildBloc();
+        bloc.notices.listen(batchNotices.add);
+        return bloc;
+      },
+      setUp: () {
+        batchNotices.clear();
+        when(
+          () => repository.refreshServiceUpdateInfo(any(), any(), any()),
+        ).thenAnswer((invocation) async {
+          final current = invocation.positionalArguments[2] as NasService;
+          return current.copyWith(
+            updateAvailable: false,
+            localVersion: 'v2.0.0',
+          );
+        });
+      },
+      act: (bloc) => bloc.add(const UpdateAllRequested()),
+      wait: const Duration(seconds: 12),
+      expect: () => [
+        isA<Updating>().having((state) => state.serviceName, 'name', 'Jellyfin'),
+        isA<Updating>().having((state) => state.serviceName, 'name', 'Radarr'),
+        isA<Loaded>(),
+      ],
+      verify: (bloc) {
+        verify(() => repository.updateService(any(), any(), 'Jellyfin')).called(1);
+        verify(() => repository.updateService(any(), any(), 'Radarr')).called(1);
+        final loaded = bloc.state as Loaded;
+        expect(loaded.services.every((service) => !service.updateAvailable), isTrue);
+        expect(
+          batchNotices.map((notice) => notice.message),
+          [
+            'Atualizando JELLYFIN.',
+            'Atualizando RADARR.',
+            '2 serviços atualizados.',
+          ],
+        );
+        expect(batchNotices[0].kind, NasNoticeKind.info);
+        expect(batchNotices.last.kind, NasNoticeKind.success);
       },
     );
 

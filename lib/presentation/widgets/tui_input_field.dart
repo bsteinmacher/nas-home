@@ -3,7 +3,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 
-/// Terminal-style input field with fixed labels and command prompt
+/// Terminal-style input field with fixed labels and command prompt.
 class TuiInputField extends StatelessWidget {
   final String? label;
   final String? hintText;
@@ -47,24 +47,20 @@ class TuiInputField extends StatelessWidget {
           onSubmitted: onSubmitted,
           onChanged: onChanged,
           textInputAction: textInputAction,
-          style: AppTypography.baseStyle.copyWith(
-            fontSize: 14,
-            color: AppColors.textPrimary,
-          ),
+          style: AppTypography.body.copyWith(fontSize: 16, height: 1.3),
           cursorColor: AppColors.terminalGreen,
           decoration: InputDecoration(
             isDense: true,
             hintText: hintText,
-            hintStyle: AppTypography.moduleSublabel.copyWith(fontSize: 13),
+            hintStyle: AppTypography.caption.copyWith(color: AppColors.textMuted),
             filled: true,
             fillColor: AppColors.surface,
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: AppSpacing.md, right: AppSpacing.sm),
               child: Text(
                 '>',
-                style: AppTypography.baseStyle.copyWith(
+                style: AppTypography.label.copyWith(
                   color: AppColors.terminalGreen,
-                  fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
@@ -77,9 +73,7 @@ class TuiInputField extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
-              borderSide: BorderSide(
-                color: AppColors.textMuted.withValues(alpha: 0.1),
-              ),
+              borderSide: const BorderSide(color: AppColors.borderSubtle),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.borderRadius),

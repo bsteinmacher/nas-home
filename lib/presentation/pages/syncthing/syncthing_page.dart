@@ -12,6 +12,7 @@ import '../../widgets/service_scaffold.dart';
 import '../../widgets/tui_dialog.dart';
 import '../../widgets/tui_input_field.dart';
 import '../../widgets/tui_progress_bar.dart';
+import '../../widgets/tui_toast.dart';
 import 'job_details_page.dart';
 
 class SyncthingPage extends StatelessWidget {
@@ -65,6 +66,7 @@ class _SyncthingViewState extends State<_SyncthingView> {
   Widget build(BuildContext context) {
     return ServiceScaffold(
       serviceName: 'Syncthing',
+      title: 'MUSIC_DL',
       themeColor: AppColors.syncthing,
       body: BlocConsumer<MusicDlBloc, MusicDlState>(
         listenWhen: (previous, current) =>
@@ -77,14 +79,10 @@ class _SyncthingViewState extends State<_SyncthingView> {
           final message = state.error ?? state.notice;
           if (message == null || message.isEmpty) return;
           if (state.notice == null && state.error == null) return;
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message),
-              backgroundColor: state.error != null
-                  ? const Color(0xFFB71C1C)
-                  : AppColors.syncthing.withValues(alpha: 0.85),
-            ),
+          TuiToast.show(
+            context,
+            message,
+            kind: state.error != null ? TuiToastKind.error : TuiToastKind.success,
           );
         },
         builder: (context, state) {
@@ -137,7 +135,7 @@ class _SyncthingViewState extends State<_SyncthingView> {
                 if ((state.inspection?.title ?? '').trim().isNotEmpty)
                   Text(
                     state.inspection!.title!,
-                    style: AppTypography.moduleLabel.copyWith(fontSize: 13),
+                    style: AppTypography.cardTitle,
                   ),
               ],
               if (state.inspection != null) ...[
@@ -240,7 +238,7 @@ class _DetectedPlaylistCard extends StatelessWidget {
         ),
         if (title.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.xs),
-          Text(title, style: AppTypography.moduleLabel.copyWith(fontSize: 13)),
+          Text(title, style: AppTypography.cardTitle),
         ],
         const SizedBox(height: AppSpacing.xs),
         Text(
@@ -260,7 +258,6 @@ class _JobTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final overall = job.overallPercent;
-    final errorSuffix = job.error == null ? '' : ' · ${job.error}';
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: InkWell(
@@ -271,10 +268,11 @@ class _JobTile extends StatelessWidget {
           );
         },
         child: TuiProgressBar(
-          label: '${job.listLabel}$errorSuffix',
+          label: job.listLabel,
           percent: (overall / 100).clamp(0.0, 1.0),
           trailing: '${overall.round()}%',
           statusDot: jobStatusDotColor(job.status),
+          error: job.error,
         ),
       ),
     );

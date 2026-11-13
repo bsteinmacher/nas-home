@@ -130,12 +130,8 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
               border: Border.all(color: AppColors.terminalMuted, width: 0.5),
             ),
             child: Text(
-              media.overview ?? 'No overview available.',
-              style: AppTypography.moduleSublabel.copyWith(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-                height: 1.5,
-              ),
+              media.overview ?? 'Sem sinopse.',
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ),
         ],
@@ -158,11 +154,11 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
             return CheckboxListTile(
             title: Text(
               'SEASON ${season.seasonNumber}',
-              style: AppTypography.moduleLabel.copyWith(fontSize: 14),
+              style: AppTypography.label,
             ),
             subtitle: Text(
               '${season.episodeCount} EPISODES',
-              style: AppTypography.moduleSublabel.copyWith(fontSize: 10),
+              style: AppTypography.caption,
             ),
             value: isSelected,
             activeColor: AppColors.seerr,
@@ -189,11 +185,11 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
       children: [
         Text(
           label,
-          style: AppTypography.sectionHeader.copyWith(fontSize: 8),
+          style: AppTypography.sectionHeader,
         ),
         Text(
           value,
-          style: AppTypography.moduleLabel.copyWith(fontSize: 14),
+          style: AppTypography.label,
         ),
       ],
     );
@@ -227,7 +223,7 @@ class _SeerrDetailsPageState extends State<SeerrDetailsPage> {
         ),
         child: Text(
           isRequested ? _getButtonText(status) : (isTv && _selectedSeasons.isEmpty ? 'SELECT SEASONS' : 'REQUEST'),
-          style: AppTypography.statusBadge.copyWith(fontSize: 12),
+          style: AppTypography.micro,
         ),
       ),
     );
